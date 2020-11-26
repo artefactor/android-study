@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="country">Россия</string>
+    <string name="orientation_landscape" translatable="false">альбом</string>
+    <string name="orientation_portrait" translatable="false">портрет</string>
+    <string name="orientation_square" translatable="false">квадрат</string>
+    <string name="orientation_undefined" translatable="false">неопределено</string>
+    <string name="orientation_unknown" translatable="false">неизвестно</string>
+</resources>
