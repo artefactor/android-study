@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/lesson1colors" />
+            <option value="$PROJECT_DIR$/lesson2activity" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ActivityApp2</string>
+
+    <string name="radio_random">Random</string>
+    <string name="radio_empty">Empty</string>
+    <string name="radio_normal">Normal</string>
+
+    <string name="static_input">Input:</string>
+    <string name="static_result">Result:</string>
+
+    <string name="button_calculate">Calculate</string>
+    <string name="button_avg">Avg</string>
+    <string name="button_sum">Sum</string>
+    <string name="button_strange_operation">Strange operation</string>
+</resources>
