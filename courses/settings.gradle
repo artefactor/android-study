@@ -1,2 +1,3 @@
 include ':lesson1colors'
+include ':lesson2activity'
 rootProject.name = "courses"
