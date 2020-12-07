@@ -17,19 +17,22 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE = 21;
 
-    int[] numbers = new int[]{};
+    private int[] numbers = new int[]{};
+
+    private TextView textInputView;
+    private TextView textResultView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        textInputView = findViewById(R.id.textInput);
+        textResultView = findViewById(R.id.textResult);
+
         findViewById(R.id.buttonCalculate).setOnClickListener(o -> {
             //      Activity #1 генерирует набор случайных чисел случайного размера и передает его в Activity #2
-            Intent intent = new Intent(this, SecondActivity.class);
-            writeInput(intent);
-            cleanResultText();
-            startActivityForResult(intent, REQUEST_CODE);
+            startSecondActivity();
         });
 
         findViewById(R.id.radioNormalCase).setOnClickListener(o -> {
@@ -46,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void startSecondActivity() {
+        logInput();
+        Intent intent = new Intent(this, SecondActivity.class);
+        intent.putExtra(Extras.EXTRA_NUMBERS, numbers);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -59,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeInput() {
         logInput();
-        TextView viewById = findViewById(R.id.textInput);
-        viewById.setText(Arrays.toString(numbers));
+        textInputView.setText(Arrays.toString(numbers));
 
         cleanResultText();
 
@@ -75,25 +84,23 @@ public class MainActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             logResult(data);
-
         } else {
-            //  TODO?
+            Log.e("Error", "Unexpected resultCode: " + requestCode);
         }
     }
 
     private void logResult(@Nullable Intent data) {
         //  При получении результата вывести его в консоль.
         assert data != null;
-        TextView viewById = findViewById(R.id.textResult);
         if (data.hasExtra(Extras.EXTRA_ERROR)) {
             String error = data.getStringExtra(Extras.EXTRA_ERROR);
             Log.i("Result", "Error: " + error);
-            viewById.setTextColor(getResources().getColor(R.color.design_default_color_error));
-            viewById.setText(error);
+            textResultView.setTextColor(getResources().getColor(R.color.design_default_color_error));
+            textResultView.setText(error);
             return;
         }
 
-        viewById.setTextColor(getResources().getColor(R.color.cardview_dark_background));
+        textResultView.setTextColor(getResources().getColor(R.color.cardview_dark_background));
 
         if (!data.hasExtra(Extras.EXTRA_TYPE)) {
             Log.i("Result", "Error: " + "no type");
@@ -119,19 +126,14 @@ public class MainActivity extends AppCompatActivity {
         String operation = data.getStringExtra(Extras.EXTRA_OPERATION);
         Log.i("Result", "operation: " + operation + ":" + result);
 
-        viewById.setText(result);
+        textResultView.setText(result);
     }
+
 
     private void cleanResultText() {
-        TextView viewByIdResult = findViewById(R.id.textResult);
-        viewByIdResult.setText("");
+        textResultView.setText("");
     }
 
-
-    private void writeInput(Intent intent) {
-        logInput();
-        intent.putExtra(Extras.EXTRA_NUMBERS, numbers);
-    }
 
     private void logInput() {
         Log.i("numbers", Arrays.toString(numbers));

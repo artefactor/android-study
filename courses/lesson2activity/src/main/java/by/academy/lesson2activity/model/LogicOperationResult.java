@@ -2,9 +2,9 @@ package by.academy.lesson2activity.model;
 
 public class LogicOperationResult<T extends Number> {
 
-    String error;
-    String resultType;
-    T result;
+   private String error;
+   private String resultType;
+   private T result;
 
     public LogicOperationResult(String error) {
         this.error = error;
