@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name" translatable="false">Lesson1Colors</string>
+    <string name="country">USA</string>
+    <string name="orientation_landscape" translatable="false">landscape</string>
+    <string name="orientation_portrait" translatable="false">portrait</string>
+    <string name="orientation_square" translatable="false">square</string>
+    <string name="orientation_undefined" translatable="false">undefined</string>
+    <string name="orientation_unknown" translatable="false">unknown</string>
+</resources>

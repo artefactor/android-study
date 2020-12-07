@@ -1,0 +1,2 @@
+include ':lesson1colors'
+rootProject.name = "courses"
