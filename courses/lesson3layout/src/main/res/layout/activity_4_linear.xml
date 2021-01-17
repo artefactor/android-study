@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10">
+
+    <!--    header-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_medium"
+        android:layout_marginVertical="@dimen/margin_small"
+        android:text="@string/android"
+        android:textAppearance="@style/LabelText"
+        android:textSize="28sp" />
+
+    <!--    user info  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/spacer_medium"
+        android:padding="@dimen/margin_medium"
+        android:showDividers="middle"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_info"
+
+                android:background="@color/grey" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:textAppearance="@style/LabelText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/address" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/description" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_info"
+            android:layout_weight="2"
+            android:divider="@drawable/spacer_medium"
+            android:gravity="bottom"
+            android:padding="@dimen/margin_medium"
+            android:showDividers="middle"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/info_up"
+                    android:text="125" />
+
+                <TextView
+                    style="@style/info_down"
+                    android:text="@string/posts" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/info_up"
+                    android:text="20K" />
+
+                <TextView
+                    style="@style/info_down"
+                    android:text="@string/followers" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/info_up"
+                    android:text="22" />
+
+                <TextView
+                    style="@style/info_down"
+                    android:text="@string/following" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!--    6 photos  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/spacer_medium"
+        android:padding="@dimen/margin_medium"
+        android:showDividers="middle"
+        android:weightSum="6">
+
+        <ImageView style="@style/small_photo" />
+
+        <ImageView style="@style/small_photo" />
+
+        <ImageView style="@style/small_photo" />
+
+        <ImageView style="@style/small_photo" />
+
+        <ImageView style="@style/small_photo" />
+
+        <ImageView style="@style/small_photo" />
+    </LinearLayout>
+
+
+    <!--    icon bar  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_medium"
+        android:divider="@drawable/spacer_medium"
+        android:showDividers="middle"
+        android:weightSum="4">
+
+        <FrameLayout style="@style/action_frame">
+
+            <ImageView
+                style="@style/action_icon"
+                android:background="@drawable/ic_baseline_directions_24" />
+
+            <TextView
+                style="@style/action_name"
+                android:text="@string/directions" />
+        </FrameLayout>
+
+        <FrameLayout style="@style/action_frame">
+
+            <ImageView
+                style="@style/action_icon"
+                android:background="@drawable/ic_baseline_call_24" />
+
+            <TextView
+                style="@style/action_name"
+                android:text="@string/call" />
+        </FrameLayout>
+
+        <FrameLayout style="@style/action_frame">
+
+            <ImageView
+                style="@style/action_icon"
+                android:background="@drawable/ic_baseline_star_rate_24" />
+
+            <TextView
+                style="@style/action_name"
+                android:text="@string/save" />
+        </FrameLayout>
+
+        <FrameLayout style="@style/action_frame">
+
+            <ImageView
+                style="@style/action_icon"
+                android:background="@drawable/ic_baseline_link_24" />
+
+            <TextView
+                style="@style/action_name"
+                android:text="@string/website" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!--    big photos -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/spacer_medium"
+        android:gravity="bottom"
+        android:padding="@dimen/margin_medium"
+        android:showDividers="middle"
+        android:weightSum="3">
+
+        <ImageView style="@style/big_photo" />
+
+        <ImageView style="@style/big_photo" />
+
+        <ImageView style="@style/big_photo" />
+    </LinearLayout>
+
+
+</LinearLayout>

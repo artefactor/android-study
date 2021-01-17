@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:background="@color/grey">
+
+        <TextView
+            style="@style/photo_text"
+            android:text="@string/photo" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/margin_medium"
+            android:contentDescription="@string/photo"
+            android:src="@drawable/ic_baseline_camera_alt_24" />
+
+    </FrameLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_medium"
+        android:layout_weight="1"
+        android:autofillHints=""
+        android:hint="@string/title"
+        android:inputType="text"
+        android:textAlignment="textStart" />
+
+    <!--approach 1. Use Nested Linear Layout.  Cons:  warning with double layout calculation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/margin_medium"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:hint="@string/price"
+            android:inputType="text"
+            android:textAlignment="textStart" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/margin_medium"
+            android:layout_weight="2"
+            android:autofillHints=""
+            android:hint="@string/location"
+            android:inputType="text"
+            android:textAlignment="textStart" />
+    </LinearLayout>
+
+
+    <!--    approach 2. Programmatic fix on width proportion. Cons: it is done programmatically  -->
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/frame_price"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_marginHorizontal="@dimen/margin_medium"
+            android:autofillHints=""
+            android:hint="@string/price"
+            android:inputType="text"
+            android:textAlignment="textStart" />
+
+        <EditText
+            android:id="@+id/frame_location"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginHorizontal="@dimen/margin_medium"
+            android:autofillHints=""
+            android:hint="@string/location"
+            android:inputType="text" />
+
+    </FrameLayout>
+    <!-- approach 2 end  -->
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_medium"
+        android:layout_weight="1"
+        android:autofillHints=""
+        android:hint="@string/description"
+        android:inputType="text"
+        android:textAlignment="textStart" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_marginHorizontal="@dimen/margin_medium"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:hint="@string/inventory"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/margin_medium"
+            android:layout_weight="1" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginHorizontal="@dimen/margin_medium"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:gravity="end"
+            android:hint="@string/weight"
+            android:inputType="text" />
+    </LinearLayout>
+
+
+</LinearLayout>

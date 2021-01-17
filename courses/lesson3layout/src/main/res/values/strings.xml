@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">lesson3layout</string>
+
+    <!--  1 screen  -->
+    <string name="sports">Sports</string>
+    <string name="recipes">Recipes</string>
+    <string name="radio">Radio</string>
+    <string name="promotions">Promotions</string>
+    <string name="office">Office</string>
+    <string name="health">Health</string>
+    <string name="family">Family</string>
+    <string name="education">Education</string>
+    <string name="dining">Dining</string>
+    <string name="attractions">Attractions</string>
+
+    <!--  2 screen  -->
+    <string name="photo" type="id">PHOTO</string>
+    <string name="title" type="id">Title</string>
+    <string name="price" type="id">Price</string>
+    <string name="location" type="id">Location</string>
+    <string name="description" type="id">Description</string>
+    <string name="inventory" type="id">Inventory</string>
+    <string name="weight" type="id">Weight</string>
+
+    <!--  3 screen  -->
+    <string name="sign_in" type="id">Sign In</string>
+    <string name="email" type="id">Email</string>
+    <string name="password" type="id">Password</string>
+    <string name="remember" type="id">Remember</string>
+    <string name="forgot_password" type="id">Forgot password?</string>
+    <string name="just_sign_in" type="id">* Just sign in</string>
+
+    <!--  4 screen  -->
+    <string name="android">Android</string>
+
+    <string name="posts">Posts</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+
+    <string name="address">Address</string>
+    <string name="username">Username</string>
+
+    <string name="directions">Directions</string>
+    <string name="website">Website</string>
+    <string name="save">Save</string>
+    <string name="call">Call</string>
+
+    <!--  5 screen  -->
+    <string name="android_course">Android course</string>
+    <string name="layouts">Layouts</string>
+    <string name="views">Views</string>
+    <string name="certificated">Certificated</string>
+
+
+</resources>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/third_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.33" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/second_third_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.66" />
+
+    <TextView
+        android:id="@+id/photo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/grey"
+        android:gravity="center"
+        android:text="@string/photo"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="42sp"
+
+        android:textStyle="bold"
+
+        app:layout_constraintBottom_toTopOf="@id/title"
+
+        app:layout_constraintDimensionRatio="2:1"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintVertical_chainStyle="spread_inside" />
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/photo"
+        android:layout_alignBottom="@id/photo"
+        android:layout_gravity="bottom|end"
+
+        android:contentDescription="@string/photo"
+        android:padding="8dp"
+        android:src="@drawable/ic_baseline_camera_alt_24"
+        app:layout_constraintBottom_toBottomOf="@id/photo"
+        app:layout_constraintRight_toRightOf="@id/photo" />
+
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/photo"
+        android:layout_marginHorizontal="8dp"
+        android:autofillHints=""
+        android:hint="@string/title"
+        android:inputType="text"
+        android:textAlignment="textStart"
+
+        app:layout_constraintBottom_toTopOf="@id/price"
+
+        app:layout_constraintTop_toBottomOf="@id/photo" />
+
+
+    <EditText
+        android:id="@+id/price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:autofillHints=""
+        android:hint="@string/price"
+        android:inputType="text"
+        android:textAlignment="textStart"
+        app:layout_constraintBottom_toTopOf="@id/description"
+
+        app:layout_constraintEnd_toStartOf="@+id/third_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:autofillHints=""
+        android:hint="@string/location"
+
+        android:inputType="text"
+        android:textAlignment="textStart"
+        app:layout_constraintBottom_toTopOf="@+id/description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/third_guideline"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:autofillHints=""
+        android:hint="@string/description"
+        android:inputType="text"
+        android:textAlignment="textStart"
+        app:layout_constraintBottom_toTopOf="@id/inventor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/price" />
+
+
+    <EditText
+        android:id="@+id/inventor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="@dimen/margin_normal"
+
+        android:layout_weight="50"
+        android:autofillHints=""
+        android:hint="@string/inventory"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="@id/vertical_guideline"
+        app:layout_constraintEnd_toStartOf="@id/third_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description" />
+
+
+    <EditText
+        android:id="@+id/weight"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginHorizontal="8dp"
+        android:layout_weight="50"
+
+        android:autofillHints=""
+        android:gravity="end"
+        android:hint="@string/weight"
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@id/inventor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/second_third_guideline"
+        app:layout_constraintTop_toBottomOf="@id/description"
+
+
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
