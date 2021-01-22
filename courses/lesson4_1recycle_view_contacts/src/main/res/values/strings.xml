@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">lesson4_1recycle_view_contacts</string>
+    <string name="app_name">LayoutExample</string>
+    <string name="text">Text</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone number</string>
+    <string name="email">Email</string>
+    <string name="add_contact">Add Contact</string>
+    <string name="edit_contact">Edit Contact</string>
+    <string name="remove">Remove</string>
+    <string name="search">Search</string>
 </resources>
