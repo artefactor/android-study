@@ -1,10 +1,13 @@
 package by.academy.lesson4.part1.contacts;
 
-public class DataItem {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class DataItem implements Serializable {
 
     private String title;
     private String contact;
-    private boolean contactMail;
+    private final boolean contactMail;
 
     public DataItem(String title, String contact) {
         this(title, contact, contact.contains("@"));
@@ -36,4 +39,22 @@ public class DataItem {
         return title;
     }
 
+    public void copyFrom(DataItem item) {
+        this.contact = item.contact;
+        this.title = item.title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DataItem dataItem = (DataItem) o;
+        return title.equals(dataItem.title) &&
+                contact.equals(dataItem.contact);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, contact);
+    }
 }

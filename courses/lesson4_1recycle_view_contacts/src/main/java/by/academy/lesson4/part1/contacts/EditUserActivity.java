@@ -6,7 +6,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import static by.academy.lesson4.part1.contacts.MainActivity.ITEMS;
+import static by.academy.lesson4.part1.contacts.MainActivity.EDIT;
+import static by.academy.lesson4.part1.contacts.MainActivity.ITEM;
+import static by.academy.lesson4.part1.contacts.MainActivity.REMOVE;
 
 
 public class EditUserActivity extends AppCompatActivity {
@@ -17,9 +19,7 @@ public class EditUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_user);
 
         Intent intent = getIntent();
-        int index = intent.getIntExtra("index", -1);
-
-        DataItem dataItem = ITEMS.get(index);
+        DataItem dataItem = (DataItem) intent.getSerializableExtra(ITEM);
 
         TextView contactView = findViewById(R.id.textViewContact);
         contactView.setText(dataItem.getContact());
@@ -28,14 +28,17 @@ public class EditUserActivity extends AppCompatActivity {
 
 
         findViewById(R.id.removeBUtton).setOnClickListener(view -> {
-            setResult(RESULT_OK);
+            Intent data = new Intent();
+            data.putExtra(REMOVE, true);
+            setResult(RESULT_OK, data);
             finish();
         });
         findViewById(R.id.saveBUtton).setOnClickListener(view -> {
             Intent data = new Intent();
             dataItem.setContact(String.valueOf(contactView.getText()));
             dataItem.setTitle(String.valueOf(titleView.getText()));
-            data.putExtra("edit", true);
+            data.putExtra(EDIT, true);
+            data.putExtra(ITEM, dataItem);
             setResult(RESULT_OK, data);
             finish();
         });

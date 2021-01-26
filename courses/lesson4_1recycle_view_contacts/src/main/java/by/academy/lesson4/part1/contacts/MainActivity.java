@@ -31,13 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE = 21;
 
-    static List<DataItem> ITEMS = new ArrayList<DataItem>() {{
-        add(new DataItem("Ann", "+23456"));
-        add(new DataItem("Mike", "yu@tt.com"));
-        add(new DataItem("Tom", "+74564"));
-        add(new DataItem("Sat", "+63466"));
-        add(new DataItem("Kimberly", "fgfg@dfdf.cim"));
-    }};
+    public static final String ADD = "add";
+    public static final String ITEM = "item";
+    public static final String REMOVE = "remove";
+    public static final String EDIT = "edit";
+
     private int position;
     private int index;
     private DataItemAdapter adapter;
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
-        adapter = new DataItemAdapter(new ArrayList<>(ITEMS), this.getResources());
+        adapter = new DataItemAdapter(new ArrayList<>(DataStorage.getInstance().getItems()), this.getResources());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
@@ -86,16 +84,26 @@ public class MainActivity extends AppCompatActivity {
         if (REQUEST_CODE != requestCode) {
             return;
         }
+        Log.i("edit", "returned data is not null " + (data != null));
+        if (resultCode == RESULT_OK && data != null) {
+            if (data.hasExtra(EDIT)) {
+                DataItem item = (DataItem) data.getSerializableExtra(ITEM);
+                DataItem dataItem = DataStorage.getInstance().getItems().get(index);
 
-        if (resultCode == RESULT_OK) {
-            if (data != null && data.hasExtra("edit")) {
-                adapter.update(position);
-
-            } else if (data != null && data.hasExtra("add")) {
-                adapter.addItem(ITEMS.get(ITEMS.size() - 1));
-
-            } else {
-                ITEMS.remove(index);
+                if (!dataItem.equals(item)) {
+                    dataItem.copyFrom(item);
+                    adapter.update(position);
+                }
+                return;
+            }
+            if (data.hasExtra(ADD)) {
+                DataItem item = (DataItem) data.getSerializableExtra(ITEM);
+                DataStorage.getInstance().getItems().add(item);
+                adapter.addItem(item);
+                return;
+            }
+            if (data.hasExtra(REMOVE)) {
+                DataStorage.getInstance().getItems().remove(index);
                 adapter.remove(position);
             }
         }
@@ -117,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
         this.position = position;
         this.index = index;
         Intent intent = new Intent(MainActivity.this, EditUserActivity.class);
-        intent.putExtra("index", index);
+        DataItem dataItem = DataStorage.getInstance().getItems().get(index);
+        intent.putExtra(ITEM, dataItem);
         startActivityForResult(intent, REQUEST_CODE);
     }
 
@@ -152,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         public void addItem(DataItem dataItem) {
             if (dataItemList != null) {
                 dataItemList.add(dataItem);
-                notifyItemInserted(ITEMS.size() - 1);
+                notifyItemInserted(DataStorage.getInstance().getItems().size() - 1);
             }
         }
 
@@ -160,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         public void filter(Editable filterString) {
             Log.i("search", "" + filterString);
             dataItemList.clear();
-            ArrayList<DataItem> newItems = new ArrayList<>(MainActivity.ITEMS);
+            ArrayList<DataItem> newItems = new ArrayList<>(DataStorage.getInstance().getItems());
             String lowerCase = filterString.toString().toLowerCase();
             newItems.removeIf(
                     r -> !(r.getTitle().toLowerCase().contains(lowerCase) ||
@@ -205,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 contactView.setText(dataItem.getContact());
 
                 textView.setText(dataItem.getTitle());
-                View.OnClickListener listener = v -> edit(position, ITEMS.indexOf(dataItemList.get(position)));
+                View.OnClickListener listener = v -> edit(position, DataStorage.getInstance().getItems().indexOf(dataItemList.get(position)));
 
                 itemView.setOnClickListener(listener);
             }

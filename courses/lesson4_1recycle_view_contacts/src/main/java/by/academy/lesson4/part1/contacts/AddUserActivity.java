@@ -7,8 +7,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import static by.academy.lesson4.part1.contacts.MainActivity.ITEMS;
-
 public class AddUserActivity extends AppCompatActivity {
 
     private boolean contactMail;
@@ -47,9 +45,9 @@ public class AddUserActivity extends AppCompatActivity {
                     contactMail
             );
 
-            ITEMS.add(dataItem);
             Intent data = new Intent();
-            data.putExtra("add", true);
+            data.putExtra(MainActivity.ADD, true);
+            data.putExtra(MainActivity.ITEM, dataItem);
             setResult(RESULT_OK, data);
             finish();
         });
