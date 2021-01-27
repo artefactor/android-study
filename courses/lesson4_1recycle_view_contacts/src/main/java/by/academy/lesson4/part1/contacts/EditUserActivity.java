@@ -6,9 +6,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static by.academy.lesson4.part1.contacts.MainActivity.*;
 import static by.academy.lesson4.part1.contacts.MainActivity.EDIT;
 import static by.academy.lesson4.part1.contacts.MainActivity.ITEM;
 import static by.academy.lesson4.part1.contacts.MainActivity.REMOVE;
+import static java.lang.String.valueOf;
 
 
 public class EditUserActivity extends AppCompatActivity {
@@ -19,7 +21,7 @@ public class EditUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_user);
 
         Intent intent = getIntent();
-        DataItem dataItem = (DataItem) intent.getSerializableExtra(ITEM);
+        DataItem dataItem = intent.getParcelableExtra(ITEM);
 
         TextView contactView = findViewById(R.id.textViewContact);
         contactView.setText(dataItem.getContact());
@@ -29,7 +31,8 @@ public class EditUserActivity extends AppCompatActivity {
 
         findViewById(R.id.removeBUtton).setOnClickListener(view -> {
             Intent data = new Intent();
-            data.putExtra(REMOVE, true);
+            data.putExtra(COMMAND, REMOVE);
+            data.putExtra(ITEM, dataItem);
             setResult(RESULT_OK, data);
             finish();
         });

@@ -1,9 +1,11 @@
 package by.academy.lesson4.part1.contacts;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Objects;
 
-public class DataItem implements Serializable {
+public class DataItem implements Parcelable{
 
     private String title;
     private String contact;
@@ -17,6 +19,36 @@ public class DataItem implements Serializable {
         this.title = title;
         this.contact = contact;
         this.contactMail = contactMail;
+    }
+
+    protected DataItem(Parcel in) {
+        title = in.readString();
+        contact = in.readString();
+        contactMail = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(contact);
+        dest.writeByte((byte) (contactMail ? 1 : 0));
+    }
+
+    public static final Creator<DataItem> CREATOR = new Creator<DataItem>() {
+        @Override
+        public DataItem createFromParcel(Parcel in) {
+            return new DataItem(in);
+        }
+
+        @Override
+        public DataItem[] newArray(int size) {
+            return new DataItem[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public void setTitle(String title) {

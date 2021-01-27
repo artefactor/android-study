@@ -7,6 +7,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static by.academy.lesson4.part1.contacts.MainActivity.ADD;
+import static by.academy.lesson4.part1.contacts.MainActivity.COMMAND;
+import static by.academy.lesson4.part1.contacts.MainActivity.ITEM;
+
 public class AddUserActivity extends AppCompatActivity {
 
     private boolean contactMail;
@@ -25,11 +29,11 @@ public class AddUserActivity extends AppCompatActivity {
                 switch (checkedId) {
                     case R.id.radioButtonPhone:
                         contactMail = false;
-                        contactView.setHint("phone");
+                        contactView.setHint(R.string.phone_number);
                         break;
                     case R.id.radioButtonEmail:
                         contactMail = true;
-                        contactView.setHint("mail");
+                        contactView.setHint(R.string.email);
                         break;
                     default:
                         break;
@@ -46,8 +50,8 @@ public class AddUserActivity extends AppCompatActivity {
             );
 
             Intent data = new Intent();
-            data.putExtra(MainActivity.ADD, true);
-            data.putExtra(MainActivity.ITEM, dataItem);
+            data.putExtra(COMMAND, ADD);
+            data.putExtra(ITEM, dataItem);
             setResult(RESULT_OK, data);
             finish();
         });

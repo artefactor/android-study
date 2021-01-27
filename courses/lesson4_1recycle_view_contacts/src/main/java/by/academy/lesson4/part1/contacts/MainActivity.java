@@ -28,20 +28,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static final String DATA = "data";
     public static final int REQUEST_CODE = 21;
 
+    public static final String COMMAND = "cmd";
     public static final String ADD = "add";
     public static final String ITEM = "item";
     public static final String REMOVE = "remove";
     public static final String EDIT = "edit";
 
     private int position;
-    private int index;
     private DataItemAdapter adapter;
+    private DataStorage dataStorage;
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (dataStorage != null) {
+            Log.d("data", "Данные сохранены");
+            outState.putParcelable(DATA, dataStorage);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            dataStorage = savedInstanceState.getParcelable(DATA);
+        } else {
+            dataStorage = new DataStorage();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -49,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
-        adapter = new DataItemAdapter(new ArrayList<>(DataStorage.getInstance().getItems()), this.getResources());
+        adapter = new DataItemAdapter(new ArrayList<>(dataStorage.getItems()), this.getResources());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
@@ -84,27 +100,21 @@ public class MainActivity extends AppCompatActivity {
         if (REQUEST_CODE != requestCode) {
             return;
         }
-        Log.i("edit", "returned data is not null " + (data != null));
-        if (resultCode == RESULT_OK && data != null) {
-            if (data.hasExtra(EDIT)) {
-                DataItem item = (DataItem) data.getSerializableExtra(ITEM);
-                DataItem dataItem = DataStorage.getInstance().getItems().get(index);
-
-                if (!dataItem.equals(item)) {
-                    dataItem.copyFrom(item);
-                    adapter.update(position);
-                }
-                return;
-            }
-            if (data.hasExtra(ADD)) {
-                DataItem item = (DataItem) data.getSerializableExtra(ITEM);
-                DataStorage.getInstance().getItems().add(item);
-                adapter.addItem(item);
-                return;
-            }
-            if (data.hasExtra(REMOVE)) {
-                DataStorage.getInstance().getItems().remove(index);
-                adapter.remove(position);
+        if (resultCode == RESULT_OK && data != null && data.hasExtra(COMMAND)) {
+            DataItem item = data.getParcelableExtra(ITEM);
+            String command = data.getStringExtra(COMMAND);
+            Log.i("edit", "returned command " + (command) + "pos: " + position );
+            switch (command){
+                case EDIT:
+                    adapter.update(position, item);
+                    return;
+                case ADD:
+                    dataStorage.getItems().add(item);
+                    adapter.addItem(item);
+                    return;
+                case REMOVE:
+                    adapter.remove(position);
+                    dataStorage.getItems().remove(item);
             }
         }
     }
@@ -121,12 +131,10 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-    private void edit(int position, int index) {
-        this.position = position;
-        this.index = index;
+    private void edit(DataItem dataItem, int position) {
         Intent intent = new Intent(MainActivity.this, EditUserActivity.class);
-        DataItem dataItem = DataStorage.getInstance().getItems().get(index);
         intent.putExtra(ITEM, dataItem);
+        this.position = position;
         startActivityForResult(intent, REQUEST_CODE);
     }
 
@@ -161,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         public void addItem(DataItem dataItem) {
             if (dataItemList != null) {
                 dataItemList.add(dataItem);
-                notifyItemInserted(DataStorage.getInstance().getItems().size() - 1);
+                notifyItemInserted(dataStorage.getItems().size() - 1);
             }
         }
 
@@ -169,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         public void filter(Editable filterString) {
             Log.i("search", "" + filterString);
             dataItemList.clear();
-            ArrayList<DataItem> newItems = new ArrayList<>(DataStorage.getInstance().getItems());
+            ArrayList<DataItem> newItems = new ArrayList<>(dataStorage.getItems());
             String lowerCase = filterString.toString().toLowerCase();
             newItems.removeIf(
                     r -> !(r.getTitle().toLowerCase().contains(lowerCase) ||
@@ -185,8 +193,13 @@ public class MainActivity extends AppCompatActivity {
             notifyItemRemoved(position);
         }
 
-        public void update(int position) {
-            notifyItemChanged(position);
+        public void update(int position, DataItem item) {
+            DataItem dataItem = dataItemList.get(position);
+
+            if (!dataItem.equals(item)) {
+                dataItem.copyFrom(item);
+                notifyItemChanged(position);
+            }
         }
 
         class DataItemViewHolder extends RecyclerView.ViewHolder {
@@ -206,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             void bind(DataItem dataItem, int position) {
+                Log.i("Bind", "bind: " + position);
                 int image = dataItem.isContactMail() ? R.drawable.ic_baseline_contact_mail_24 : R.drawable.ic_baseline_contact_phone_24;
                 imageView.setImageResource(image);
                 imageView.setBackgroundColor(dataItem.isContactMail() ?
@@ -214,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                 contactView.setText(dataItem.getContact());
 
                 textView.setText(dataItem.getTitle());
-                View.OnClickListener listener = v -> edit(position, DataStorage.getInstance().getItems().indexOf(dataItemList.get(position)));
+                View.OnClickListener listener = v -> edit(dataItem, dataItemList.indexOf(dataItem));
 
                 itemView.setOnClickListener(listener);
             }
