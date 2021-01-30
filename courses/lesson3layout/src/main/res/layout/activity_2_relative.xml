@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+    <TextView
+        android:id="@+id/photo"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+
+        android:layout_weight="1"
+        android:background="@color/grey"
+        android:gravity="center"
+
+        android:text="@string/photo"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="42sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/photo"
+
+        android:layout_alignBottom="@id/photo"
+        android:layout_gravity="bottom|end"
+        android:contentDescription="@string/photo"
+
+        android:padding="8dp"
+        android:src="@drawable/ic_baseline_camera_alt_24" />
+
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/photo"
+        android:layout_marginHorizontal="8dp"
+        android:autofillHints=""
+        android:hint="@string/title"
+        android:inputType="text"
+        android:textAlignment="textStart" />
+
+
+    <EditText
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_marginHorizontal="8dp"
+        android:autofillHints=""
+        android:hint="@string/price"
+        android:inputType="text"
+        android:textAlignment="textStart" />
+
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/price"
+        android:layout_alignParentRight="true"
+        android:layout_marginHorizontal="8dp"
+        android:layout_toRightOf="@+id/price"
+
+        android:autofillHints=""
+        android:hint="@string/location"
+        android:inputType="text"
+        android:textAlignment="textStart" />
+
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/price"
+        android:layout_alignParentLeft="true"
+        android:layout_marginHorizontal="8dp"
+        android:autofillHints=""
+        android:hint="@string/description"
+        android:inputType="text"
+        android:textAlignment="textStart" />
+
+
+    <EditText
+        android:id="@+id/inventor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/description"
+        android:layout_gravity="start"
+        android:layout_marginHorizontal="8dp"
+        android:layout_weight="50"
+        android:autofillHints=""
+        android:hint="@string/inventory"
+        android:inputType="text" />
+
+
+    <EditText
+        android:id="@+id/weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/description"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="end"
+        android:layout_marginHorizontal="8dp"
+        android:layout_weight="50"
+        android:autofillHints=""
+        android:gravity="end"
+        android:hint="@string/weight"
+        android:inputType="number" />
+
+
+</android.widget.RelativeLayout>
