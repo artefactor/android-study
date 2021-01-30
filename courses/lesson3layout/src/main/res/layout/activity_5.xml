@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="9">
+
+    <!--  search bar -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="@dimen/margin_small"
+            android:text="@string/android_course"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/margin_small"
+            android:background="@drawable/ic_baseline_search_24" />
+
+    </RelativeLayout>
+
+
+    <!--  photo card -->
+    <RelativeLayout
+        style="@style/card"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+
+        <FrameLayout
+            android:id="@+id/card_layouts0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:background="@color/grey">
+
+            <TextView
+                style="@style/photo_text"
+                android:text="@string/photo" />
+
+
+            <TextView
+                style="@style/cart_text"
+                android:text="@string/certificated" />
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/icon01"
+            style="@style/card_action_button"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_baseline_share_24" />
+
+        <ImageView
+            android:id="@+id/icon02"
+            style="@style/card_action_button"
+            android:layout_toLeftOf="@+id/icon01"
+            android:background="@drawable/ic_baseline_bookmark_24" />
+
+        <ImageView
+            android:id="@+id/icon03"
+            style="@style/card_action_button"
+            android:layout_toLeftOf="@+id/icon02"
+            android:background="@drawable/ic_baseline_favorite_24" />
+    </RelativeLayout>
+
+    <!--  horizontal cards -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <RelativeLayout
+            style="@style/card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:id="@+id/card_layouts1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:background="@color/grey">
+
+                <TextView
+                    style="@style/cart_text"
+                    android:text="@string/layouts" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/icon11"
+                style="@style/card_action_button"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_baseline_share_24" />
+
+            <ImageView
+                android:id="@+id/icon12"
+                style="@style/card_action_button"
+                android:layout_toLeftOf="@+id/icon11"
+                android:background="@drawable/ic_baseline_bookmark_24" />
+
+            <ImageView
+                android:id="@+id/icon13"
+                style="@style/card_action_button"
+                android:layout_toLeftOf="@+id/icon12"
+                android:background="@drawable/ic_baseline_favorite_24" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:id="@+id/card_layouts2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:background="@color/grey">
+
+                <TextView
+                    style="@style/cart_text"
+                    android:text="@string/views" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/icon21"
+                style="@style/card_action_button"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_baseline_share_24" />
+
+            <ImageView
+                android:id="@+id/icon22"
+                style="@style/card_action_button"
+                android:layout_toLeftOf="@+id/icon21"
+                android:background="@drawable/ic_baseline_bookmark_24" />
+
+            <ImageView
+                android:id="@+id/icon23"
+                style="@style/card_action_button"
+                android:layout_toLeftOf="@+id/icon22"
+                android:background="@drawable/ic_baseline_favorite_24"
+
+                />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
