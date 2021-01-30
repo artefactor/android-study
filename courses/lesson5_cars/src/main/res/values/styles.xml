@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <style name="textInput">
+        <item name="android:layout_margin">32dp</item>
+    </style>
+
+    <style name="flowButton">
+        <item name="android:layout_margin">32dp</item>
+    </style>
+
+    <style name="buttonToolbar">
+        <item name="android:backgroundTint">@color/teal_700</item>
+        <item name="android:tint">@color/white</item>
+    </style>
+
+    <style name="toolbar">
+        <item name="android:background">@color/teal_700</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="toolbarTextlight">
+        <item name="android:layout_gravity">fill_horizontal|center_vertical</item>
+        <item name="android:layout_marginRight">32dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="toolbarText">
+        <item name="android:layout_gravity">fill_horizontal|center_vertical</item>
+        <item name="android:layout_marginRight">32dp</item>
+        <item name="android:layout_marginLeft">32dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="searchTextStyle">
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:inputType">text</item>
+        <item name="android:elegantTextHeight">true</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="buttonBig" parent="textInput">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginVertical" tools:targetApi="o">16dp</item>
+        <item name="android:layout_marginBottom">106dp</item>
+        <item name="android:background">@color/purple_500</item>
+    </style>
+
+    <style name="card">
+        <item name="android:paddingTop">@dimen/margin_small</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:paddingLeft">@dimen/margin_small</item>
+        <item name="android:paddingRight">@dimen/margin_small</item>
+        <item name="android:background">@android:drawable/dialog_holo_light_frame</item>
+    </style>
+
+</resources>

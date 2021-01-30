@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="margin_normal">32dp</dimen>
+    <dimen name="margin_big">50dp</dimen>
+    <dimen name="margin_medium">12dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+
+    <dimen name="text_button">20sp</dimen>
+    <dimen name="text_small">12sp</dimen>
+</resources>
