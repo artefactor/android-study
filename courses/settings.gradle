@@ -1,3 +1,4 @@
+include ':photoapplication'
 include ':lesson3layout'
 include ':lesson1colors'
 include ':lesson2activity'
