@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,12 +26,21 @@ import androidx.core.content.FileProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+enum FileStorage {
+    INTERNAL, EXTERNAL
+}
 
 public class MainPhotoActivity extends AppCompatActivity {
 
@@ -40,8 +51,10 @@ public class MainPhotoActivity extends AppCompatActivity {
     static final int CAPTURE_IMAGE_REQUEST = 16;
 
     private ImageView imageView;
-
+    private FileStorage currentImageStorage = FileStorage.INTERNAL;
     private String mCurrentPhotoPath;
+    private RadioGroup radioGroup;
+    private TextView storageText;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -51,7 +64,33 @@ public class MainPhotoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        setSupportActionBar(findViewById(R.id.toolbar));
         imageView = findViewById(R.id.imageView);
-        setImage(imageView, Storage.getInitialPhotoPath());
+        storageText = findViewById(R.id.textViewStorage);
+        radioGroup = findViewById(R.id.radioButtonStorage);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case -1:
+                        Toast.makeText(getApplicationContext(), "Ничего не выбрано",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.radioButtonInternal:
+                        currentImageStorage = FileStorage.INTERNAL;
+                        Toast.makeText(getApplicationContext(), currentImageStorage.name(),
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.radioButtonExternal:
+                        currentImageStorage = FileStorage.EXTERNAL;
+                        Toast.makeText(getApplicationContext(), currentImageStorage.name(),
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                storageText.setText(getFileStorageDir().getAbsolutePath());
+            }
+        });
+        storageText.setText(getFileStorageDir().getAbsolutePath());
+        setImage(imageView, readLastImageFileName());
 
         this.<FloatingActionButton>findViewById(R.id.fab).setOnClickListener(view -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -127,9 +166,9 @@ public class MainPhotoActivity extends AppCompatActivity {
             File photoFile = createImageFile();
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                 mCurrentPhotoPath = photoFile.getAbsolutePath();
+                mCurrentPhotoPath = photoFile.getAbsolutePath();
                 Log.i(TAG, "Photo path:" + mCurrentPhotoPath);
-    //          displayMessage(getBaseContext(), mCurrentPhotoPath);
+                //          displayMessage(getBaseContext(), mCurrentPhotoPath);
 
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.mydomain.fileprovider",
@@ -141,22 +180,40 @@ public class MainPhotoActivity extends AppCompatActivity {
             // Error occurred while creating the File
             displayMessage(getBaseContext(), ex.getMessage());
         }
-
     }
 
 
-    private File createImageFile() {
+    private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File storageDir = getExternalFilesDir("images");
-        File storageDir = new File(getFilesDir(), "images");
-//           File storageDir = getFilesDir();
+        File storageDir = getFileStorageDir();
 
+        if (storageDir.exists() && !storageDir.isDirectory()) {
+            boolean delete = storageDir.delete();
+        }
+        if (!storageDir.exists()) {
+            boolean mkdir = storageDir.mkdir();
+        }
         Log.i(TAG, "createImageFile: " + storageDir);
-        Log.i(TAG, String.format("createImageFile %s %s " ,storageDir.exists(), storageDir.canWrite()));
-        return new File(storageDir, imageFileName);
+        Log.i(TAG, String.format("createImageFile %s %s ", storageDir.exists(), storageDir.canWrite()));
+        File file = new File(storageDir, imageFileName);
+        if (!file.exists()) {
+            boolean newFile = file.createNewFile();
+        }
+        return file;
+    }
+
+    private File getFileStorageDir() {
+        switch (currentImageStorage) {
+            case EXTERNAL:
+                return getExternalFilesDir("images");
+            case INTERNAL:
+        }
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File storageDir = getFilesDir();
+        return new File(getFilesDir(), "images");
+
     }
 
     @Override
@@ -167,8 +224,9 @@ public class MainPhotoActivity extends AppCompatActivity {
         //Bitmap imageBitmap = (Bitmap) extras.get("data");
         //imageView.setImageBitmap(imageBitmap);
 
-        if (requestCode == CAPTURE_IMAGE_REQUEST/* && resultCode == RESULT_OK*/) {
+        if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             setImage(imageView, mCurrentPhotoPath);
+            writeLastImageFileName(mCurrentPhotoPath);
         } else {
             displayMessage(getBaseContext(), "Request cancelled or something went wrong.");
         }
@@ -189,4 +247,42 @@ public class MainPhotoActivity extends AppCompatActivity {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String readLastImageFileName() {
+        String filename = "lastImage";
+        Log.i("files", "readLastImageFileName: reading text from file:" + filename);
+        Context context = getApplicationContext();
+        File file = new File(context.getFilesDir(), filename);
+        try {
+            FileReader reader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            String lastLine = bufferedReader.lines().
+                    reduce((first, second) -> second)
+                    .orElse(null);
+            bufferedReader.close();
+            Log.i("files", "readed:" + lastLine );
+            return lastLine;
+        } catch (IOException e) {
+            System.out.println(e);
+            Log.e("files", "error during work with file", e);
+        }
+        return null;
+    }
+    private void writeLastImageFileName(String mCurrentPhotoPath) {
+        String filename = "lastImage";
+        Log.i("files", "writeLastImageFileName: writing text '" +
+                mCurrentPhotoPath +
+                "' to file:" + filename);
+        Context context = getApplicationContext();
+        File file = new File(context.getFilesDir(), filename);
+        try {
+            FileWriter writer = new FileWriter(file, true);
+            BufferedWriter bufferWriter = new BufferedWriter(writer);
+            bufferWriter.write(mCurrentPhotoPath + "\n");
+            bufferWriter.close();
+        } catch (IOException e) {
+            System.out.println(e);
+            Log.e("files", "error during work with file", e);
+        }
+    }
 }
