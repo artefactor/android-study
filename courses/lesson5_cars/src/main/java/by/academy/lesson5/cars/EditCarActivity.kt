@@ -1,24 +1,38 @@
 package by.academy.lesson5.cars
 
+import android.Manifest
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import by.academy.lesson5.cars.PermissionsHelper.checkPermission
+import by.academy.lesson5.cars.PermissionsHelper.notGivenPermission3
+import by.academy.lesson5.cars.UiUtils.displayMessage
+import by.academy.lesson5.cars.UiUtils.setPhoto
 import by.academy.lesson5.cars.data.CarInfoEntity
+import by.academy.utils.FilesAndImagesUtils.createImageFile
+import by.academy.utils.LoggingTags.TAG_PHOTO
 
 
 class EditCarActivity : AppCompatActivity() {
 
-    private val REQUEST_CODE_PHOTO = 1
-    lateinit var ivPhoto: ImageView
-    private var imageUri: Uri? = null
+    //    For checking manual permissions for API level 23
+    private val MY_PERMISSIONS_REQUEST_CAMERA = 22
+    private val CAPTURE_IMAGE_REQUEST = 16
 
+    lateinit var photoBack: ImageView
+    lateinit var photo: ImageView
+    private var mCurrentPhotoPath: String? = null
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.car_add_edit)
@@ -34,9 +48,11 @@ class EditCarActivity : AppCompatActivity() {
         val producerView = findViewById<TextView>(R.id.viewTextProducer).apply { text = dataItem.producer }
         val modelView = findViewById<TextView>(R.id.viewTextModel).apply { text = dataItem.model }
         val plateNumberView = findViewById<TextView>(R.id.viewTextPlateNumber).apply { text = dataItem.plateNumber }
+        mCurrentPhotoPath = dataItem.imagePath
 
-        ivPhoto = findViewById<View>(R.id.imagePreviewBackground) as ImageView
-//        setPhoto(ivPhoto, dataItem.imagePath)
+        photoBack = findViewById<View>(R.id.imagePreviewBackground) as ImageView
+        photo = findViewById<View>(R.id.imagePreview) as ImageView
+        setPhoto()
 
         findViewById<View>(R.id.removeBUtton).setOnClickListener {
             val data = Intent()
@@ -46,15 +62,14 @@ class EditCarActivity : AppCompatActivity() {
             finish()
         }
 
-         var imagePath: String = ""
-
         findViewById<View>(R.id.addBUtton).setOnClickListener {
             val updatedDataItem = CarInfoEntity(dataItem.id,
                     ownerView.text.toString(),
                     producerView.text.toString(),
                     modelView.text.toString(),
                     plateNumberView.text.toString(),
-                    imagePath)
+                    mCurrentPhotoPath)
+
             val data = Intent().apply {
                 action = MainActivity.EDIT
                 putExtra(MainActivity.ITEM, updatedDataItem)
@@ -68,45 +83,87 @@ class EditCarActivity : AppCompatActivity() {
             finish()
         }
 
-        findViewById<View>(R.id.imageEdit).setOnClickListener(function())
+        findViewById<View>(R.id.imageEdit).setOnClickListener(captureImageMultiVersion())
     }
 
-    private fun function(): (View) -> Unit = {
-        d()
+
+    //--------------------   IMAGE   ------------------------
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun captureImageMultiVersion(): (View) -> Unit = {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            captureImage()
+        } else {
+            displayMessage(baseContext, " Capture Image function for 4.4.4 and lower is not supported")
+        }
     }
 
-    private fun d() {
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private fun captureImage() {
+        // check permission on storage and camera
+        val permissions = arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        if (checkPermission(this, permissions, MY_PERMISSIONS_REQUEST_CAMERA)) {
+            Log.i(TAG_PHOTO, "requestPermissions " + permissions.contentToString())
+            captureImageCameraIfPermitted()
+        }
     }
 
-    private fun setPhoto(ivPhoto: ImageView, imagePath: String?) {
-        //        TODO("Not yet implemented")
-        // photo
-        imageUri = Uri.parse("/storage/emulated/0/DCIM/Camera/IMG_20210203_170116.jpg")
-        val bitmap = BitmapFactory.decodeFile("/storage/emulated/0/DCIM/Camera/IMG_20210203_170116.jpg")
-        Log.d("photo", "Photo uri: " + imageUri)
-        ivPhoto.setImageBitmap(bitmap)
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        Log.i(TAG_PHOTO, "onRequestPermissionsResult: " + requestCode + "; grantResults: " + grantResults.contentToString())
+        if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA) {
+            notGivenPermission3(grantResults, permissions,
+                    this::captureImageCameraIfPermitted,
+                    { message -> displayMessage(baseContext, message) }
+            )
+        }
+    }
+
+    private fun captureImageCameraIfPermitted() {
+        Log.i(TAG_PHOTO, "captureImage: takePictureIntent")
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        /*FIXME it  doesn't work.
+            Денис, не понял про этот метод. Встречал его в нескольких примерах,
+            на одной версии андроида у меня он работал, на другой - нет.
+            Он от версии зависит?
+            Или он вообще не нужен?
+        */
+//        if (takePictureIntent.resolveActivity(getPackageManager()) == null) {
+//            displayMessage(getBaseContext(), "Null during resolveActivity method");
+//            return;
+//        }
+
+        try {
+            val photoFile = createImageFile(filesDir)
+            // Continue only if the File was successfully created
+            mCurrentPhotoPath = photoFile.absolutePath
+            Log.i(TAG_PHOTO, "Photo path:$mCurrentPhotoPath")
+
+            val photoURI = FileProvider.getUriForFile(applicationContext,
+                    BuildConfig.APPLICATION_ID + ".provider", photoFile)
+            Log.i(TAG_PHOTO, "Photo URI:$photoURI")
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+            startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST)
+        } catch (ex: Exception) {
+            // Error occurred while creating the File
+            Log.e(TAG_PHOTO, "exception ", ex)
+            displayMessage(baseContext, ex.message.toString())
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_PHOTO && resultCode == RESULT_OK) {
-            в(data)
+        if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            setPhoto()
+        } else {
+            displayMessage(baseContext, "Request cancelled or something went wrong.")
         }
     }
 
-
-    private fun ы() {
-    }
-
-    private fun в(data: Intent?) {
-
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        Toast.makeText(this@EditCarActivity, "GET_ACCOUNTS Denied",
-                Toast.LENGTH_SHORT).show()
-
+    private fun setPhoto() {
+        setPhoto(mCurrentPhotoPath, photo, photoBack, resources)
     }
 
 }

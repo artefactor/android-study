@@ -94,6 +94,7 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
         private final TextView plateNumberView;
 
         private final ImageView imageView;
+        private final ImageView imageViewBack;
         private final Resources resources;
 
         public DataItemViewHolder(@NonNull View itemView, Resources resources) {
@@ -103,15 +104,16 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
             producerModelView = itemView.findViewById(R.id.viewTextProducerModel);
 
             imageView = itemView.findViewById(R.id.imagePreview);
+            imageViewBack = itemView.findViewById(R.id.imagePreviewBackground);
 
             this.resources = resources;
         }
 
         void bind(CarInfoEntity dataItem, int position) {
             Log.i(LoggingTags.TAG_BIND, "bind: " + position);
-            int image = R.drawable.ic_baseline_camera_alt_24;
-            imageView.setImageResource(image);
-            imageView.setBackgroundColor(resources.getColor(R.color.purple_200));
+
+            UiUtils.INSTANCE.setPhotoAndInit(dataItem.getImagePath(), imageView, imageViewBack, resources);
+
             ownerView.setText(dataItem.getOwnerName());
             plateNumberView.setText(dataItem.getPlateNumber());
 
