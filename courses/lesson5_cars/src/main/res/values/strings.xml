@@ -2,7 +2,7 @@
     <string name="app_name">Lesson5Cars</string>
 
     <!--    car-->
-    <string name="owner_name">Owner ame</string>
+    <string name="owner_name">Owner name</string>
     <string name="producer">Producer</string>
     <string name="model">Model</string>
     <string name="plate_number">Plate number</string>
@@ -12,7 +12,7 @@
     <string name="car_list">Car list</string>
     <string name="edit_car">Car info</string>
     <string name="remove">Remove</string>
-    <string name="search">Search</string>
+    <string name="search">Producer or PlateNumber</string>
 
     <!--    work-->
     <string name="add_work">Add work</string>

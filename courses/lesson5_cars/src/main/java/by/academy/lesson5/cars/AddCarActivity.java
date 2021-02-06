@@ -6,9 +6,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import by.academy.lesson5.cars.data.CarInfoEntity;
+
 import static android.view.View.INVISIBLE;
 import static by.academy.lesson5.cars.MainActivity.ADD;
-import static by.academy.lesson5.cars.MainActivity.COMMAND;
 import static by.academy.lesson5.cars.MainActivity.ITEM;
 
 public class AddCarActivity extends AppCompatActivity {
@@ -26,18 +27,22 @@ public class AddCarActivity extends AppCompatActivity {
         TextView modelView = findViewById(R.id.viewTextModel);
         TextView plateNumberView = findViewById(R.id.viewTextPlateNumber);
 
-
+        //TODO
+        String imagePath = null;
 
         findViewById(R.id.addBUtton).setOnClickListener(view -> {
-            DataItem dataItem = new DataItem(
+
+            CarInfoEntity dataItem = new CarInfoEntity(
+                    0L,
                     String.valueOf(ownerView.getText()),
                     String.valueOf(producerView.getText()),
                     String.valueOf(modelView.getText()),
-                    String.valueOf(plateNumberView.getText())
+                    String.valueOf(plateNumberView.getText()),
+                    imagePath
             );
 
             Intent data = new Intent();
-            data.putExtra(COMMAND, ADD);
+            data.setAction(ADD);
             data.putExtra(ITEM, dataItem);
             setResult(RESULT_OK, data);
             finish();
@@ -47,7 +52,6 @@ public class AddCarActivity extends AppCompatActivity {
         findViewById(R.id.backButton).setOnClickListener(view -> {
             setResult(RESULT_CANCELED);
             finish();
-
         });
     }
 }
