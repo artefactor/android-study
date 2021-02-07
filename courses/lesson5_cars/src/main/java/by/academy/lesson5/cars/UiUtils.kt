@@ -36,6 +36,9 @@ object UiUtils {
     }
 
     fun setImage(imageView: ImageView, absolutePath: String?) {
+        if (absolutePath == null) {
+            return
+        }
         val myBitmap = BitmapFactory.decodeFile(absolutePath)
         if (myBitmap != null) {
             val width = myBitmap.width

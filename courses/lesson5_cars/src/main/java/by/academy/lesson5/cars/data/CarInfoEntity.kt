@@ -27,17 +27,17 @@ class CarInfoEntity(
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(id)
-        parcel.writeString(ownerName)
-        parcel.writeString(producer)
-        parcel.writeString(model)
-        parcel.writeString(plateNumber)
-        parcel.writeString(imagePath)
+        parcel.apply {
+            writeLong(id)
+            writeString(ownerName)
+            writeString(producer)
+            writeString(model)
+            writeString(plateNumber)
+            writeString(imagePath)
+        }
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<CarInfoEntity> {
         override fun createFromParcel(parcel: Parcel): CarInfoEntity {

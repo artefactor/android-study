@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,20 +18,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import by.academy.lesson5.cars.data.AbstractCarDataStorage;
 import by.academy.lesson5.cars.data.CarInfoEntity;
+import by.academy.lesson5.cars.data.WorkInfoDAO;
+import by.academy.lesson5.cars.data.WorkInfoEntity;
 import by.academy.utils.LoggingTags;
 
 import static android.view.LayoutInflater.from;
 
-class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewHolder> {
+class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataItemViewHolder> {
 
     private final Resources resources;
-    private final AbstractCarDataStorage dataStorage;
-    private final List<CarInfoEntity> dataItemList;
+    private final WorkInfoDAO dataStorage;
+    private final List<WorkInfoEntity> dataItemList;
+    private final CarInfoEntity carDataItem;
 
-    public DataItemAdapter(AbstractCarDataStorage dataStorage, Resources resources) {
-        this.dataItemList = dataStorage.getAllItems();
+    public WorkDataItemAdapter(WorkInfoDAO dataStorage, CarInfoEntity carDataItem, Resources resources,
+                               OnCheckVisibilityListener checkVisibilityListener) {
+        this.carDataItem = carDataItem;
+        this.checkVisibilityListener = checkVisibilityListener;
+        this.dataItemList = dataStorage.getInfo(carDataItem.getId());
         this.dataStorage = dataStorage;
         this.resources = resources;
         checkVisibility();
@@ -54,24 +58,25 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
         this.checkVisibilityListener = checkVisibilityListener;
     }
 
-    interface EditCarListener {
-        void onEditCar(CarInfoEntity dataItem, int position);
+    interface EditWorkListener {
+        void onEditWork(WorkInfoEntity dataItem, int position);
     }
 
-    private EditCarListener editCarListener;
+    private EditWorkListener editWorkListener;
 
-    public void setEditCarListener(EditCarListener editCarListener) {
-        this.editCarListener = editCarListener;
+    public void setEditWorkListener(EditWorkListener editWorkListener) {
+        this.editWorkListener = editWorkListener;
     }
 
-    interface ShowWorkListener {
-        void onShowWorks(CarInfoEntity dataItem, int position);
+    interface AddWorkListener {
+//        void onAddWork(CarInfoEntity dataItem, int position);
+        void onAddWork(CarInfoEntity dataItem);
     }
 
-    private ShowWorkListener showWorkListener;
+    private AddWorkListener addWorkListener;
 
-    public void setShowWorkListener(ShowWorkListener showWorkListener) {
-        this.showWorkListener = showWorkListener;
+    public void setAddWorkListener(AddWorkListener addWorkListener) {
+        this.addWorkListener = addWorkListener;
     }
 
     /*------------------------------------------
@@ -83,7 +88,7 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
     @NonNull
     @Override
     public DataItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = from(parent.getContext()).inflate(R.layout.car_info, parent, false);
+        View view = from(parent.getContext()).inflate(R.layout.work_info, parent, false);
         return new DataItemViewHolder(view, resources);
     }
 
@@ -99,44 +104,44 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
 
     class DataItemViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView producerModelView;
-        private final TextView ownerView;
-        private final TextView plateNumberView;
+        private final TextView viewWorkDate;
+        private final TextView viewWorkName;
+        private final TextView viewCost;
 
-        private final ImageView imageView;
-        private final ImageView imageViewBack;
+//        private final ImageView imageView;
+//        private final ImageView imageViewBack;
         private final Resources resources;
 
         public DataItemViewHolder(@NonNull View itemView, Resources resources) {
             super(itemView);
-            ownerView = itemView.findViewById(R.id.viewTextOwnerName);
-            plateNumberView = itemView.findViewById(R.id.viewTextPlateNumber);
-            producerModelView = itemView.findViewById(R.id.viewTextProducerModel);
+            viewWorkName = itemView.findViewById(R.id.viewTextWorkName);
+            viewCost = itemView.findViewById(R.id.viewTextCost);
+            viewWorkDate = itemView.findViewById(R.id.viewTextDate);
 
-            imageView = itemView.findViewById(R.id.imagePreview);
-            imageViewBack = itemView.findViewById(R.id.imagePreviewBackground);
+//            imageView = itemView.findViewById(R.id.imagePreview);
+//            imageViewBack = itemView.findViewById(R.id.imagePreviewBackground);
 
             this.resources = resources;
         }
 
-        void bind(CarInfoEntity dataItem, int position) {
+        //        private void add() {
+//            Intent intent = new Intent(this, EditWorkActivity.class);
+//            startActivityForResult(intent, REQUEST_CODE);
+//        }
+//
+        void bind(WorkInfoEntity dataItem, int position) {
             Log.i(LoggingTags.TAG_BIND, "bind: " + position);
 
-            UiUtils.INSTANCE.setPhotoAndInit(dataItem.getImagePath(), imageView, imageViewBack, resources);
+//            UiUtils.INSTANCE.setPhotoAndInit(dataItem.getImagePath(), imageView, imageViewBack, resources);
 
-            ownerView.setText(dataItem.getOwnerName());
-            plateNumberView.setText(dataItem.getPlateNumber());
+            viewWorkName.setText(dataItem.getTitle());
+            viewCost.setText("" + dataItem.getCost());
 
-            producerModelView.setText(String.format("%s %s", dataItem.getProducer(), dataItem.getModel()));
+            viewWorkDate.setText(String.format("%s", dataItem.getDate()));
 
-            if (editCarListener != null) {
-                itemView.findViewById(R.id.imageEdit).setOnClickListener(
-                        view -> editCarListener.onEditCar(dataItem, dataItemList.indexOf(dataItem)));
-            }
-
-            if (showWorkListener != null) {
+            if (editWorkListener != null) {
                 itemView.setOnClickListener(
-                        view -> showWorkListener.onShowWorks(dataItem, dataItemList.indexOf(dataItem)));
+                        view -> editWorkListener.onEditWork(dataItem, dataItemList.indexOf(dataItem)));
             }
 
         }
@@ -148,19 +153,19 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
     //
     //------------------------------------------*/
 
-    public void addItem(CarInfoEntity dataItem) {
+    public void addItem(WorkInfoEntity dataItem) {
         dataStorage.add(dataItem);
         if (dataItemList != null) {
             dataItemList.add(dataItem);
-            int position = dataStorage.getAllItems().size() - 1;
+            int position = dataStorage.getInfo(carDataItem.getId()).size() - 1;
             notifyItemInserted(position);
         }
         checkVisibility();
     }
 
-    public void update(CarInfoEntity item, int position) {
+    public void update(WorkInfoEntity item, int position) {
         dataStorage.update(item);
-        CarInfoEntity dataItem = dataItemList.get(position);
+        WorkInfoEntity dataItem = dataItemList.get(position);
         Log.i(LoggingTags.TAG_EDIT, "update from: " + item);
         Log.i(LoggingTags.TAG_EDIT, "update     : " + dataItem);
 
@@ -170,9 +175,9 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
         }
     }
 
-    public void remove(CarInfoEntity item, int position) {
+    public void remove(WorkInfoEntity item, int position) {
         dataItemList.remove(position);
-        dataStorage.remove(item);
+        dataStorage.delete(item);
         notifyItemRemoved(position);
         checkVisibility();
     }
@@ -203,13 +208,11 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
     public void filter(Editable filterString) {
         Log.i(LoggingTags.TAG_SEARCH, "" + filterString);
         dataItemList.clear();
-        List<CarInfoEntity> newItems = new ArrayList(dataStorage.getAllItems());
+        List<WorkInfoEntity> newItems = new ArrayList(dataStorage.getInfo(carDataItem.getId()));
         String lowerCase = filterString.toString().toLowerCase();
         newItems.removeIf(
-                r -> !(Objects.requireNonNull(r.getModel()).toLowerCase().contains(lowerCase) ||
-                        r.getPlateNumber().toLowerCase().contains(lowerCase) ||
-                        r.getProducer().toLowerCase().contains(lowerCase)
-                ));
+                r -> !(Objects.requireNonNull(r.getTitle()).toLowerCase().contains(lowerCase))
+                );
         dataItemList.addAll(newItems);
         notifyDataSetChanged();
         checkVisibility();

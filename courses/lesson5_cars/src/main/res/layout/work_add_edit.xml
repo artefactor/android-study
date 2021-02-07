@@ -5,7 +5,7 @@
     android:id="@+id/itemViewRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".AddCarActivity">
+    tools:context=".EditWorkActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -33,7 +33,7 @@
                 style="@style/toolbarText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/add_car" />
+                android:text="@string/add_work" />
 
             <ImageButton
                 android:id="@+id/addBUtton"
@@ -45,135 +45,94 @@
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <ImageView
-        android:id="@+id/imagePreviewBackground"
+    <TextView
+        android:id="@+id/viewTextDate"
         android:layout_width="0dp"
-        android:layout_height="130dp"
-        android:background="@color/purple_200"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="16dp"
+        android:text="@string/app_date"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
-    <ImageView
-        android:id="@+id/imagePreview"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_margin="32dp"
-        android:background="@color/purple_200"
-        android:src="@drawable/ic_baseline_camera_alt_24"
-        app:layout_constraintBottom_toBottomOf="@id/imagePreviewBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/imagePreviewBackground" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:background="@color/purple_200" />
 
     <View
         android:id="@+id/helper"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toBottomOf="@id/imagePreviewBackground"
-        app:layout_constraintEnd_toEndOf="@id/imagePreviewBackground" />
+        app:layout_constraintBottom_toBottomOf="@id/viewTextDate"
+        app:layout_constraintEnd_toEndOf="@id/viewTextDate" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/imageEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="0dp"
-        android:src="@drawable/ic_baseline_camera_alt_24"
-        app:layout_constraintEnd_toEndOf="@id/imagePreviewBackground"
-        app:layout_constraintTop_toBottomOf="@id/helper"
-        app:tint="@android:color/white" />
 
-    <!--    ownerName-->
+    <!--    WorkName-->
     <TextView
-        android:id="@+id/viewTextOwnerNameTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="4dp"
-        android:layout_marginStart="16dp"
-        android:maxLines="1"
-        android:text="@string/owner_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imagePreviewBackground" />
-
-    <EditText
-        android:id="@+id/viewTextOwnerName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="4dp"
-        android:layout_marginStart="16dp"
-        android:maxLines="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewTextOwnerNameTitle"
-        tools:text="Dorothy" />
-
-    <!--    producer-->
-    <TextView
-        android:id="@+id/viewTextProducerTitle"
+        android:id="@+id/viewTextWorkNameTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="4dp"
         android:maxLines="1"
-        android:text="@string/producer"
-        app:layout_constraintStart_toStartOf="@+id/viewTextProducer"
-        app:layout_constraintTop_toBottomOf="@id/viewTextOwnerName"
+        android:text="@string/work_name"
+        app:layout_constraintStart_toStartOf="@+id/viewTextWorkName"
+        app:layout_constraintTop_toBottomOf="@id/viewTextDate"
         tools:layout_editor_absoluteY="263dp" />
 
     <EditText
-        android:id="@+id/viewTextProducer"
+        android:id="@+id/viewTextWorkName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:maxLines="1"
-        app:layout_constraintBottom_toBottomOf="@+id/viewTextModel"
-        app:layout_constraintEnd_toStartOf="@+id/viewTextModel"
+        app:layout_constraintBottom_toBottomOf="@+id/viewTextCost"
+        app:layout_constraintEnd_toStartOf="@+id/viewTextCost"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewTextProducerTitle"
-        tools:text="Ford" />
+        app:layout_constraintTop_toBottomOf="@+id/viewTextWorkNameTitle"
+        tools:text="Install" />
 
-    <!--    model-->
+    <!--    Cost -->
     <TextView
-        android:id="@+id/viewTextModelTitle"
+        android:id="@+id/viewTextCostTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="4dp"
         android:maxLines="1"
-        android:text="@string/model"
-        app:layout_constraintBaseline_toBaselineOf="@id/viewTextProducerTitle"
-        app:layout_constraintStart_toStartOf="@+id/viewTextModel"
+        android:text="@string/cost"
+        app:layout_constraintBaseline_toBaselineOf="@id/viewTextWorkNameTitle"
+        app:layout_constraintStart_toStartOf="@+id/viewTextCost"
         tools:layout_editor_absoluteY="263dp" />
 
+
     <EditText
-        android:id="@+id/viewTextModel"
+        android:id="@+id/viewTextCost"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="4dp"
+        android:inputType="numberDecimal"
         android:maxLines="1"
-        app:layout_constraintBaseline_toBaselineOf="@id/viewTextProducer"
+        app:layout_constraintBaseline_toBaselineOf="@id/viewTextWorkName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/viewTextProducer"
+        app:layout_constraintStart_toEndOf="@+id/viewTextWorkName"
         tools:layout_editor_absoluteY="285dp"
-        tools:text="Mustang" />
+        tools:text="400" />
 
-    <!--    plateNumber-->
+    <!--    Description-->
     <TextView
-        android:id="@+id/viewTextPlateNumberTitle"
+        android:id="@+id/viewTextDescriptionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="4dp"
         android:layout_marginStart="16dp"
         android:maxLines="1"
-        android:text="@string/plate_number"
+        android:text="@string/description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewTextModel" />
+        app:layout_constraintTop_toBottomOf="@id/viewTextCost" />
 
     <EditText
-        android:id="@+id/viewTextPlateNumber"
+        android:id="@+id/viewTextDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -181,9 +140,16 @@
         android:layout_marginStart="16dp"
         android:maxLines="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewTextPlateNumberTitle"
-        tools:text="1238 KK" />
+        app:layout_constraintTop_toBottomOf="@id/viewTextDescriptionTitle"
+        tools:text="install and tune" />
 
+    <RadioGroup
+        android:id="@+id/radioWorkStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/viewTextDescription">
+
+    </RadioGroup>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/removeBUtton"
@@ -192,6 +158,6 @@
         android:layout_height="wrap_content"
         android:text="@string/remove"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewTextPlateNumber" />
+        app:layout_constraintTop_toBottomOf="@id/radioWorkStatus" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

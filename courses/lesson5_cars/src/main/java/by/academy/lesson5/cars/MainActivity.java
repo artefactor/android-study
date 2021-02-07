@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new DataItemAdapter(dataStorage, this.getResources());
         adapter.setCheckVisibilityListener(this::onCheckVisibility);
         adapter.setEditCarListener(this::edit);
+        adapter.setShowWorkListener(this::showWorks);
         adapter.addFilteringBy(findViewById(R.id.searchView));
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void add() {
-        Intent intent = new Intent(this, AddCarActivity.class);
+        Intent intent = new Intent(this, EditCarActivity.class);
         startActivityForResult(intent, REQUEST_CODE);
     }
 
@@ -101,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(ITEM, dataItem);
         this.position = position;
         startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    private void showWorks(CarInfoEntity dataItem, int position) {
+        Intent intent = new Intent(MainActivity.this, WorkListActivity.class);
+        intent.putExtra(ITEM, dataItem);
+        this.position = position;
+        startActivity(intent);
     }
 
     public void onCheckVisibility(boolean invisible) {

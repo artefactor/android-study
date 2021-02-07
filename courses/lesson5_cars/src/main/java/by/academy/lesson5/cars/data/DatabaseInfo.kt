@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import by.academy.utils.LoggingTags
 
-@Database(entities = [CarInfoEntity::class, WorkInfoEntity::class], version = 3, exportSchema = false)
+@Database(entities = [CarInfoEntity::class, WorkInfoEntity::class], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class DatabaseInfo : RoomDatabase() {
 

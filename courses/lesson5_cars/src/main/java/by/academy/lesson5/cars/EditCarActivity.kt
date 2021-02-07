@@ -27,53 +27,80 @@ class EditCarActivity : AppCompatActivity() {
     private val MY_PERMISSIONS_REQUEST_CAMERA = 22
     private val CAPTURE_IMAGE_REQUEST = 16
 
-    lateinit var photoBack: ImageView
-    lateinit var photo: ImageView
+    private lateinit var photoBack: ImageView
+    private lateinit var photo: ImageView
     private var mCurrentPhotoPath: String? = null
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.car_add_edit)
 
-        val dataItem: CarInfoEntity? = intent.getParcelableExtra(MainActivity.ITEM)
-        if (dataItem == null) {
-            finish()
-            return
-        }
-        findViewById<TextView>(R.id.toolbarTitle).setText(R.string.edit_car)
-
-        val ownerView = findViewById<TextView>(R.id.viewTextOwnerName).apply { text = dataItem.ownerName }
-        val producerView = findViewById<TextView>(R.id.viewTextProducer).apply { text = dataItem.producer }
-        val modelView = findViewById<TextView>(R.id.viewTextModel).apply { text = dataItem.model }
-        val plateNumberView = findViewById<TextView>(R.id.viewTextPlateNumber).apply { text = dataItem.plateNumber }
-        mCurrentPhotoPath = dataItem.imagePath
+        val ownerView = findViewById<TextView>(R.id.viewTextOwnerName)
+        val producerView = findViewById<TextView>(R.id.viewTextProducer)
+        val modelView = findViewById<TextView>(R.id.viewTextModel)
+        val plateNumberView = findViewById<TextView>(R.id.viewTextPlateNumber)
 
         photoBack = findViewById<View>(R.id.imagePreviewBackground) as ImageView
         photo = findViewById<View>(R.id.imagePreview) as ImageView
-        setPhoto()
+        val removeButton = findViewById<View>(R.id.removeBUtton)
 
-        findViewById<View>(R.id.removeBUtton).setOnClickListener {
-            val data = Intent()
-            data.action = MainActivity.REMOVE
-            data.putExtra(MainActivity.ITEM, dataItem)
-            setResult(RESULT_OK, data)
-            finish()
+        val dataItem: CarInfoEntity? = intent.getParcelableExtra(MainActivity.ITEM)
+        //  dataItem is null  -  means a car adding
+        if (dataItem == null) {
+            removeButton.visibility = View.INVISIBLE
+        } else {
+            findViewById<TextView>(R.id.toolbarTitle).setText(R.string.edit_car)
+
+            ownerView.text = dataItem.ownerName
+            producerView.text = dataItem.producer
+            modelView.text = dataItem.model
+            plateNumberView.text = dataItem.plateNumber
+
+            mCurrentPhotoPath = dataItem.imagePath
+
+            setPhoto()
+
+            removeButton.setOnClickListener {
+                val data = Intent()
+                data.action = MainActivity.REMOVE
+                data.putExtra(MainActivity.ITEM, dataItem)
+                setResult(RESULT_OK, data)
+                finish()
+            }
         }
 
         findViewById<View>(R.id.addBUtton).setOnClickListener {
-            val updatedDataItem = CarInfoEntity(dataItem.id,
-                    ownerView.text.toString(),
-                    producerView.text.toString(),
-                    modelView.text.toString(),
-                    plateNumberView.text.toString(),
-                    mCurrentPhotoPath)
+            val data = Intent()
+            if (dataItem == null) {
+                // add
+                val newDataItem = CarInfoEntity(0L,
+                        ownerView.text.toString(),
+                        producerView.text.toString(),
+                        modelView.text.toString(),
+                        plateNumberView.text.toString(),
+                        mCurrentPhotoPath
+                )
+                data.apply {
+                    action = MainActivity.ADD
+                    putExtra(MainActivity.ITEM, newDataItem)
+                }
 
-            val data = Intent().apply {
-                action = MainActivity.EDIT
-                putExtra(MainActivity.ITEM, updatedDataItem)
+            } else {
+                // edit
+                val updatedDataItem = CarInfoEntity(dataItem.id,
+                        ownerView.text.toString(),
+                        producerView.text.toString(),
+                        modelView.text.toString(),
+                        plateNumberView.text.toString(),
+                        mCurrentPhotoPath)
+
+                data.apply {
+                    action = MainActivity.EDIT
+                    putExtra(MainActivity.ITEM, updatedDataItem)
+                }
             }
+
             setResult(RESULT_OK, data)
             finish()
         }
