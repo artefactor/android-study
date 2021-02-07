@@ -47,43 +47,36 @@
 
     <TextView
         android:id="@+id/viewTextDate"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="16dp"
+        android:layout_marginHorizontal="@dimen/size20"
+        android:layout_marginTop="@dimen/size12"
+        android:paddingBottom="@dimen/size12"
         android:text="@string/app_date"
+        android:textSize="@dimen/text_medium"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:background="@color/purple_200" />
 
-    <View
-        android:id="@+id/helper"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toBottomOf="@id/viewTextDate"
-        app:layout_constraintEnd_toEndOf="@id/viewTextDate" />
-
-
     <!--    WorkName-->
     <TextView
         android:id="@+id/viewTextWorkNameTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="4dp"
+        android:layout_marginVertical="@dimen/size4"
+        android:layout_marginTop="@dimen/size16"
         android:maxLines="1"
         android:text="@string/work_name"
         app:layout_constraintStart_toStartOf="@+id/viewTextWorkName"
-        app:layout_constraintTop_toBottomOf="@id/viewTextDate"
-        tools:layout_editor_absoluteY="263dp" />
+        app:layout_constraintTop_toBottomOf="@id/viewTextDate" />
 
     <EditText
         android:id="@+id/viewTextWorkName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="@dimen/size16"
         android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="@+id/viewTextCost"
         app:layout_constraintEnd_toStartOf="@+id/viewTextCost"
@@ -96,49 +89,39 @@
         android:id="@+id/viewTextCostTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="4dp"
+        android:layout_marginVertical="@dimen/size4"
         android:maxLines="1"
         android:text="@string/cost"
         app:layout_constraintBaseline_toBaselineOf="@id/viewTextWorkNameTitle"
-        app:layout_constraintStart_toStartOf="@+id/viewTextCost"
-        tools:layout_editor_absoluteY="263dp" />
+        app:layout_constraintStart_toStartOf="@+id/viewTextCost" />
 
 
     <EditText
         android:id="@+id/viewTextCost"
+        style="@style/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="4dp"
         android:inputType="numberDecimal"
-        android:maxLines="1"
         app:layout_constraintBaseline_toBaselineOf="@id/viewTextWorkName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/viewTextWorkName"
-        tools:layout_editor_absoluteY="285dp"
         tools:text="400" />
 
     <!--    Description-->
     <TextView
         android:id="@+id/viewTextDescriptionTitle"
+        style="@style/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="4dp"
-        android:layout_marginStart="16dp"
-        android:maxLines="1"
         android:text="@string/description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewTextCost" />
 
     <EditText
         android:id="@+id/viewTextDescription"
+        style="@style/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="4dp"
-        android:layout_marginStart="16dp"
-        android:maxLines="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewTextDescriptionTitle"
         tools:text="install and tune" />
@@ -147,53 +130,37 @@
         android:id="@+id/radioWorkStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="16dp"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:layout_marginVertical="@dimen/size16"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/viewTextDescription">
 
         <RadioButton
             android:id="@+id/workStatusInProgress"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:button="@null"
-            android:checked="false"
-            android:drawableTop="@drawable/ic_repair"
+            style="@style/work_status_radio"
             android:drawableTint="@color/yellow"
-            android:gravity="center"
             android:text="@string/work_status_in_progress"
             android:textColor="@color/yellow" />
 
         <ImageView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
 
-            android:layout_weight="1"
             android:gravity="center"
             android:src="@drawable/ic_baseline_arrow_forward_24" />
-        <!--        style="@style/imageInactive"-->
+
         <RadioButton
             android:id="@+id/workStatusCompleted"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:baselineAligned="false"
-            android:button="@null"
-            android:drawableTop="@drawable/ic_repair"
+            style="@style/work_status_radio"
             android:drawableTint="@color/green"
-            android:gravity="center"
             android:text="@string/work_status_completed"
             android:textColor="@color/green" />
 
         <ImageView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:baselineAligned="false"
             android:gravity="center"
 
@@ -201,16 +168,8 @@
 
         <RadioButton
             android:id="@+id/workStatusPending"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-
-            android:baselineAligned="false"
-            android:button="@null"
-            android:drawableTop="@drawable/ic_repair"
+            style="@style/work_status_radio"
             android:drawableTint="@color/red"
-            android:gravity="center"
             android:text="@string/work_status_pending"
             android:textColor="@color/red" />
     </RadioGroup>
