@@ -1,5 +1,8 @@
-include ':lesson4_1recycle_view_contacts'
+include ':photoapplication'
 include ':lesson1colors'
 include ':lesson2activity'
+include ':lesson3layout'
+include ':lesson4_1recycle_view_contacts'
 include ':lesson4_2custom_view'
+
 rootProject.name = "courses"

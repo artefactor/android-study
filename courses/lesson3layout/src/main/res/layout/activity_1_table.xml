@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".MainActivity">
+
+    <TableRow>
+
+        <TextView
+            style="@style/rowItem"
+            android:text="@string/attractions"
+            app:drawableStartCompat="@drawable/ic_baseline_folder_24" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            style="@style/rowItem"
+            android:text="@string/dining"
+            app:drawableStartCompat="@drawable/ic_baseline_local_dining_24" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            style="@style/rowItem"
+            android:text="@string/education"
+            app:drawableStartCompat="@drawable/ic_baseline_school_24" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            style="@style/rowItem"
+            android:text="@string/family"
+            app:drawableStartCompat="@drawable/ic_baseline_people_24" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            style="@style/rowItem"
+            android:text="@string/health"
+            app:drawableStartCompat="@drawable/ic_baseline_favorite_24" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            style="@style/rowItem"
+            android:text="@string/office"
+            app:drawableStartCompat="@drawable/ic_baseline_business_24" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            style="@style/rowItem"
+            android:text="@string/promotions"
+            app:drawableStartCompat="@drawable/ic_baseline_shopping_cart_24" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            style="@style/rowItem"
+            android:text="@string/radio"
+            app:drawableStartCompat="@drawable/ic_baseline_radio_24" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            style="@style/rowItem"
+            android:text="@string/recipes"
+            app:drawableStartCompat="@drawable/ic_baseline_book_24" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            style="@style/rowItem"
+            android:text="@string/sports"
+            app:drawableStartCompat="@drawable/ic_baseline_directions_bike_24" />
+    </TableRow>
+</TableLayout>

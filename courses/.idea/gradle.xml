@@ -14,6 +14,8 @@
             <option value="$PROJECT_DIR$/lesson1colors" />
             <option value="$PROJECT_DIR$/lesson2activity" />
             <option value="$PROJECT_DIR$/lesson4_1recycle_view_contacts" />
+            <option value="$PROJECT_DIR$/lesson4_2custom_view" />
+            <option value="$PROJECT_DIR$/lesson3layout" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
