@@ -2,7 +2,6 @@ package by.academy.lesson5.cars
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -16,10 +15,6 @@ import by.academy.lesson5.cars.data.WorkInfoEntity
 import java.util.Date
 
 class EditWorkActivity : AppCompatActivity() {
-
-    private lateinit var wStatusInProgress: RadioButton
-    private lateinit var wStatusInPending: RadioButton
-    private lateinit var wStatusCompleted: RadioButton
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,14 +33,21 @@ class EditWorkActivity : AppCompatActivity() {
         val descriptionView = findViewById<TextView>(R.id.viewTextDescription)
 
         val workStatusRadioGroup = findViewById<RadioGroup>(R.id.radioWorkStatus)
-        wStatusInProgress = findViewById(R.id.workStatusInProgress)
-        wStatusCompleted = findViewById(R.id.workStatusCompleted)
-        wStatusInPending = findViewById(R.id.workStatusPending)
+        val wStatusInProgress: RadioButton
+        val wStatusInPending: RadioButton
+        val wStatusCompleted: RadioButton
 
-        workStatusRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-            val checkedIndex: Int = workStatusRadioGroup.indexOfChild(workStatusRadioGroup.findViewById(checkedId))
-            setWorkStatus(checkedIndex)
-        }
+        wStatusInProgress = workStatusRadioGroup.findViewById(R.id.workStatusInProgress)
+        wStatusCompleted = workStatusRadioGroup.findViewById(R.id.workStatusCompleted)
+        wStatusInPending = workStatusRadioGroup.findViewById(R.id.workStatusPending)
+
+        val workStatusComponent = WorkStatusComponent(workStatusRadioGroup,
+                wStatusInProgress,
+                wStatusCompleted,
+                wStatusInPending,
+                resources
+        )
+        workStatusComponent.init();
 
         val dataItem: WorkInfoEntity? = intent.getParcelableExtra(WorkListActivity.WORK_ITEM)
         val date: Date
@@ -54,8 +56,7 @@ class EditWorkActivity : AppCompatActivity() {
         if (dataItem == null) {
             removeButton.visibility = View.INVISIBLE
             date = Date()
-            setWorkStatus(0)
-            workStatusRadioGroup.check(0)
+            workStatusComponent.setWorkStatus(0)
         } else {
             findViewById<TextView>(R.id.toolbarTitle).text = dataItem.title
 
@@ -67,8 +68,7 @@ class EditWorkActivity : AppCompatActivity() {
             removeButton.setOnClickListener {
                 removeWithConfirmationDialog(dataItem)
             }
-            setWorkStatus(dataItem.status)
-            workStatusRadioGroup.check(dataItem.status)
+            workStatusComponent.setWorkStatus(dataItem.status)
         }
 
         val dateFormat = dateFormat(date)
@@ -81,11 +81,11 @@ class EditWorkActivity : AppCompatActivity() {
             val workName = workNameView.text.toString()
             val workDescription = descriptionView.text.toString()
             val workCost = costView.text.toString()
-            val status = getStatus(workStatusRadioGroup)
+            val status = workStatusComponent.getStatus()
 
 
             if (workName.isEmpty() || workDescription.isEmpty() || workCost.isEmpty()) {
-                UiUtils.displayMessage(this, "Fields can't be empty")
+                UiUtils.displayMessage(this, getString(R.string.fields_must_be_filled))
                 return@setOnClickListener
             }
 
@@ -126,50 +126,6 @@ class EditWorkActivity : AppCompatActivity() {
             setResult(RESULT_CANCELED)
             finish()
         }
-    }
-
-    private fun getStatus(workStatusRadioGroup: RadioGroup): Int {
-        when (workStatusRadioGroup.checkedRadioButtonId) {
-            wStatusInProgress.id -> return 0
-            wStatusCompleted.id -> return 2
-            wStatusInPending.id -> return 4
-        }
-        return 0;
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun setWorkStatus(checkedIndex: Int) {
-        when (checkedIndex) {
-            0 -> {
-                lightOn(wStatusInProgress, R.color.yellow)
-                lightOFF(wStatusCompleted)
-                lightOFF(wStatusInPending)
-            }
-            2 -> {
-                lightOFF(wStatusInProgress)
-                lightOn(wStatusCompleted, R.color.green)
-                lightOFF(wStatusInPending)
-            }
-            4 -> {
-                lightOFF(wStatusInProgress)
-                lightOFF(wStatusCompleted)
-                lightOn(wStatusInPending, R.color.red)
-            }
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun lightOFF(wStatusRadio: RadioButton) {
-        val color = resources.getColor(R.color.purple_700)
-        wStatusRadio.compoundDrawableTintList = ColorStateList.valueOf(color)
-        wStatusRadio.setTextColor(color)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun lightOn(wStatusRadio: RadioButton, color: Int) {
-        val color1 = resources.getColor(color)
-        wStatusRadio.compoundDrawableTintList = ColorStateList.valueOf(color1)
-        wStatusRadio.setTextColor(color1)
     }
 
 

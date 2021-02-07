@@ -38,7 +38,7 @@ object PermissionsHelper {
         if (notGivenPermission.isEmpty()) {
             funSuccess()
         } else {
-            funError.invoke("Permissions not given: $notGivenPermission")
+            funError.invoke(notGivenPermission.toString())
         }
     }
 

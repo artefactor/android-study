@@ -121,7 +121,7 @@ class EditCarActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             captureImage()
         } else {
-            displayMessage(baseContext, " Capture Image function for 4.4.4 and lower is not supported")
+            displayMessage(baseContext, getString(R.string.camera_not_supported))
         }
     }
 
@@ -143,7 +143,10 @@ class EditCarActivity : AppCompatActivity() {
         if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA) {
             notGivenPermission3(grantResults, permissions,
                     this::captureImageCameraIfPermitted,
-                    { message -> displayMessage(baseContext, message) }
+                    { message ->
+                        displayMessage(baseContext,
+                                "${getString(R.string.permissions_not_given)}: $message")
+                    }
             )
         }
     }
@@ -185,7 +188,7 @@ class EditCarActivity : AppCompatActivity() {
         if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             setPhoto()
         } else {
-            displayMessage(baseContext, "Request cancelled or something went wrong.")
+            displayMessage(baseContext, getString(R.string.photo_capture_was_cancelled))
         }
     }
 

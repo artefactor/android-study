@@ -6,7 +6,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import by.academy.lesson5.cars.WS_COMPLETED
+import by.academy.lesson5.cars.WS_IN_PROGRESS
+import by.academy.lesson5.cars.WS_PENDING
 import by.academy.utils.LoggingTags
+import java.util.*
 
 @Database(entities = [CarInfoEntity::class, WorkInfoEntity::class], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
@@ -37,9 +41,14 @@ abstract class DatabaseInfo : RoomDatabase() {
 
         private fun initTestData(db: DatabaseInfo) {
             db.getCarInfoDAO().apply {
-                add(CarInfoEntity(1, "larry", "audi" , "80" , "9000CT", null))
-                add(CarInfoEntity(2, "tom"  , "volvo", "90" , "8175PT", null))
-                add(CarInfoEntity(3, "harry", "fiat" , "100", "1075CL", null))
+                add(CarInfoEntity(1, "larry", "audi", "80", "9000CT", null))
+                add(CarInfoEntity(2, "tom", "volvo", "90", "8175PT", null))
+                add(CarInfoEntity(3, "harry", "fiat", "100", "1075CL", null))
+            }
+            db.getWorkInfoDAO().apply {
+                add(WorkInfoEntity(1, Date(), "repair engine", WS_IN_PROGRESS, 90.0, "").apply { carId = 1 })
+                add(WorkInfoEntity(2, Date(), "check fuel", WS_COMPLETED, 50.5, "").apply { carId = 1 })
+                add(WorkInfoEntity(3, Date(), "replace door", WS_PENDING, 120.0, "").apply { carId = 1 })
             }
         }
     }

@@ -25,7 +25,13 @@
     <string name="work_name">Work name</string>
     <string name="description">Description</string>
     <string name="works_empty">No works added</string>
+
+    <!--    confirmations and dialogs-->
     <string name="remove_work">Remove work</string>
     <string name="remove_confirmation">Do you really want to delete work?</string>
     <string name="No">No</string>
+    <string name="camera_not_supported">Capture Image function for 4.4.4 and lower is not supported</string>
+    <string name="permissions_not_given">Permissions not given</string>
+    <string name="fields_must_be_filled">Fields can\'t be empty</string>
+    <string name="photo_capture_was_cancelled">Request cancelled or something went wrong.</string>
 </resources>

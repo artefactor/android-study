@@ -109,21 +109,15 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
             this.resources = resources;
         }
 
-        //TODO move
-        private int getStatusColor(int status){
-            switch (status){
-                case 0 : return R.color.yellow;
-                case 2 : return R.color.green;
-                case 4 : return R.color.red;
-            }
-            return R.color.yellow;
-        }
-
         @RequiresApi(api = Build.VERSION_CODES.N)
         void bind(WorkInfoEntity dataItem, int position) {
             Log.i(LoggingTags.TAG_BIND, "bind: " + position);
 
-            ColorStateList colorStateList = ColorStateList.valueOf(resources.getColor(getStatusColor(dataItem.getStatus())));
+            ColorStateList colorStateList =
+                    ColorStateList.valueOf(
+                            resources.getColor(
+                                    WorkStatusComponent.Companion.statusColor(dataItem.getStatus()))
+                    );
             imageView.setImageTintList(colorStateList);
 
             viewWorkName.setText(dataItem.getTitle());
@@ -203,7 +197,7 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
         String lowerCase = filterString.toString().toLowerCase();
         newItems.removeIf(
                 r -> !(Objects.requireNonNull(r.getTitle()).toLowerCase().contains(lowerCase))
-                );
+        );
         dataItemList.addAll(newItems);
         notifyDataSetChanged();
         checkVisibility();

@@ -92,7 +92,6 @@ public class WorkListActivity extends AppCompatActivity {
     private void addWork(CarInfoEntity dataItem) {
         Intent intent = new Intent(WorkListActivity.this, EditWorkActivity.class);
         intent.putExtra(CAR_ITEM_ID, dataItem.getId());
-//        this.position = position;
         startActivityForResult(intent, REQUEST_CODE_WORKS);
     }
 
