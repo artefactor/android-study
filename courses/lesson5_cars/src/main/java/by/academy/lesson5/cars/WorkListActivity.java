@@ -18,6 +18,7 @@ import by.academy.lesson5.cars.data.DatabaseInfo;
 import by.academy.lesson5.cars.data.WorkInfoDAO;
 import by.academy.lesson5.cars.data.WorkInfoEntity;
 
+import static by.academy.utils.LoggingTags.TAG_EDIT;
 import static by.academy.utils.LoggingTags.TAG_WORK;
 
 public class WorkListActivity extends AppCompatActivity {
@@ -36,6 +37,7 @@ public class WorkListActivity extends AppCompatActivity {
     private WorkInfoDAO workDao;
     private View noWorksView;
 
+    // TODO now abstract storage is implemented only for car list
 //    @Override
 //    public void onSaveInstanceState(@NonNull Bundle outState) {
 //        super.onSaveInstanceState(outState);
@@ -57,7 +59,7 @@ public class WorkListActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO if needed storage
+        // TODO now abstract storage is implemented only for car list
         // DB
         DatabaseInfo databaseInfo = DatabaseInfo.Companion.init(this).getValue();
         workDao = databaseInfo.getWorkInfoDAO();
@@ -69,7 +71,6 @@ public class WorkListActivity extends AppCompatActivity {
         adapter = new WorkDataItemAdapter(workDao, carDataItem, this.getResources(),
                 this::onCheckVisibility);
         adapter.setEditWorkListener(this::onEditWork);
-        adapter.setAddWorkListener(this::addWork);
         adapter.addFilteringBy(findViewById(R.id.searchView));
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -115,11 +116,21 @@ public class WorkListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(TAG_WORK, "returned  " + (requestCode) + "pos: " + position);
-        if (resultCode == RESULT_OK && REQUEST_CODE_WORKS == requestCode ) {
-            DatabaseInfo databaseInfo = DatabaseInfo.Companion.init(this).getValue();
+        if (data != null && resultCode == RESULT_OK && REQUEST_CODE_WORKS == requestCode) {
             WorkInfoEntity item = data.getParcelableExtra(WORK_ITEM);
-            adapter.addItem(item);
-            return;
+
+            String command = data.getAction();
+            Log.i(TAG_EDIT, "returned command " + (command) + "pos: " + position);
+            switch (command) {
+                case EDIT:
+                    adapter.update(item, position);
+                    return;
+                case ADD:
+                    adapter.addItem(item);
+                    return;
+                case REMOVE:
+                    adapter.remove(item, position);
+            }
         }
     }
 }

@@ -121,8 +121,9 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
 
         void bind(CarInfoEntity dataItem, int position) {
             Log.i(LoggingTags.TAG_BIND, "bind: " + position);
+            View viewEdit = itemView.findViewById(R.id.imageEdit);
 
-            UiUtils.INSTANCE.setPhotoAndInit(dataItem.getImagePath(), imageView, imageViewBack, resources);
+            UiUtils.INSTANCE.setPhotoAndInit(dataItem.getImagePath(), imageView, imageViewBack,viewEdit, resources);
 
             ownerView.setText(dataItem.getOwnerName());
             plateNumberView.setText(dataItem.getPlateNumber());
@@ -130,7 +131,7 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
             producerModelView.setText(String.format("%s %s", dataItem.getProducer(), dataItem.getModel()));
 
             if (editCarListener != null) {
-                itemView.findViewById(R.id.imageEdit).setOnClickListener(
+                viewEdit.setOnClickListener(
                         view -> editCarListener.onEditCar(dataItem, dataItemList.indexOf(dataItem)));
             }
 

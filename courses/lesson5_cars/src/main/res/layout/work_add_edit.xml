@@ -147,8 +147,72 @@
         android:id="@+id/radioWorkStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"
+        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/viewTextDescription">
 
+        <RadioButton
+            android:id="@+id/workStatusInProgress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="false"
+            android:drawableTop="@drawable/ic_repair"
+            android:drawableTint="@color/yellow"
+            android:gravity="center"
+            android:text="@string/work_status_in_progress"
+            android:textColor="@color/yellow" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:src="@drawable/ic_baseline_arrow_forward_24" />
+        <!--        style="@style/imageInactive"-->
+        <RadioButton
+            android:id="@+id/workStatusCompleted"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:baselineAligned="false"
+            android:button="@null"
+            android:drawableTop="@drawable/ic_repair"
+            android:drawableTint="@color/green"
+            android:gravity="center"
+            android:text="@string/work_status_completed"
+            android:textColor="@color/green" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:baselineAligned="false"
+            android:gravity="center"
+
+            android:src="@drawable/ic_baseline_arrow_forward_24" />
+
+        <RadioButton
+            android:id="@+id/workStatusPending"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+
+            android:baselineAligned="false"
+            android:button="@null"
+            android:drawableTop="@drawable/ic_repair"
+            android:drawableTint="@color/red"
+            android:gravity="center"
+            android:text="@string/work_status_pending"
+            android:textColor="@color/red" />
     </RadioGroup>
 
     <androidx.appcompat.widget.AppCompatButton

@@ -1,5 +1,6 @@
 package by.academy.lesson5.cars;
 
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.os.Build;
 import android.text.Editable;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,11 +54,7 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
         void onCheckVisibility(boolean invisible);
     }
 
-    private OnCheckVisibilityListener checkVisibilityListener;
-
-    public void setCheckVisibilityListener(OnCheckVisibilityListener checkVisibilityListener) {
-        this.checkVisibilityListener = checkVisibilityListener;
-    }
+    private final OnCheckVisibilityListener checkVisibilityListener;
 
     interface EditWorkListener {
         void onEditWork(WorkInfoEntity dataItem, int position);
@@ -66,17 +64,6 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
 
     public void setEditWorkListener(EditWorkListener editWorkListener) {
         this.editWorkListener = editWorkListener;
-    }
-
-    interface AddWorkListener {
-//        void onAddWork(CarInfoEntity dataItem, int position);
-        void onAddWork(CarInfoEntity dataItem);
-    }
-
-    private AddWorkListener addWorkListener;
-
-    public void setAddWorkListener(AddWorkListener addWorkListener) {
-        this.addWorkListener = addWorkListener;
     }
 
     /*------------------------------------------
@@ -92,6 +79,7 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
         return new DataItemViewHolder(view, resources);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull DataItemViewHolder holder, int position) {
         holder.bind(dataItemList.get(position), position);
@@ -108,8 +96,7 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
         private final TextView viewWorkName;
         private final TextView viewCost;
 
-//        private final ImageView imageView;
-//        private final ImageView imageViewBack;
+        private final ImageView imageView;
         private final Resources resources;
 
         public DataItemViewHolder(@NonNull View itemView, Resources resources) {
@@ -118,26 +105,30 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
             viewCost = itemView.findViewById(R.id.viewTextCost);
             viewWorkDate = itemView.findViewById(R.id.viewTextDate);
 
-//            imageView = itemView.findViewById(R.id.imagePreview);
-//            imageViewBack = itemView.findViewById(R.id.imagePreviewBackground);
-
+            imageView = itemView.findViewById(R.id.imageStatus);
             this.resources = resources;
         }
 
-        //        private void add() {
-//            Intent intent = new Intent(this, EditWorkActivity.class);
-//            startActivityForResult(intent, REQUEST_CODE);
-//        }
-//
+        //TODO move
+        private int getStatusColor(int status){
+            switch (status){
+                case 0 : return R.color.yellow;
+                case 2 : return R.color.green;
+                case 4 : return R.color.red;
+            }
+            return R.color.yellow;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
         void bind(WorkInfoEntity dataItem, int position) {
             Log.i(LoggingTags.TAG_BIND, "bind: " + position);
 
-//            UiUtils.INSTANCE.setPhotoAndInit(dataItem.getImagePath(), imageView, imageViewBack, resources);
+            ColorStateList colorStateList = ColorStateList.valueOf(resources.getColor(getStatusColor(dataItem.getStatus())));
+            imageView.setImageTintList(colorStateList);
 
             viewWorkName.setText(dataItem.getTitle());
-            viewCost.setText("" + dataItem.getCost());
-
-            viewWorkDate.setText(String.format("%s", dataItem.getDate()));
+            viewCost.setText(UiUtils.INSTANCE.formatMoney(dataItem.getCost()));
+            viewWorkDate.setText(UiUtils.INSTANCE.dateFormat(dataItem.getDate()));
 
             if (editWorkListener != null) {
                 itemView.setOnClickListener(

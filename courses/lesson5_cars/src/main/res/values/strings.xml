@@ -25,4 +25,7 @@
     <string name="work_name">Work name</string>
     <string name="description">Description</string>
     <string name="works_empty">No works added</string>
+    <string name="remove_work">Remove work</string>
+    <string name="remove_confirmation">Do you really want to delete work?</string>
+    <string name="No">No</string>
 </resources>
