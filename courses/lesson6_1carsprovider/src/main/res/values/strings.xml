@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Lesson6Cars</string>
+
+    <!--    car-->
+    <string name="owner_name">Owner name</string>
+    <string name="producer">Producer</string>
+    <string name="model">Model</string>
+    <string name="plate_number">Plate number</string>
+    <string name="cars_empty">No cars added</string>
+    <!--    actions-->
+
+    <!--    work-->
+    <string name="work_status_in_progress">In progress</string>
+    <string name="work_status_pending">Pending</string>
+    <string name="work_status_completed">Completed</string>
+
+    <string name="app_date">Application date</string>
+    <string name="cost">Cost($)</string>
+    <string name="work_name">Work name</string>
+    <string name="description">Description</string>
+    <string name="works_empty">No works added</string>
+
+    <!--    confirmations and dialogs-->
+    <string name="permissions_not_given">Permissions not given</string>
+    <string name="photo_capture_was_cancelled">Request cancelled or something went wrong.</string>
+</resources>

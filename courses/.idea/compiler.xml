@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.8" />
+    <bytecodeTargetLevel target="1.7">
+      <module name="courses.examples" target="1.8" />
+      <module name="courses.lesson1colors" target="1.8" />
+      <module name="courses.lesson2activity" target="1.8" />
+      <module name="courses.lesson3layout" target="1.8" />
+      <module name="courses.lesson4_2custom_view" target="1.8" />
+      <module name="courses.lesson5_cars" target="1.8" />
+      <module name="courses.lesson6_1carsprovider" target="1.8" />
+      <module name="courses.photoapplication" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
