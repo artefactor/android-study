@@ -1,5 +1,6 @@
 package by.academy.lesson5.cars.data
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -10,6 +11,9 @@ import androidx.room.Update
 
 @Dao
 interface WorkInfoDAO {
+
+    @Query("SELECT * FROM work_info")
+    fun selectAll(): Cursor?
 
     @Query("SELECT * FROM work_info")
     fun getAllInfo(): List<WorkInfoEntity>

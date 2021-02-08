@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Урок6Машины</string>
+
+    <!--    car-->
+    <string name="owner_name">Владелец</string>
+    <string name="producer">Марка</string>
+    <string name="model">Модель</string>
+    <string name="plate_number">Госномер</string>
+    <string name="cars_empty">Нет машин</string>
+    <!--    actions-->
+
+    <!--    work-->
+    <string name="work_status_in_progress">В процессе</string>
+    <string name="work_status_pending">На паузе</string>
+    <string name="work_status_completed">Завершена</string>
+
+    <string name="app_date">Время</string>
+    <string name="cost">Стоимость($)</string>
+    <string name="work_name">Заголовок</string>
+    <string name="description">Описание</string>
+    <string name="works_empty">Нет работ</string>
+
+    <!--    confirmations and dialogs-->
+    <string name="permissions_not_given">Разрешения не получены</string>
+    <string name="photo_capture_was_cancelled">Запрос отменен или что-то пошло не так</string>
+
+
+</resources>

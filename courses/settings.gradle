@@ -4,7 +4,6 @@ include ':lesson1colors'
 include ':lesson2activity'
 include ':lesson4_2custom_view'
 include ':lesson3layout'
-include ':lesson1colors'
-include ':lesson2activity'
+include ':lesson6_1carsprovider'
 include ':lesson5_cars'
 rootProject.name = "courses"
