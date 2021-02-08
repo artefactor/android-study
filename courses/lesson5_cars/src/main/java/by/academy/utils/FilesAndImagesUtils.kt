@@ -1,15 +1,13 @@
 package by.academy.utils
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.util.Log
-import android.widget.ImageView
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 object FilesAndImagesUtils {
     /**

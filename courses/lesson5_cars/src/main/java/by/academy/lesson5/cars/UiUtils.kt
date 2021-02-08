@@ -3,17 +3,14 @@ package by.academy.lesson5.cars
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.BitmapFactory
-import android.icu.text.SimpleDateFormat
-import android.os.Build
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import by.academy.utils.LoggingTags
-import java.util.Date
+import by.academy.utils.CommonUtils
 
-object UiUtils {
+object UiUtils : CommonUtils() {
 
     fun setPhotoAndInit(imagePath: String?, imageView: ImageView, imageViewBack: ImageView, viewEdit: View, resources: Resources) {
         if (imagePath == null) {
@@ -54,11 +51,6 @@ object UiUtils {
             imageView.setImageBitmap(myBitmap)
         }
     }
-
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun dateFormat(date: Date): String? = SimpleDateFormat.getDateInstance().format(date)
-
-    fun formatMoney(cost: Double): String = "$cost $"
 
     fun displayMessage(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()

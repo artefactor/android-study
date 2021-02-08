@@ -1,6 +1,8 @@
+include ':utils'
 include ':photoapplication'
 include ':lesson1colors'
 include ':lesson2activity'
+include ':lesson4_2custom_view'
 include ':lesson3layout'
 include ':lesson1colors'
 include ':lesson2activity'

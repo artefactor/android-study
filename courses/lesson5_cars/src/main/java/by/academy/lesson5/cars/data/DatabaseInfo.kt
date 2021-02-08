@@ -10,7 +10,7 @@ import by.academy.lesson5.cars.WS_COMPLETED
 import by.academy.lesson5.cars.WS_IN_PROGRESS
 import by.academy.lesson5.cars.WS_PENDING
 import by.academy.utils.LoggingTags
-import java.util.*
+import java.util.Date
 
 @Database(entities = [CarInfoEntity::class, WorkInfoEntity::class], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
