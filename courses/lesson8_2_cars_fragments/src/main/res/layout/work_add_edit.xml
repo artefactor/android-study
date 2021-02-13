@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemViewRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".EditWorkActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/backButton"
+                style="@style/buttonToolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:src="@drawable/ic_baseline_arrow_back_24" />
+
+
+            <TextView
+                android:id="@+id/toolbarTitle"
+                style="@style/toolbarText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/add_work" />
+
+            <ImageButton
+                android:id="@+id/addBUtton"
+                style="@style/buttonToolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_baseline_check_24" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/viewTextDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size20"
+        android:layout_marginTop="@dimen/size12"
+        android:paddingBottom="@dimen/size12"
+        android:text="@string/app_date"
+        android:textSize="@dimen/text_medium"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:background="@color/purple_200" />
+
+    <!--    WorkName-->
+    <TextView
+        android:id="@+id/viewTextWorkNameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/size4"
+        android:layout_marginTop="@dimen/size16"
+        android:maxLines="1"
+        android:text="@string/work_name"
+        app:layout_constraintStart_toStartOf="@+id/viewTextWorkName"
+        app:layout_constraintTop_toBottomOf="@id/viewTextDate" />
+
+    <EditText
+        android:id="@+id/viewTextWorkName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@+id/viewTextCost"
+        app:layout_constraintEnd_toStartOf="@+id/viewTextCost"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewTextWorkNameTitle"
+        tools:text="Install" />
+
+    <!--    Cost -->
+    <TextView
+        android:id="@+id/viewTextCostTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/size4"
+        android:maxLines="1"
+        android:text="@string/cost"
+        app:layout_constraintBaseline_toBaselineOf="@id/viewTextWorkNameTitle"
+        app:layout_constraintStart_toStartOf="@+id/viewTextCost" />
+
+
+    <EditText
+        android:id="@+id/viewTextCost"
+        style="@style/textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        app:layout_constraintBaseline_toBaselineOf="@id/viewTextWorkName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/viewTextWorkName"
+        tools:text="400" />
+
+    <!--    Description-->
+    <TextView
+        android:id="@+id/viewTextDescriptionTitle"
+        style="@style/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewTextCost" />
+
+    <EditText
+        android:id="@+id/viewTextDescription"
+        style="@style/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewTextDescriptionTitle"
+        tools:text="install and tune" />
+
+    <RadioGroup
+        android:id="@+id/radioWorkStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:layout_marginVertical="@dimen/size16"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/viewTextDescription">
+
+        <RadioButton
+            android:id="@+id/workStatusInProgress"
+            style="@style/work_status_radio"
+            android:drawableTint="@color/yellow"
+            android:text="@string/work_status_in_progress"
+            android:textColor="@color/yellow" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:gravity="center"
+            android:src="@drawable/ic_baseline_arrow_forward_24" />
+
+        <RadioButton
+            android:id="@+id/workStatusCompleted"
+            style="@style/work_status_radio"
+            android:drawableTint="@color/green"
+            android:text="@string/work_status_completed"
+            android:textColor="@color/green" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:baselineAligned="false"
+            android:gravity="center"
+
+            android:src="@drawable/ic_baseline_arrow_forward_24" />
+
+        <RadioButton
+            android:id="@+id/workStatusPending"
+            style="@style/work_status_radio"
+            android:drawableTint="@color/red"
+            android:text="@string/work_status_pending"
+            android:textColor="@color/red" />
+    </RadioGroup>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/removeBUtton"
+        style="@style/buttonBig"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/remove"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radioWorkStatus" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

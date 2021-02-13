@@ -7,14 +7,19 @@
         <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="11" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/lesson1colors" />
             <option value="$PROJECT_DIR$/lesson2activity" />
-            <option value="$PROJECT_DIR$/lesson4_2custom_view" />
             <option value="$PROJECT_DIR$/lesson3layout" />
+            <option value="$PROJECT_DIR$/lesson4_2custom_view" />
+            <option value="$PROJECT_DIR$/lesson7_1_cars_coroutines" />
+            <option value="$PROJECT_DIR$/lesson7_2_cars_rx_java" />
+            <option value="$PROJECT_DIR$/lesson8_2_cars_fragments" />
+            <option value="$PROJECT_DIR$/lesson9_weather" />
+            <option value="$PROJECT_DIR$/photoapplication" />
+            <option value="$PROJECT_DIR$/utils" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

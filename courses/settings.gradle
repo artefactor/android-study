@@ -1,3 +1,8 @@
+include ':lesson9_weather'
+include ':lesson7_1_cars_coroutines'
+include ':lesson7_2_cars_rx_java'
+include ':lesson8_2_cars_fragments'
+include ':utils'
 include ':photoapplication'
 include ':lesson3layout'
 include ':lesson1colors'
