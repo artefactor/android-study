@@ -10,11 +10,16 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import by.academy.lesson5.cars.UiUtils.dateFormat
+import by.academy.lesson5.cars.WorkListActivity.WORK_ITEM
+import by.academy.lesson5.cars.data.DatabaseInfo.Companion.init
+import by.academy.lesson5.cars.data.WorkInfoDAO
 import by.academy.lesson5.cars.data.WorkInfoEntity
+import by.academy.utils.dateFormat
 import java.util.*
 
 class EditWorkActivity : AppCompatActivity() {
+
+    private lateinit var workDao: WorkInfoDAO
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +31,11 @@ class EditWorkActivity : AppCompatActivity() {
             return
         }
         val carDataItemId = intent.getLongExtra(WorkListActivity.CAR_ITEM_ID, -1L)
+
+        // DB
+        val databaseInfo = init(this).value
+        workDao = databaseInfo.getWorkInfoDAO()
+
         val removeButton = findViewById<View>(R.id.removeBUtton)
 
         val workNameView = findViewById<TextView>(R.id.viewTextWorkName)
@@ -72,56 +82,70 @@ class EditWorkActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.viewTextDate).text = "${resources.getString(R.string.app_date)} $dateFormat"
 
+        findViewById<View>(R.id.backButton).setOnClickListener {
+            setResult(RESULT_CANCELED)
+            finish()
+        }
+
         findViewById<View>(R.id.addBUtton).setOnClickListener {
             val data = Intent()
 
-            val workName = workNameView.text.toString()
-            val workDescription = descriptionView.text.toString()
-            val workCost = costView.text.toString()
-            val status = workStatusComponent.getStatus()
+            val workBuilder = WorkBuilder()
+            workBuilder.apply {
+                workName = workNameView.text.toString()
+                workDescription = descriptionView.text.toString()
+                workCost = costView.text.toString()
+                status = workStatusComponent.getStatus()
+                this.carDataItemId = carDataItemId
+            }
 
-
-            if (workName.isEmpty() || workDescription.isEmpty() || workCost.isEmpty()) {
-                UiUtils.displayMessage(this, getString(R.string.fields_must_be_filled))
+            if (workBuilder.isEmpty()) {
+                displayMessage(this, getString(R.string.fields_must_be_filled))
                 return@setOnClickListener
             }
 
             if (dataItem == null) {
                 // add
-                val newDataItem = WorkInfoEntity(0L,
-                        date,
-                        workName,
-                        status,
-                        workCost.toDouble(),
-                        workDescription
-                )
-                newDataItem.carId = carDataItemId
-                data.apply {
-                    action = MainActivity.ADD
-                    putExtra(WorkListActivity.WORK_ITEM, newDataItem)
-                }
+                add(data, workBuilder, date)
             } else {
                 // edit
-                val updatedDataItem = WorkInfoEntity(dataItem.id,
-                        dataItem.date,
-                        workName,
-                        status,
-                        workCost.toDouble(),
-                        workDescription
-                )
-                updatedDataItem.carId = carDataItemId
-
-                data.apply {
-                    action = MainActivity.EDIT
-                    putExtra(WorkListActivity.WORK_ITEM, updatedDataItem)
-                }
+                update(data, workBuilder, dataItem, carDataItemId)
             }
             setResult(RESULT_OK, data)
             finish()
         }
-        findViewById<View>(R.id.backButton).setOnClickListener {
-            setResult(RESULT_CANCELED)
-            finish()
+    }
+
+    private fun add(data: Intent, workBuilder: WorkBuilder, date: Date) {
+        val newDataItem = WorkInfoEntity(0L,
+                date,
+                workBuilder.workName,
+                workBuilder.status,
+                workBuilder.workCost.toDouble(),
+                workBuilder.workDescription
+        )
+        newDataItem.carId = workBuilder.carDataItemId
+        data.apply {
+            action = MainActivity.ADD
+            val newId = workDao.add(newDataItem)
+            newDataItem.id = newId;
+            putExtra(WORK_ITEM, newDataItem)
+        }
+    }
+
+    private fun update(data: Intent, workBuilder: WorkBuilder, dataItem: WorkInfoEntity, carDataItemId: Long) {
+        val updatedDataItem = WorkInfoEntity(dataItem.id,
+                dataItem.date,
+                workBuilder.workName,
+                workBuilder.status,
+                workBuilder.workCost.toDouble(),
+                workBuilder.workDescription
+        )
+        updatedDataItem.carId = carDataItemId
+
+        data.apply {
+            action = MainActivity.EDIT
+            workDao.update(updatedDataItem)
         }
     }
 
@@ -140,7 +164,7 @@ class EditWorkActivity : AppCompatActivity() {
     private fun remove(dataItem: WorkInfoEntity) {
         val data = Intent()
         data.action = MainActivity.REMOVE
-        data.putExtra(WorkListActivity.WORK_ITEM, dataItem)
+        workDao.delete(dataItem)
         setResult(RESULT_OK, data)
         finish()
 

@@ -1,12 +1,13 @@
 package by.academy.lesson5.cars;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,11 +18,7 @@ import by.academy.lesson5.cars.data.AbstractCarDataStorage;
 import by.academy.lesson5.cars.data.CarInfoEntity;
 import by.academy.lesson5.cars.data.DatabaseInfo;
 import by.academy.lesson5.cars.data.DatabaseStorage;
-import by.academy.lesson5.cars.data.MemoryDataStorage;
 import by.academy.utils.FilesAndImagesUtils;
-
-import static by.academy.utils.LoggingTags.TAG_DATA;
-import static by.academy.utils.LoggingTags.TAG_EDIT;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DATA = "data";
@@ -33,23 +30,11 @@ public class MainActivity extends AppCompatActivity {
     public static final String REMOVE = "remove";
     public static final String EDIT = "edit";
 
-    private int position;
-    /**
-     * true for database, false for memory
-     */
-    boolean useDatabase = true;
     private DataItemAdapter adapter;
     private AbstractCarDataStorage dataStorage;
     private View noCarsView;
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (!useDatabase && dataStorage != null) {
-            Log.d(TAG_DATA, "Данные сохранены");
-            outState.putParcelable(DATA, (MemoryDataStorage) dataStorage);
-        }
-    }
+    private CarInfoEntity lastAddedItem;
+    private EditText searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +46,8 @@ public class MainActivity extends AppCompatActivity {
         FilesAndImagesUtils.appendLogFile(getApplicationContext(), APPLOG_LOG);
 
         // DB
-        if (useDatabase) {
-            DatabaseInfo databaseInfo = DatabaseInfo.Companion.init(this).getValue();
-            dataStorage = new DatabaseStorage(databaseInfo.getCarInfoDAO());
-        } else {
-            if (savedInstanceState != null) {
-                dataStorage = savedInstanceState.getParcelable(DATA);
-            } else {
-                dataStorage = new MemoryDataStorage();
-            }
-        }
+        DatabaseInfo databaseInfo = DatabaseInfo.Companion.init(this).getValue();
+        dataStorage = new DatabaseStorage(databaseInfo.getCarInfoDAO());
 
         // Recycler view and adapter
         noCarsView = findViewById(R.id.no_cars);
@@ -80,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.setCheckVisibilityListener(this::onCheckVisibility);
         adapter.setEditCarListener(this::edit);
         adapter.setShowWorkListener(this::showWorks);
-        adapter.addFilteringBy(findViewById(R.id.searchView), ()-> dataStorage.getAllItems());
+        searchView = findViewById(R.id.searchView);
+        adapter.addFilteringBy(searchView, ()-> dataStorage.getAllItems());
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
@@ -100,14 +78,12 @@ public class MainActivity extends AppCompatActivity {
     private void edit(CarInfoEntity dataItem, int position) {
         Intent intent = new Intent(MainActivity.this, EditCarActivity.class);
         intent.putExtra(ITEM, dataItem);
-        this.position = position;
         startActivityForResult(intent, REQUEST_CODE);
     }
 
     private void showWorks(CarInfoEntity dataItem, int position) {
         Intent intent = new Intent(MainActivity.this, WorkListActivity.class);
         intent.putExtra(ITEM, dataItem);
-        this.position = position;
         startActivity(intent);
     }
 
@@ -122,27 +98,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (REQUEST_CODE != requestCode) {
-            return;
-        }
-        if (resultCode == RESULT_OK && data != null && data.getAction() != null) {
+        if (data != null && resultCode == RESULT_OK && REQUEST_CODE == requestCode) {
             CarInfoEntity item = data.getParcelableExtra(ITEM);
             String command = data.getAction();
-            Log.i(TAG_EDIT, "returned command " + (command) + "pos: " + position);
-            switch (command) {
-                case EDIT:
-                    dataStorage.update(item);
-                    adapter.update(item, position);
-                    return;
-                case ADD:
-                    dataStorage.add(item);
-                    adapter.addItem(item);
-                    return;
-                case REMOVE:
-                    dataStorage.remove(item);
-                    adapter.remove(item, position);
+            if (ADD.equals(command)) {
+                this.lastAddedItem = item;
             }
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.filter(searchView.getText(), lastAddedItem, dataStorage.getAllItems());
     }
 
 }

@@ -20,7 +20,7 @@ import java.util.Date
 )
 class WorkInfoEntity(
         @PrimaryKey(autoGenerate = true)
-        val id: Long,
+        var id: Long,
         val date: Date,
         val title: String,
         val status: Int,

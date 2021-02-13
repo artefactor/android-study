@@ -1,7 +1,6 @@
 package by.academy.lesson5.cars;
 
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,29 +16,24 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
-import by.academy.lesson5.cars.data.CarInfoEntity;
-import by.academy.lesson5.cars.data.WorkInfoDAO;
 import by.academy.lesson5.cars.data.WorkInfoEntity;
+import by.academy.utils.CommonUtils;
 import by.academy.utils.LoggingTags;
 
 import static android.view.LayoutInflater.from;
 
 class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataItemViewHolder> {
 
-    private final WorkInfoDAO dataStorage;
     private final List<WorkInfoEntity> dataItemList;
-    private final CarInfoEntity carDataItem;
 
-    public WorkDataItemAdapter(WorkInfoDAO dataStorage, CarInfoEntity carDataItem, Resources resources,
+    public WorkDataItemAdapter(List<WorkInfoEntity> dataItemList,
                                OnCheckVisibilityListener checkVisibilityListener) {
-        this.carDataItem = carDataItem;
         this.checkVisibilityListener = checkVisibilityListener;
-        this.dataItemList = dataStorage.getInfo(carDataItem.getId());
-        this.dataStorage = dataStorage;
+        this.dataItemList = dataItemList;
         checkVisibility();
     }
 
@@ -118,8 +112,8 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
             imageView.setImageTintList(colorStateList);
 
             viewWorkName.setText(dataItem.getTitle());
-            viewCost.setText(UiUtils.INSTANCE.formatMoney(dataItem.getCost()));
-            viewWorkDate.setText(UiUtils.INSTANCE.dateFormat(dataItem.getDate()));
+            viewCost.setText(CommonUtils.formatMoney(dataItem.getCost()));
+            viewWorkDate.setText(CommonUtils.dateFormat(dataItem.getDate()));
 
             if (editWorkListener != null) {
                 itemView.setOnClickListener(
@@ -135,40 +129,11 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
     //
     //------------------------------------------*/
 
-    public void addItem(WorkInfoEntity dataItem) {
-        dataStorage.add(dataItem);
-        if (dataItemList != null) {
-            dataItemList.add(dataItem);
-            int position = dataStorage.getInfo(carDataItem.getId()).size() - 1;
-            notifyItemInserted(position);
-        }
-        checkVisibility();
-    }
-
-    public void update(WorkInfoEntity item, int position) {
-        dataStorage.update(item);
-        WorkInfoEntity dataItem = dataItemList.get(position);
-        Log.d(LoggingTags.TAG_EDIT, "update from: " + item);
-        Log.d(LoggingTags.TAG_EDIT, "update     : " + dataItem);
-
-        if (!dataItem.equals(item)) {
-            dataItemList.set(position, item);
-            notifyItemChanged(position);
-        }
-    }
-
-    public void remove(WorkInfoEntity item, int position) {
-        dataItemList.remove(position);
-        dataStorage.delete(item);
-        notifyItemRemoved(position);
-        checkVisibility();
-    }
-
     /**
      * Кроме этого, на данном экране должна быть реализована фильтрация автомобилей
      * по гос. номеру и марке.
      */
-    public void addFilteringBy(EditText viewById) {
+    public void addFilteringBy(EditText viewById, Supplier<List<WorkInfoEntity>> itemsProvider) {
         viewById.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -181,24 +146,33 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void afterTextChanged(Editable s) {
-                filter(s);
+                filter(s, null, itemsProvider.get());
             }
         });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void filter(Editable filterString) {
+    public void filter(Editable filterString, WorkInfoEntity lastAddedItem, List<WorkInfoEntity> freshItems) {
         Log.i(LoggingTags.TAG_SEARCH, "" + filterString);
+
         dataItemList.clear();
-        List<WorkInfoEntity> newItems = new ArrayList(dataStorage.getInfo(carDataItem.getId()));
         String lowerCase = filterString.toString().toLowerCase();
-        newItems.removeIf(
-                r -> !(Objects.requireNonNull(r.getTitle()).toLowerCase().contains(lowerCase))
-        );
-        dataItemList.addAll(newItems);
+        freshItems.stream().filter(
+                r -> isMatches(r, lowerCase) || isEquals(lastAddedItem, r)).forEach(dataItemList::add);
         notifyDataSetChanged();
         checkVisibility();
 
+    }
+
+    private boolean isMatches(WorkInfoEntity r, String lowerCase) {
+        return Objects.requireNonNull(r.getTitle()).toLowerCase().contains(lowerCase);
+    }
+
+    private boolean isEquals(WorkInfoEntity lastAddedItem, WorkInfoEntity r) {
+        if (lastAddedItem == null) {
+            return false;
+        }
+        return r.getId() == lastAddedItem.getId();
     }
 
     private void checkVisibility() {

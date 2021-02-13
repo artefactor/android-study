@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "car_info")
 class CarInfoEntity(
         @PrimaryKey(autoGenerate = true)
-        val id: Long,
+        var id: Long,
         val ownerName: String,
         val producer: String,
         val model: String,

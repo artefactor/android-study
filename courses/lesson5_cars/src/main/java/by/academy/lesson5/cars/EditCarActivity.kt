@@ -12,11 +12,10 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import by.academy.lesson5.cars.PermissionsHelper.checkPermission
-import by.academy.lesson5.cars.PermissionsHelper.notGivenPermission3
-import by.academy.lesson5.cars.UiUtils.displayMessage
-import by.academy.lesson5.cars.UiUtils.setPhoto
+import by.academy.lesson5.cars.MainActivity.ITEM
 import by.academy.lesson5.cars.data.CarInfoEntity
+import by.academy.lesson5.cars.data.DatabaseInfo
+import by.academy.lesson5.cars.data.DatabaseStorage
 import by.academy.utils.FilesAndImagesUtils.createImageFile
 import by.academy.utils.LoggingTags.TAG_PHOTO
 
@@ -28,6 +27,11 @@ class EditCarActivity : AppCompatActivity() {
 
     private lateinit var photoBack: ImageView
     private lateinit var photo: ImageView
+    private lateinit var ownerView: TextView
+    private lateinit var producerView: TextView
+    private lateinit var modelView: TextView
+    private lateinit var plateNumberView: TextView
+
     private var mCurrentPhotoPath: String? = null
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -35,10 +39,13 @@ class EditCarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.car_add_edit)
 
-        val ownerView = findViewById<TextView>(R.id.viewTextOwnerName)
-        val producerView = findViewById<TextView>(R.id.viewTextProducer)
-        val modelView = findViewById<TextView>(R.id.viewTextModel)
-        val plateNumberView = findViewById<TextView>(R.id.viewTextPlateNumber)
+        // DB
+        val dataStorage = DatabaseStorage(DatabaseInfo.init(this).value.getCarInfoDAO())
+
+        ownerView = findViewById(R.id.viewTextOwnerName)
+        producerView = findViewById(R.id.viewTextProducer)
+        modelView = findViewById(R.id.viewTextModel)
+        plateNumberView = findViewById(R.id.viewTextPlateNumber)
 
         photoBack = findViewById<View>(R.id.imagePreviewBackground) as ImageView
         photo = findViewById<View>(R.id.imagePreview) as ImageView
@@ -63,9 +70,9 @@ class EditCarActivity : AppCompatActivity() {
             setPhoto()
 
             removeButton.setOnClickListener {
+                dataStorage.remove(dataItem)
                 val data = Intent()
                 data.action = MainActivity.REMOVE
-                data.putExtra(MainActivity.ITEM, dataItem)
                 setResult(RESULT_OK, data)
                 finish()
             }
@@ -74,34 +81,10 @@ class EditCarActivity : AppCompatActivity() {
         findViewById<View>(R.id.addBUtton).setOnClickListener {
             val data = Intent()
             if (dataItem == null) {
-                // add
-                val newDataItem = CarInfoEntity(0L,
-                        ownerView.text.toString(),
-                        producerView.text.toString(),
-                        modelView.text.toString(),
-                        plateNumberView.text.toString(),
-                        mCurrentPhotoPath
-                )
-                data.apply {
-                    action = MainActivity.ADD
-                    putExtra(MainActivity.ITEM, newDataItem)
-                }
-
+                addCar(data, dataStorage)
             } else {
-                // edit
-                val updatedDataItem = CarInfoEntity(dataItem.id,
-                        ownerView.text.toString(),
-                        producerView.text.toString(),
-                        modelView.text.toString(),
-                        plateNumberView.text.toString(),
-                        mCurrentPhotoPath)
-
-                data.apply {
-                    action = MainActivity.EDIT
-                    putExtra(MainActivity.ITEM, updatedDataItem)
-                }
+                updateCar(dataItem, data, dataStorage)
             }
-
             setResult(RESULT_OK, data)
             finish()
         }
@@ -112,6 +95,39 @@ class EditCarActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.imageEdit).setOnClickListener(captureImageMultiVersion())
+    }
+
+    private fun addCar(data: Intent, dataStorage: DatabaseStorage) {
+        // add
+        val newDataItem = CarInfoEntity(0L,
+                ownerView.text.toString(),
+                producerView.text.toString(),
+                modelView.text.toString(),
+                plateNumberView.text.toString(),
+                mCurrentPhotoPath
+        )
+        val newId = dataStorage.add(newDataItem)
+
+        data.apply {
+            action = MainActivity.ADD
+            newDataItem.id = newId;
+            putExtra(ITEM, newDataItem)
+        }
+    }
+
+    private fun updateCar(dataItem: CarInfoEntity, data: Intent, dataStorage: DatabaseStorage) {
+        // edit
+        val updatedDataItem = CarInfoEntity(dataItem.id,
+                ownerView.text.toString(),
+                producerView.text.toString(),
+                modelView.text.toString(),
+                plateNumberView.text.toString(),
+                mCurrentPhotoPath)
+        dataStorage.update(updatedDataItem)
+
+        data.apply {
+            action = MainActivity.EDIT
+        }
     }
 
 

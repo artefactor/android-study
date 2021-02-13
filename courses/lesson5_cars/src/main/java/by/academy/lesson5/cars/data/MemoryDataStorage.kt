@@ -42,8 +42,9 @@ class MemoryDataStorage() : Parcelable, AbstractCarDataStorage {
         return items!!.sortedBy { it?.producer?.toLowerCase() };
     }
 
-    override fun add(item: CarInfoEntity?) {
+    override fun add(item: CarInfoEntity?): Long {
         items.apply { add(item) }
+        return items!!.size.toLong()
     }
 
     override fun remove(item: CarInfoEntity?) {

@@ -15,8 +15,8 @@ public class DatabaseStorage implements AbstractCarDataStorage {
     }
 
     @Override
-    public void add(CarInfoEntity item) {
-        carInfoDAO.add(item);
+    public Long add(CarInfoEntity item) {
+        return carInfoDAO.add(item);
     }
 
     @Override

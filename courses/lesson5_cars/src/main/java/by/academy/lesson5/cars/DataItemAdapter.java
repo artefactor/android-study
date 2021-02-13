@@ -147,7 +147,7 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
                 imageView.setVisibility(View.GONE);
             }
 
-            UiUtils.INSTANCE.setImage(imageViewBack, imagePath);
+            UiUtils.setImage(imageViewBack, imagePath);
         }
     }
 
@@ -157,31 +157,6 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
     //
     //------------------------------------------*/
 
-    public void addItem(CarInfoEntity dataItem) {
-        if (dataItemList != null) {
-            dataItemList.add(dataItem);
-            int position = dataItemList.size() ;
-            notifyItemInserted(position);
-        }
-        checkVisibility();
-    }
-
-    public void update(CarInfoEntity item, int position) {
-        CarInfoEntity dataItem = dataItemList.get(position);
-        Log.d(LoggingTags.TAG_EDIT, "update from: " + item);
-        Log.d(LoggingTags.TAG_EDIT, "update     : " + dataItem);
-
-        if (!dataItem.equals(item)) {
-            dataItemList.set(position, item);
-            notifyItemChanged(position);
-        }
-    }
-
-    public void remove(CarInfoEntity item, int position) {
-        dataItemList.remove(position);
-        notifyItemRemoved(position);
-        checkVisibility();
-    }
 
     /**
      * Кроме этого, на данном экране должна быть реализована фильтрация автомобилей
@@ -200,25 +175,35 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void afterTextChanged(Editable s) {
-                filter(s, itemsProvider.get());
+                filter(s, null, itemsProvider.get());
             }
         });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void filter(Editable filterString, List<CarInfoEntity> freshItems) {
+    public void filter(Editable filterString, CarInfoEntity lastAddedItem, List<CarInfoEntity> freshItems) {
 
         Log.i(LoggingTags.TAG_SEARCH, "" + filterString);
         dataItemList.clear();
         String lowerCase = filterString.toString().toLowerCase();
         freshItems.stream().filter(
-                r -> (Objects.requireNonNull(r.getModel()).toLowerCase().contains(lowerCase) ||
-                        r.getPlateNumber().toLowerCase().contains(lowerCase) ||
-                        r.getProducer().toLowerCase().contains(lowerCase)
-                )).forEach(dataItemList::add);
+                r -> isMatches(r, lowerCase) || isEquals(lastAddedItem, r)).forEach(dataItemList::add);
         notifyDataSetChanged();
         checkVisibility();
 
+    }
+
+    private boolean isMatches(CarInfoEntity r, String lowerCase) {
+        return Objects.requireNonNull(r.getModel()).toLowerCase().contains(lowerCase) ||
+                r.getPlateNumber().toLowerCase().contains(lowerCase) ||
+                r.getProducer().toLowerCase().contains(lowerCase);
+    }
+
+    private boolean isEquals(CarInfoEntity lastAddedItem, CarInfoEntity r) {
+        if (lastAddedItem == null) {
+            return false;
+        }
+        return r.getId() == lastAddedItem.getId();
     }
 
     private void checkVisibility() {

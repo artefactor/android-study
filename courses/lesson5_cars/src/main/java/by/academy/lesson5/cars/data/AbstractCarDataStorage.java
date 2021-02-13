@@ -5,7 +5,7 @@ import java.util.List;
 public interface AbstractCarDataStorage {
     List<CarInfoEntity> getAllItems();
 
-    void add(CarInfoEntity item);
+    Long add(CarInfoEntity item);
 
     void remove(CarInfoEntity item);
 

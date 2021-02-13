@@ -29,7 +29,6 @@
         </provider>
 
         <activity android:name=".EditCarActivity" />
-        <activity android:name=".AddCarActivity" />
         <activity android:name=".EditWorkActivity" />
         <activity android:name=".WorkListActivity" />
         <activity android:name=".MainActivity">
