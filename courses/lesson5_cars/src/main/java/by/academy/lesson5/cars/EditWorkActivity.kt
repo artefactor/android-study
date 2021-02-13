@@ -12,7 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import by.academy.lesson5.cars.UiUtils.dateFormat
 import by.academy.lesson5.cars.data.WorkInfoEntity
-import java.util.Date
+import java.util.*
 
 class EditWorkActivity : AppCompatActivity() {
 
@@ -25,7 +25,7 @@ class EditWorkActivity : AppCompatActivity() {
             finish()
             return
         }
-        val carDataItemId: Long = intent.getLongExtra(WorkListActivity.CAR_ITEM_ID, -1L)
+        val carDataItemId = intent.getLongExtra(WorkListActivity.CAR_ITEM_ID, -1L)
         val removeButton = findViewById<View>(R.id.removeBUtton)
 
         val workNameView = findViewById<TextView>(R.id.viewTextWorkName)
@@ -33,13 +33,10 @@ class EditWorkActivity : AppCompatActivity() {
         val descriptionView = findViewById<TextView>(R.id.viewTextDescription)
 
         val workStatusRadioGroup = findViewById<RadioGroup>(R.id.radioWorkStatus)
-        val wStatusInProgress: RadioButton
-        val wStatusInPending: RadioButton
-        val wStatusCompleted: RadioButton
 
-        wStatusInProgress = workStatusRadioGroup.findViewById(R.id.workStatusInProgress)
-        wStatusCompleted = workStatusRadioGroup.findViewById(R.id.workStatusCompleted)
-        wStatusInPending = workStatusRadioGroup.findViewById(R.id.workStatusPending)
+        val wStatusInProgress: RadioButton = workStatusRadioGroup.findViewById(R.id.workStatusInProgress)
+        val wStatusCompleted: RadioButton = workStatusRadioGroup.findViewById(R.id.workStatusCompleted)
+        val wStatusInPending: RadioButton = workStatusRadioGroup.findViewById(R.id.workStatusPending)
 
         val workStatusComponent = WorkStatusComponent(workStatusRadioGroup,
                 wStatusInProgress,

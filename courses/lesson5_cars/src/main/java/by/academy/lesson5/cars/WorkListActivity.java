@@ -37,15 +37,6 @@ public class WorkListActivity extends AppCompatActivity {
     private WorkInfoDAO workDao;
     private View noWorksView;
 
-    // TODO now abstract storage is implemented only for car list
-//    @Override
-//    public void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        if (!useDatabase && dataStorage != null) {
-//            Log.d(TAG_DATA, "Данные сохранены");
-//            outState.putParcelable(DATA, (MemoryDataStorage) dataStorage);
-//        }
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

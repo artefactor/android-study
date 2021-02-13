@@ -82,14 +82,13 @@ class WorkStatusComponent(
     }
 
     companion object {
-        fun statusColor(status: Int): Int {
-            when (status) {
-                WS_IN_PROGRESS -> return WS_IN_PROGRESS_COLOR
-                WS_COMPLETED -> return WS_COMPLETED_COLOR
-                WS_PENDING -> return WS_PENDING_COLOR
-            }
-            return WS_IN_PROGRESS_COLOR
-        }
+        fun statusColor(status: Int): Int =
+                when (status) {
+                    WS_IN_PROGRESS -> WS_IN_PROGRESS_COLOR
+                    WS_COMPLETED -> WS_COMPLETED_COLOR
+                    WS_PENDING -> WS_PENDING_COLOR
+                    else -> WS_IN_PROGRESS_COLOR
+                }
     }
 }
 

@@ -76,11 +76,11 @@ public class MainActivity extends AppCompatActivity {
         noCarsView = findViewById(R.id.no_cars);
         noCarsView.setVisibility(View.INVISIBLE);
 
-        adapter = new DataItemAdapter(dataStorage, this.getResources());
+        adapter = new DataItemAdapter(dataStorage.getAllItems());
         adapter.setCheckVisibilityListener(this::onCheckVisibility);
         adapter.setEditCarListener(this::edit);
         adapter.setShowWorkListener(this::showWorks);
-        adapter.addFilteringBy(findViewById(R.id.searchView));
+        adapter.addFilteringBy(findViewById(R.id.searchView), ()-> dataStorage.getAllItems());
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
@@ -131,12 +131,15 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG_EDIT, "returned command " + (command) + "pos: " + position);
             switch (command) {
                 case EDIT:
+                    dataStorage.update(item);
                     adapter.update(item, position);
                     return;
                 case ADD:
+                    dataStorage.add(item);
                     adapter.addItem(item);
                     return;
                 case REMOVE:
+                    dataStorage.remove(item);
                     adapter.remove(item, position);
             }
         }

@@ -20,12 +20,11 @@ import by.academy.lesson5.cars.data.CarInfoEntity
 import by.academy.utils.FilesAndImagesUtils.createImageFile
 import by.academy.utils.LoggingTags.TAG_PHOTO
 
+//    For checking manual permissions for API level 23
+private const val MY_PERMISSIONS_REQUEST_CAMERA = 22
+private const val CAPTURE_IMAGE_REQUEST = 16
 
 class EditCarActivity : AppCompatActivity() {
-
-    //    For checking manual permissions for API level 23
-    private val MY_PERMISSIONS_REQUEST_CAMERA = 22
-    private val CAPTURE_IMAGE_REQUEST = 16
 
     private lateinit var photoBack: ImageView
     private lateinit var photo: ImageView
@@ -45,7 +44,9 @@ class EditCarActivity : AppCompatActivity() {
         photo = findViewById<View>(R.id.imagePreview) as ImageView
         val removeButton = findViewById<View>(R.id.removeBUtton)
 
-        val dataItem: CarInfoEntity? = intent.getParcelableExtra(MainActivity.ITEM)
+        val dataItem: CarInfoEntity? =
+                intent.getParcelableExtra(MainActivity.ITEM) as? CarInfoEntity?
+
         //  dataItem is null  -  means a car adding
         if (dataItem == null) {
             removeButton.visibility = View.INVISIBLE
@@ -193,7 +194,7 @@ class EditCarActivity : AppCompatActivity() {
     }
 
     private fun setPhoto() {
-        setPhoto(mCurrentPhotoPath, photo, photoBack, resources)
+        setPhoto(mCurrentPhotoPath, photo, photoBack)
     }
 
 }

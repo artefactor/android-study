@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ import static android.view.LayoutInflater.from;
 
 class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataItemViewHolder> {
 
-    private final Resources resources;
     private final WorkInfoDAO dataStorage;
     private final List<WorkInfoEntity> dataItemList;
     private final CarInfoEntity carDataItem;
@@ -40,7 +40,6 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
         this.checkVisibilityListener = checkVisibilityListener;
         this.dataItemList = dataStorage.getInfo(carDataItem.getId());
         this.dataStorage = dataStorage;
-        this.resources = resources;
         checkVisibility();
     }
 
@@ -76,7 +75,7 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
     @Override
     public DataItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = from(parent.getContext()).inflate(R.layout.work_info, parent, false);
-        return new DataItemViewHolder(view, resources);
+        return new DataItemViewHolder(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -97,16 +96,14 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
         private final TextView viewCost;
 
         private final ImageView imageView;
-        private final Resources resources;
 
-        public DataItemViewHolder(@NonNull View itemView, Resources resources) {
+        public DataItemViewHolder(@NonNull View itemView) {
             super(itemView);
             viewWorkName = itemView.findViewById(R.id.viewTextWorkName);
             viewCost = itemView.findViewById(R.id.viewTextCost);
             viewWorkDate = itemView.findViewById(R.id.viewTextDate);
 
             imageView = itemView.findViewById(R.id.imageStatus);
-            this.resources = resources;
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -115,7 +112,7 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
 
             ColorStateList colorStateList =
                     ColorStateList.valueOf(
-                            resources.getColor(
+                            ContextCompat.getColor(imageView.getContext(),
                                     WorkStatusComponent.Companion.statusColor(dataItem.getStatus()))
                     );
             imageView.setImageTintList(colorStateList);
@@ -151,8 +148,8 @@ class WorkDataItemAdapter extends RecyclerView.Adapter<WorkDataItemAdapter.DataI
     public void update(WorkInfoEntity item, int position) {
         dataStorage.update(item);
         WorkInfoEntity dataItem = dataItemList.get(position);
-        Log.i(LoggingTags.TAG_EDIT, "update from: " + item);
-        Log.i(LoggingTags.TAG_EDIT, "update     : " + dataItem);
+        Log.d(LoggingTags.TAG_EDIT, "update from: " + item);
+        Log.d(LoggingTags.TAG_EDIT, "update     : " + dataItem);
 
         if (!dataItem.equals(item)) {
             dataItemList.set(position, item);

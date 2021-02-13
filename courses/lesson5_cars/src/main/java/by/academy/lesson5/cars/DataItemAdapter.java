@@ -1,6 +1,5 @@
 package by.academy.lesson5.cars;
 
-import android.content.res.Resources;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,26 +14,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
-import by.academy.lesson5.cars.data.AbstractCarDataStorage;
 import by.academy.lesson5.cars.data.CarInfoEntity;
 import by.academy.utils.LoggingTags;
 
 import static android.view.LayoutInflater.from;
+import static androidx.core.content.ContextCompat.getColor;
 
 class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewHolder> {
 
-    private final Resources resources;
-    private final AbstractCarDataStorage dataStorage;
     private final List<CarInfoEntity> dataItemList;
 
-    public DataItemAdapter(AbstractCarDataStorage dataStorage, Resources resources) {
-        this.dataItemList = dataStorage.getAllItems();
-        this.dataStorage = dataStorage;
-        this.resources = resources;
+    public DataItemAdapter(List<CarInfoEntity> allItems) {
+        this.dataItemList = allItems;
         checkVisibility();
     }
 
@@ -84,7 +79,7 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
     @Override
     public DataItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = from(parent.getContext()).inflate(R.layout.car_info, parent, false);
-        return new DataItemViewHolder(view, resources);
+        return new DataItemViewHolder(view);
     }
 
     @Override
@@ -105,9 +100,8 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
 
         private final ImageView imageView;
         private final ImageView imageViewBack;
-        private final Resources resources;
 
-        public DataItemViewHolder(@NonNull View itemView, Resources resources) {
+        public DataItemViewHolder(@NonNull View itemView) {
             super(itemView);
             ownerView = itemView.findViewById(R.id.viewTextOwnerName);
             plateNumberView = itemView.findViewById(R.id.viewTextPlateNumber);
@@ -116,14 +110,13 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
             imageView = itemView.findViewById(R.id.imagePreview);
             imageViewBack = itemView.findViewById(R.id.imagePreviewBackground);
 
-            this.resources = resources;
         }
 
         void bind(CarInfoEntity dataItem, int position) {
             Log.i(LoggingTags.TAG_BIND, "bind: " + position);
             View viewEdit = itemView.findViewById(R.id.imageEdit);
 
-            UiUtils.INSTANCE.setPhotoAndInit(dataItem.getImagePath(), imageView, imageViewBack,viewEdit, resources);
+            setPhotoAndInit(dataItem.getImagePath(), imageView, imageViewBack, viewEdit);
 
             ownerView.setText(dataItem.getOwnerName());
             plateNumberView.setText(dataItem.getPlateNumber());
@@ -141,6 +134,21 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
             }
 
         }
+
+        private void setPhotoAndInit(String imagePath, ImageView imageView, ImageView imageViewBack, View viewEdit) {
+            if (imagePath == null) {
+                imageView.setVisibility(View.VISIBLE);
+                imageView.setImageResource(R.drawable.ic_baseline_camera_alt_24);
+                imageView.setBackgroundColor(getColor(itemView.getContext(), R.color.purple_200));
+                viewEdit.setBackgroundColor(getColor(itemView.getContext(), R.color.purple_200));
+            } else {
+                viewEdit.setBackgroundColor(getColor(itemView.getContext(), R.color.teal_200));
+                imageViewBack.setBackgroundColor(getColor(itemView.getContext(), R.color.teal_200));
+                imageView.setVisibility(View.GONE);
+            }
+
+            UiUtils.INSTANCE.setImage(imageViewBack, imagePath);
+        }
     }
 
     /*------------------------------------------
@@ -150,20 +158,18 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
     //------------------------------------------*/
 
     public void addItem(CarInfoEntity dataItem) {
-        dataStorage.add(dataItem);
         if (dataItemList != null) {
             dataItemList.add(dataItem);
-            int position = dataStorage.getAllItems().size() - 1;
+            int position = dataItemList.size() ;
             notifyItemInserted(position);
         }
         checkVisibility();
     }
 
     public void update(CarInfoEntity item, int position) {
-        dataStorage.update(item);
         CarInfoEntity dataItem = dataItemList.get(position);
-        Log.i(LoggingTags.TAG_EDIT, "update from: " + item);
-        Log.i(LoggingTags.TAG_EDIT, "update     : " + dataItem);
+        Log.d(LoggingTags.TAG_EDIT, "update from: " + item);
+        Log.d(LoggingTags.TAG_EDIT, "update     : " + dataItem);
 
         if (!dataItem.equals(item)) {
             dataItemList.set(position, item);
@@ -173,7 +179,6 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
 
     public void remove(CarInfoEntity item, int position) {
         dataItemList.remove(position);
-        dataStorage.remove(item);
         notifyItemRemoved(position);
         checkVisibility();
     }
@@ -182,7 +187,7 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
      * Кроме этого, на данном экране должна быть реализована фильтрация автомобилей
      * по гос. номеру и марке.
      */
-    public void addFilteringBy(EditText viewById) {
+    public void addFilteringBy(EditText viewById, Supplier<List<CarInfoEntity>> itemsProvider) {
         viewById.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -195,23 +200,22 @@ class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.DataItemViewH
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void afterTextChanged(Editable s) {
-                filter(s);
+                filter(s, itemsProvider.get());
             }
         });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void filter(Editable filterString) {
+    public void filter(Editable filterString, List<CarInfoEntity> freshItems) {
+
         Log.i(LoggingTags.TAG_SEARCH, "" + filterString);
         dataItemList.clear();
-        List<CarInfoEntity> newItems = new ArrayList(dataStorage.getAllItems());
         String lowerCase = filterString.toString().toLowerCase();
-        newItems.removeIf(
-                r -> !(Objects.requireNonNull(r.getModel()).toLowerCase().contains(lowerCase) ||
+        freshItems.stream().filter(
+                r -> (Objects.requireNonNull(r.getModel()).toLowerCase().contains(lowerCase) ||
                         r.getPlateNumber().toLowerCase().contains(lowerCase) ||
                         r.getProducer().toLowerCase().contains(lowerCase)
-                ));
-        dataItemList.addAll(newItems);
+                )).forEach(dataItemList::add);
         notifyDataSetChanged();
         checkVisibility();
 
