@@ -13,8 +13,12 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/lesson1colors" />
             <option value="$PROJECT_DIR$/lesson2activity" />
-            <option value="$PROJECT_DIR$/lesson4_2custom_view" />
             <option value="$PROJECT_DIR$/lesson3layout" />
+            <option value="$PROJECT_DIR$/lesson4_2custom_view" />
+            <option value="$PROJECT_DIR$/lesson5_cars" />
+            <option value="$PROJECT_DIR$/lesson4_2custom_view" />
+            <option value="$PROJECT_DIR$/photoapplication" />
+            <option value="$PROJECT_DIR$/utils" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
