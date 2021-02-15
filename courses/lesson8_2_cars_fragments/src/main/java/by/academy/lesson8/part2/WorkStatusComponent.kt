@@ -1,13 +1,11 @@
 package by.academy.lesson8.part2
 
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.os.Build
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import by.academy.lesson8.part2.R
 
 const val WS_IN_PROGRESS = 0
 const val WS_COMPLETED = 2

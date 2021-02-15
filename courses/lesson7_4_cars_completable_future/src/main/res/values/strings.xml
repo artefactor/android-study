@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">74Cars</string>
+
+    <!--    car-->
+    <string name="owner_name">Owner name</string>
+    <string name="producer">Producer</string>
+    <string name="model">Model</string>
+    <string name="plate_number">Plate number</string>
+    <string name="cars_empty">No cars added</string>
+    <!--    actions-->
+    <string name="add_car">Add Car</string>
+    <string name="car_list">Car list</string>
+    <string name="edit_car">Car info</string>
+    <string name="remove">Remove</string>
+    <string name="search">Producer or PlateNumber</string>
+
+    <!--    work-->
+    <string name="add_work">Add work</string>
+    <string name="work_status_in_progress">In progress</string>
+    <string name="work_status_pending">Pending</string>
+    <string name="work_status_completed">Completed</string>
+
+    <string name="app_date">Application date</string>
+    <string name="cost">Cost($)</string>
+    <string name="work_name">Work name</string>
+    <string name="description">Description</string>
+    <string name="works_empty">No works added</string>
+
+    <!--    confirmations and dialogs-->
+    <string name="remove_work">Remove work</string>
+    <string name="remove_confirmation">Do you really want to delete work?</string>
+    <string name="No">No</string>
+    <string name="camera_not_supported">Capture Image function for 4.4.4 and lower is not supported</string>
+    <string name="permissions_not_given">Permissions not given</string>
+    <string name="fields_must_be_filled">Fields can\'t be empty</string>
+    <string name="photo_capture_was_cancelled">Request cancelled or something went wrong.</string>
+</resources>

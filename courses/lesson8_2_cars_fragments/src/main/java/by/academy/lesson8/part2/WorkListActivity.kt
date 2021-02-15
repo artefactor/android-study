@@ -3,6 +3,7 @@ package by.academy.lesson8.part2
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.academy.lesson8.part2.data.*
+import by.academy.utils.TextWatcherAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 const val REQUEST_CODE_WORKS = 28
@@ -43,9 +45,13 @@ class WorkListActivity : AppCompatActivity() {
         noWorksView = findViewById<TextView>(R.id.no_cars).apply { visibility = View.INVISIBLE }
         searchView = findViewById(R.id.searchView)
 
-        workItemsAdapter = WorkDataItemAdapter2(dataStorage.getWorkInfo(carDataItem.getId()), this::onCheckVisibility).apply {
+        workItemsAdapter = WorkDataItemAdapter2(this::onCheckVisibility).apply {
             setEditWorkListener { dataItem: WorkInfoEntity, position: Int -> onEditWork(dataItem, position) }
-            addFilteringBy(searchView) { dataStorage.getWorkInfo(carDataItem.getId()) }
+            searchView.addTextChangedListener(object : TextWatcherAdapter() {
+                override fun afterTextChanged(s: Editable) {
+                    filter(s, null, dataStorage.getWorkInfo(carDataItem.getId()))
+                }
+            })
         }
         findViewById<RecyclerView>(R.id.recyclerView).apply {
             adapter = workItemsAdapter

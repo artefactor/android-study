@@ -12,13 +12,15 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import by.academy.lesson8.part2.BuildConfig
-import by.academy.lesson8.part2.R
-import by.academy.lesson8.part2.data.CarInfoEntity
 import by.academy.lesson8.part2.data.AbstractDataRepository
+import by.academy.lesson8.part2.data.CarInfoEntity
 import by.academy.lesson8.part2.data.RepositoryFactory
 import by.academy.utils.FilesAndImagesUtils.createImageFile
 import by.academy.utils.LoggingTags.TAG_PHOTO
+import by.academy.utils.checkPermission
+import by.academy.utils.displayMessage
+import by.academy.utils.notGivenPermission3
+import by.academy.utils.setPhoto
 
 //    For checking manual permissions for API level 23
 private const val MY_PERMISSIONS_REQUEST_CAMERA = 22
@@ -43,7 +45,7 @@ class EditCarActivity : AppCompatActivity() {
 
         // DB
         val dataStorage = RepositoryFactory().getRepository(this)
-        
+
         ownerView = findViewById(R.id.viewTextOwnerName)
         producerView = findViewById(R.id.viewTextProducer)
         modelView = findViewById(R.id.viewTextModel)
@@ -172,16 +174,10 @@ class EditCarActivity : AppCompatActivity() {
     private fun captureImageCameraIfPermitted() {
         Log.i(TAG_PHOTO, "captureImage: takePictureIntent")
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        /*FIXME it  doesn't work.
-            Денис, не понял про этот метод. Встречал его в нескольких примерах,
-            на одной версии андроида у меня он работал, на другой - нет.
-            Он от версии зависит?
-            Или он вообще не нужен?
-        */
-//        if (takePictureIntent.resolveActivity(getPackageManager()) == null) {
-//            displayMessage(getBaseContext(), "Null during resolveActivity method");
-//            return;
-//        }
+        if (takePictureIntent.resolveActivity(packageManager) == null) {
+            displayMessage(baseContext, "Null during resolveActivity method");
+            return;
+        }
 
         try {
             val photoFile = createImageFile(filesDir)

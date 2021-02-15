@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Урок5Машины</string>
+    <string name="app_name">8Машины</string>
 
     <!--    car-->
     <string name="owner_name">Владелец</string>

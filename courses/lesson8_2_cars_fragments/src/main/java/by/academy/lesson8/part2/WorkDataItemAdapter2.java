@@ -6,7 +6,6 @@ import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,9 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 import by.academy.lesson8.part2.data.WorkInfoEntity;
 import by.academy.utils.CommonUtils;
@@ -34,12 +33,10 @@ class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.Dat
     private final CommonAdapterBehavior<WorkInfoEntity> adapterBehavior;
     private final InfoEntityMatcher<WorkInfoEntity> entityMatcher;
 
-    public WorkDataItemAdapter2(List<WorkInfoEntity> dataItemList,
-                                CommonAdapterBehavior.OnCheckVisibilityListener checkVisibilityListener) {
-        this.dataItemList = dataItemList;
+    public WorkDataItemAdapter2(CommonAdapterBehavior.OnCheckVisibilityListener checkVisibilityListener) {
+        this.dataItemList = new ArrayList<>();
         entityMatcher = this::isMatches;
         adapterBehavior = new CommonAdapterBehavior(this, dataItemList, checkVisibilityListener);
-        checkVisibility();
     }
 
 
@@ -132,10 +129,6 @@ class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.Dat
     /**
      * Кроме этого, на данном экране должна быть реализована фильтрация работ по названию
      */
-    public void addFilteringBy(EditText viewById, Supplier<List<WorkInfoEntity>> itemsProvider) {
-        adapterBehavior.addFilteringBy(viewById, itemsProvider, entityMatcher);
-    }
-
     public void filter(@Nullable Editable editableText, @Nullable WorkInfoEntity lastAddedItem, @NotNull List<WorkInfoEntity> workInfo) {
         adapterBehavior.filter(editableText, lastAddedItem, workInfo, entityMatcher);
     }

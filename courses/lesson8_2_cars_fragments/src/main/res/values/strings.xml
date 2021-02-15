@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lesson5Cars</string>
+    <string name="app_name">8Cars</string>
 
     <!--    car-->
     <string name="owner_name">Owner name</string>

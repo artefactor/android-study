@@ -8,11 +8,11 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import by.academy.lesson8.part2.R
 import by.academy.lesson8.part2.data.AbstractDataRepository
 import by.academy.lesson8.part2.data.RepositoryFactory
 import by.academy.lesson8.part2.data.WorkInfoEntity
 import by.academy.utils.dateFormat
+import by.academy.utils.displayMessage
 import java.util.*
 
 class EditWorkActivity : AppCompatActivity() {

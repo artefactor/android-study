@@ -10,7 +10,7 @@ import by.academy.lesson8.part2.WS_COMPLETED
 import by.academy.lesson8.part2.WS_IN_PROGRESS
 import by.academy.lesson8.part2.WS_PENDING
 import by.academy.utils.LoggingTags
-import java.util.Date
+import java.util.*
 
 @Database(entities = [CarInfoEntity::class, WorkInfoEntity::class], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
@@ -46,9 +46,9 @@ internal abstract class DatabaseInfo : RoomDatabase() {
                 add(CarInfoEntity(3, "harry", "fiat", "100", "1075CL", null))
             }
             db.getWorkInfoDAO().apply {
-                addWork(WorkInfoEntity(1, Date(), "repair engine", WS_IN_PROGRESS, 90.0, "").apply { carId = 1 })
-                addWork(WorkInfoEntity(2, Date(), "check fuel", WS_COMPLETED, 50.5, "").apply { carId = 1 })
-                addWork(WorkInfoEntity(3, Date(), "replace door", WS_PENDING, 120.0, "").apply { carId = 1 })
+                addWork(WorkInfoEntity(1, Date(), "repair engine", WS_IN_PROGRESS, 90.0, "work").apply { carId = 1 })
+                addWork(WorkInfoEntity(2, Date(), "check fuel", WS_COMPLETED, 50.5, "work").apply { carId = 1 })
+                addWork(WorkInfoEntity(3, Date(), "replace door", WS_PENDING, 120.0, "work").apply { carId = 1 })
             }
         }
     }

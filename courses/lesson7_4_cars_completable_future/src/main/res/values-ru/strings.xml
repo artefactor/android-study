@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">74Машины</string>
+
+    <!--    car-->
+    <string name="owner_name">Владелец</string>
+    <string name="producer">Марка</string>
+    <string name="model">Модель</string>
+    <string name="plate_number">Госномер</string>
+    <string name="cars_empty">Нет машин</string>
+    <!--    actions-->
+    <string name="add_car">Добавить машину</string>
+    <string name="car_list">Машины</string>
+    <string name="edit_car">Машина</string>
+    <string name="remove">Удалить</string>
+    <string name="search">Марка или госномер</string>
+
+    <!--    work-->
+    <string name="add_work">Добавить работу</string>
+    <string name="work_status_in_progress">В процессе</string>
+    <string name="work_status_pending">На паузе</string>
+    <string name="work_status_completed">Завершена</string>
+
+    <string name="app_date">Время</string>
+    <string name="cost">Стоимость($)</string>
+    <string name="work_name">Заголовок</string>
+    <string name="description">Описание</string>
+    <string name="works_empty">Нет работ</string>
+
+    <!--    confirmations and dialogs-->
+    <string name="remove_work">Удалить работу</string>
+    <string name="remove_confirmation">Вы точно хотите удалить работу?</string>
+    <string name="No">Нет</string>
+    <string name="camera_not_supported">Функция камеры для версии андроида 4.4.4 и ниже не поддерживается</string>
+    <string name="permissions_not_given">Разрешения не получены</string>
+    <string name="fields_must_be_filled">Поля не могут быть пустыми</string>
+    <string name="photo_capture_was_cancelled">Запрос отменен или что-то пошло не так</string>
+
+
+</resources>
