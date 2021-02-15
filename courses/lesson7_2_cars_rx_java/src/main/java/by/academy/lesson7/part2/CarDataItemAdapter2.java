@@ -138,6 +138,7 @@ class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataI
                 imageView.setImageResource(R.drawable.ic_baseline_camera_alt_24);
                 imageView.setBackgroundColor(getColor(itemView.getContext(), R.color.purple_200));
                 viewEdit.setBackgroundColor(getColor(itemView.getContext(), R.color.purple_200));
+                imageViewBack.setBackgroundColor(getColor(itemView.getContext(), R.color.purple_200));
             } else {
                 viewEdit.setBackgroundColor(getColor(itemView.getContext(), R.color.teal_200));
                 imageViewBack.setBackgroundColor(getColor(itemView.getContext(), R.color.teal_200));
@@ -159,9 +160,6 @@ class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataI
      * Кроме этого, на данном экране должна быть реализована фильтрация автомобилей
      * по гос. номеру и марке.
      */
-    public void addFilteringBy(EditText viewById, Supplier<List<CarInfoEntity>> itemsProvider) {
-        adapterBehavior.addFilteringBy(viewById, itemsProvider, entityMatcher);
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void filter(Editable editableText, CarInfoEntity lastAddedItem, List<CarInfoEntity> freshItems) {

@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import by.academy.lesson7.part2.R
 import by.academy.lesson7.part2.data.AbstractDataRepository
 import by.academy.lesson7.part2.data.RepositoryFactory
 import by.academy.lesson7.part2.data.WorkInfoEntity
@@ -92,8 +91,6 @@ class EditWorkActivity : AppCompatActivity() {
             } else {
                 update(data, workBuilder, dataItem, carDataItemId)
             }
-            setResult(RESULT_OK, data)
-            finish()
         }
     }
 
@@ -106,11 +103,13 @@ class EditWorkActivity : AppCompatActivity() {
                 workBuilder.workDescription
         )
         newDataItem.carId = workBuilder.carDataItemId
-        data.apply {
-            action = CMD_ADD
-            val newId = dataStorage.addWork(newDataItem)
-            newDataItem.setId(newId);
-            putExtra(WORK_ITEM, newDataItem)
+
+        dataStorage.addWork(newDataItem).subscribe { newId ->
+            data.action = CMD_ADD
+            newDataItem.setId(newId)
+            data.putExtra(WORK_ITEM, newDataItem)
+            setResult(RESULT_OK, data)
+            finish()
         }
     }
 
@@ -124,10 +123,12 @@ class EditWorkActivity : AppCompatActivity() {
         )
         updatedDataItem.carId = carDataItemId
 
-        data.apply {
-            action = CMD_EDIT
-            dataStorage.updateWork(updatedDataItem)
-        }
+        dataStorage.updateWork(updatedDataItem)
+                .subscribe {
+                    data.action = CMD_EDIT
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
     }
 
 
@@ -145,9 +146,9 @@ class EditWorkActivity : AppCompatActivity() {
     private fun remove(dataItem: WorkInfoEntity) {
         val data = Intent()
         data.action = CMD_REMOVE
-        dataStorage.deleteWork(dataItem)
-        setResult(RESULT_OK, data)
-        finish()
-
+        dataStorage.deleteWork(dataItem).subscribe {
+            setResult(RESULT_OK, data)
+            finish()
+        }
     }
 }

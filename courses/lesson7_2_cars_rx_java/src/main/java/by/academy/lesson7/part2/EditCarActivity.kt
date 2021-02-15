@@ -43,7 +43,7 @@ class EditCarActivity : AppCompatActivity() {
 
         // DB
         val dataStorage = RepositoryFactory().getRepository(this)
-        
+
         ownerView = findViewById(R.id.viewTextOwnerName)
         producerView = findViewById(R.id.viewTextProducer)
         modelView = findViewById(R.id.viewTextModel)
@@ -71,11 +71,12 @@ class EditCarActivity : AppCompatActivity() {
             setPhoto()
 
             removeButton.setOnClickListener {
-                dataStorage.removeCar(dataItem)
-                val data = Intent()
-                data.action = CMD_REMOVE
-                setResult(RESULT_OK, data)
-                finish()
+                dataStorage.removeCar(dataItem).subscribe {
+                    val data = Intent()
+                    data.action = CMD_REMOVE
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
             }
         }
 
@@ -86,8 +87,6 @@ class EditCarActivity : AppCompatActivity() {
             } else {
                 updateCar(dataItem, data, dataStorage)
             }
-            setResult(RESULT_OK, data)
-            finish()
         }
 
         findViewById<View>(R.id.backButton).setOnClickListener {
@@ -107,12 +106,13 @@ class EditCarActivity : AppCompatActivity() {
                 plateNumberView.text.toString(),
                 mCurrentPhotoPath
         )
-        val newId = dataStorage.addCar(newDataItem)
 
-        data.apply {
-            action = CMD_ADD
+        dataStorage.addCar(newDataItem).subscribe { newId ->
+            data.action = CMD_ADD
             newDataItem.setId(newId);
-            putExtra(CAR_ITEM, newDataItem)
+            data.putExtra(CAR_ITEM, newDataItem)
+            setResult(RESULT_OK, data)
+            finish()
         }
     }
 
@@ -124,10 +124,10 @@ class EditCarActivity : AppCompatActivity() {
                 modelView.text.toString(),
                 plateNumberView.text.toString(),
                 mCurrentPhotoPath)
-        dataStorage.updateCar(updatedDataItem)
-
-        data.apply {
-            action = CMD_EDIT
+        dataStorage.updateCar(updatedDataItem).subscribe {
+            data.action = CMD_EDIT
+            setResult(RESULT_OK, data)
+            finish()
         }
     }
 
@@ -172,16 +172,10 @@ class EditCarActivity : AppCompatActivity() {
     private fun captureImageCameraIfPermitted() {
         Log.i(TAG_PHOTO, "captureImage: takePictureIntent")
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        /*FIXME it  doesn't work.
-            Денис, не понял про этот метод. Встречал его в нескольких примерах,
-            на одной версии андроида у меня он работал, на другой - нет.
-            Он от версии зависит?
-            Или он вообще не нужен?
-        */
-//        if (takePictureIntent.resolveActivity(getPackageManager()) == null) {
-//            displayMessage(getBaseContext(), "Null during resolveActivity method");
-//            return;
-//        }
+        if (takePictureIntent.resolveActivity(packageManager) == null) {
+            displayMessage(baseContext, "Null during resolveActivity method")
+            return
+        }
 
         try {
             val photoFile = createImageFile(filesDir)
