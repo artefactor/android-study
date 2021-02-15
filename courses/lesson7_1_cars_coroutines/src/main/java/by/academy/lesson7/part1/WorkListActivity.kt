@@ -10,8 +10,18 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import by.academy.lesson7.part1.data.*
+import by.academy.lesson7.part1.data.AbstractDataRepository
+import by.academy.lesson7.part1.data.CarInfoEntity
+import by.academy.lesson7.part1.data.RepositoryFactory
+import by.academy.lesson7.part1.data.WorkInfoEntity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.util.function.Supplier
 
 const val REQUEST_CODE_WORKS = 28
 
@@ -22,7 +32,7 @@ class WorkListActivity : AppCompatActivity() {
     private lateinit var car: CarInfoEntity
     private var lastAddedItem: WorkInfoEntity? = null
     private lateinit var searchView: EditText
-
+    private lateinit var activityScope: CoroutineScope
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,15 +47,16 @@ class WorkListActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         // DB
-        dataStorage = RepositoryFactory().getRepository(this)
+        activityScope = CoroutineScope(Dispatchers.Main + Job())
+        dataStorage = RepositoryFactory().getRepository(this, activityScope)
 
         // Recycler view and adapter
         noWorksView = findViewById<TextView>(R.id.no_cars).apply { visibility = View.INVISIBLE }
         searchView = findViewById(R.id.searchView)
 
-        workItemsAdapter = WorkDataItemAdapter2(dataStorage.getWorkInfo(carDataItem.getId()), this::onCheckVisibility).apply {
+        workItemsAdapter = WorkDataItemAdapter2(arrayListOf()) { onCheckVisibility(it) }.apply {
             setEditWorkListener { dataItem: WorkInfoEntity, position: Int -> onEditWork(dataItem, position) }
-            addFilteringBy(searchView) { dataStorage.getWorkInfo(carDataItem.getId()) }
+            addFilteringBy(searchView, getWorksSupplier(carDataItem.getId()))
         }
         findViewById<RecyclerView>(R.id.recyclerView).apply {
             adapter = workItemsAdapter
@@ -66,6 +77,21 @@ class WorkListActivity : AppCompatActivity() {
             finish()
         }
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        activityScope.cancel()
+    }
+
+    private fun getWorksSupplier(carId: Long): Supplier<List<WorkInfoEntity>> {
+        return Supplier<List<WorkInfoEntity>> {
+            val result: List<WorkInfoEntity>
+            runBlocking {
+                result = dataStorage.getWorkInfo(carId)
+            }
+            result
+        }
+    }
+
 
     private fun addWork(dataItem: CarInfoEntity) {
         val intent = Intent(this@WorkListActivity, EditWorkActivity::class.java)
@@ -90,7 +116,9 @@ class WorkListActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val editableText = searchView.editableText
-        workItemsAdapter.filter(editableText, lastAddedItem, dataStorage.getWorkInfo(car.getId()))
+        activityScope.launch {
+            workItemsAdapter.filter(editableText, lastAddedItem, dataStorage.getWorkInfo(car.getId()))
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
