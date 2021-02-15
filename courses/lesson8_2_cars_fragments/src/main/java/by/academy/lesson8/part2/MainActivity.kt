@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.academy.lesson8.part2.adapter.CarDataItemAdapter2
 import by.academy.lesson8.part2.data.AbstractDataRepository
 import by.academy.lesson8.part2.data.CarInfoEntity
 import by.academy.lesson8.part2.data.RepositoryFactory

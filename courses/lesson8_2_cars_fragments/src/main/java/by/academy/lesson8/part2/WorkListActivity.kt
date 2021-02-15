@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.academy.lesson8.part2.adapter.WorkDataItemAdapter2
 import by.academy.lesson8.part2.data.*
 import by.academy.utils.TextWatcherAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton

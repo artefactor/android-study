@@ -1,4 +1,4 @@
-package by.academy.lesson8.part2;
+package by.academy.lesson8.part2.adapter;
 
 import android.os.Build;
 import android.text.Editable;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import by.academy.lesson8.part2.R;
 import by.academy.lesson8.part2.data.CarInfoEntity;
 import by.academy.utils.LoggingTags;
 import by.academy.utils.UiUtils;
@@ -23,7 +24,7 @@ import by.academy.utils.UiUtils;
 import static android.view.LayoutInflater.from;
 import static androidx.core.content.ContextCompat.getColor;
 
-class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataItemViewHolder> {
+public class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataItemViewHolder> {
 
     private final List<CarInfoEntity> dataItemList;
     private final CommonAdapterBehavior<CarInfoEntity> adapterBehavior;

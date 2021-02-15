@@ -1,4 +1,4 @@
-package by.academy.lesson8.part2;
+package by.academy.lesson8.part2.adapter;
 
 import android.os.Build;
 import android.text.Editable;
@@ -12,7 +12,7 @@ import java.util.List;
 import by.academy.lesson8.part2.data.InfoEntity;
 import by.academy.utils.LoggingTags;
 
-public class CommonAdapterBehavior<T extends InfoEntity> {
+class CommonAdapterBehavior<T extends InfoEntity> {
     private final RecyclerView.Adapter workDataItemAdapterAaA;
     private final List<T> dataItemList;
 

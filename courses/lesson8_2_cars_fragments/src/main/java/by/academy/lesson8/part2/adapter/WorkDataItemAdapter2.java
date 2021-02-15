@@ -1,4 +1,4 @@
-package by.academy.lesson8.part2;
+package by.academy.lesson8.part2.adapter;
 
 import android.content.res.ColorStateList;
 import android.os.Build;
@@ -21,13 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import by.academy.lesson8.part2.R;
+import by.academy.lesson8.part2.WorkStatusComponent;
 import by.academy.lesson8.part2.data.WorkInfoEntity;
 import by.academy.utils.CommonUtils;
 import by.academy.utils.LoggingTags;
 
 import static android.view.LayoutInflater.from;
 
-class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.DataItemViewHolder> {
+public class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.DataItemViewHolder> {
 
     private final List<WorkInfoEntity> dataItemList;
     private final CommonAdapterBehavior<WorkInfoEntity> adapterBehavior;
