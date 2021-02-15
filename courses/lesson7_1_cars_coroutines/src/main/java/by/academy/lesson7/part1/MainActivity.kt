@@ -120,6 +120,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /* FIXME Денис. а будет ли такой подход работать?
+        у меня в 5й работе была лямбда, которая на фильтр возвращала свежий список,
+        здесь я постарался так же сделать.
+        Намучался пару часов, но думаю, что не совсем правильный подход.
+        можешь прокомментировать?
+     */
     private fun getCarsSupplier(): Supplier<List<CarInfoEntity>>? {
         return Supplier<List<CarInfoEntity>> {
             val result: List<CarInfoEntity>
