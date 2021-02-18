@@ -8,15 +8,19 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import by.academy.lesson7.part1.R
 import by.academy.lesson7.part1.data.AbstractDataRepository
 import by.academy.lesson7.part1.data.RepositoryFactory
 import by.academy.lesson7.part1.data.WorkInfoEntity
 import by.academy.utils.dateFormat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.util.*
 
 class EditWorkActivity : AppCompatActivity() {
-
+    private lateinit var activityScope: CoroutineScope
     private lateinit var dataStorage: AbstractDataRepository
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -31,7 +35,8 @@ class EditWorkActivity : AppCompatActivity() {
         setContentView(R.layout.work_add_edit)
 
         // DB
-        dataStorage = RepositoryFactory().getRepository(this)
+        activityScope = CoroutineScope(Dispatchers.Main + Job())
+        dataStorage = RepositoryFactory().getRepository(this, activityScope)
 
         val removeButton = findViewById<View>(R.id.removeBUtton)
 
@@ -87,17 +92,24 @@ class EditWorkActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (dataItem == null) {
-                add(data, workBuilder, date)
-            } else {
-                update(data, workBuilder, dataItem, carDataItemId)
+            activityScope.launch {
+                if (dataItem == null) {
+                    add(data, workBuilder, date)
+                } else {
+                    update(data, workBuilder, dataItem, carDataItemId)
+                }
+                setResult(RESULT_OK, data)
+                finish()
             }
-            setResult(RESULT_OK, data)
-            finish()
         }
     }
 
-    private fun add(data: Intent, workBuilder: WorkBuilder, date: Date) {
+    override fun onDestroy() {
+        super.onDestroy()
+        activityScope.cancel()
+    }
+
+    private suspend fun add(data: Intent, workBuilder: WorkBuilder, date: Date) {
         val newDataItem = WorkInfoEntity(0L,
                 date,
                 workBuilder.workName,
@@ -114,7 +126,7 @@ class EditWorkActivity : AppCompatActivity() {
         }
     }
 
-    private fun update(data: Intent, workBuilder: WorkBuilder, dataItem: WorkInfoEntity, carDataItemId: Long) {
+    private suspend fun update(data: Intent, workBuilder: WorkBuilder, dataItem: WorkInfoEntity, carDataItemId: Long) {
         val updatedDataItem = WorkInfoEntity(dataItem.getId(),
                 dataItem.date,
                 workBuilder.workName,
@@ -143,11 +155,12 @@ class EditWorkActivity : AppCompatActivity() {
     }
 
     private fun remove(dataItem: WorkInfoEntity) {
-        val data = Intent()
-        data.action = CMD_REMOVE
-        dataStorage.deleteWork(dataItem)
-        setResult(RESULT_OK, data)
-        finish()
-
+        activityScope.launch {
+            val data = Intent()
+            data.action = CMD_REMOVE
+            dataStorage.deleteWork(dataItem)
+            setResult(RESULT_OK, data)
+            finish()
+        }
     }
 }

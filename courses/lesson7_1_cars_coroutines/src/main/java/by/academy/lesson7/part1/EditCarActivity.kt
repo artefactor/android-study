@@ -12,13 +12,18 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import by.academy.lesson7.part1.BuildConfig
-import by.academy.lesson7.part1.R
-import by.academy.lesson7.part1.data.CarInfoEntity
 import by.academy.lesson7.part1.data.AbstractDataRepository
+import by.academy.lesson7.part1.data.CarInfoEntity
 import by.academy.lesson7.part1.data.RepositoryFactory
 import by.academy.utils.FilesAndImagesUtils.createImageFile
 import by.academy.utils.LoggingTags.TAG_PHOTO
+import by.academy.utils.displayMessage
+import by.academy.utils.setPhoto
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 //    For checking manual permissions for API level 23
 private const val MY_PERMISSIONS_REQUEST_CAMERA = 22
@@ -32,6 +37,7 @@ class EditCarActivity : AppCompatActivity() {
     private lateinit var producerView: TextView
     private lateinit var modelView: TextView
     private lateinit var plateNumberView: TextView
+    private lateinit var activityScope: CoroutineScope
 
     private var mCurrentPhotoPath: String? = null
 
@@ -42,7 +48,8 @@ class EditCarActivity : AppCompatActivity() {
 
 
         // DB
-        val dataStorage = RepositoryFactory().getRepository(this)
+        activityScope = CoroutineScope(Dispatchers.Main + Job())
+        val dataStorage = RepositoryFactory().getRepository(this, activityScope)
         
         ownerView = findViewById(R.id.viewTextOwnerName)
         producerView = findViewById(R.id.viewTextProducer)
@@ -71,23 +78,27 @@ class EditCarActivity : AppCompatActivity() {
             setPhoto()
 
             removeButton.setOnClickListener {
-                dataStorage.removeCar(dataItem)
-                val data = Intent()
-                data.action = CMD_REMOVE
-                setResult(RESULT_OK, data)
-                finish()
+                activityScope.launch {
+                    dataStorage.removeCar(dataItem)
+                    val data = Intent()
+                    data.action = CMD_REMOVE
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
             }
         }
 
         findViewById<View>(R.id.addBUtton).setOnClickListener {
             val data = Intent()
-            if (dataItem == null) {
-                addCar(data, dataStorage)
-            } else {
-                updateCar(dataItem, data, dataStorage)
+            activityScope.launch {
+                if (dataItem == null) {
+                    addCar(data, dataStorage)
+                } else {
+                    updateCar(dataItem, data, dataStorage)
+                }
+                setResult(RESULT_OK, data)
+                finish()
             }
-            setResult(RESULT_OK, data)
-            finish()
         }
 
         findViewById<View>(R.id.backButton).setOnClickListener {
@@ -98,7 +109,12 @@ class EditCarActivity : AppCompatActivity() {
         findViewById<View>(R.id.imageEdit).setOnClickListener(captureImageMultiVersion())
     }
 
-    private fun addCar(data: Intent, dataStorage: AbstractDataRepository) {
+    override fun onDestroy() {
+        super.onDestroy()
+        activityScope.cancel()
+    }
+
+    private suspend fun addCar(data: Intent, dataStorage: AbstractDataRepository) {
         // add
         val newDataItem = CarInfoEntity(0L,
                 ownerView.text.toString(),
@@ -116,7 +132,7 @@ class EditCarActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateCar(dataItem: CarInfoEntity, data: Intent, dataStorage: AbstractDataRepository) {
+    private suspend fun updateCar(dataItem: CarInfoEntity, data: Intent, dataStorage: AbstractDataRepository) {
         // edit
         val updatedDataItem = CarInfoEntity(dataItem.getId(),
                 ownerView.text.toString(),

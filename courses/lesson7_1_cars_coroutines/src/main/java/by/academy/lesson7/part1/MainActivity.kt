@@ -3,6 +3,7 @@ package by.academy.lesson7.part1
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -10,12 +11,17 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import by.academy.lesson7.part1.R
 import by.academy.lesson7.part1.data.AbstractDataRepository
 import by.academy.lesson7.part1.data.CarInfoEntity
 import by.academy.lesson7.part1.data.RepositoryFactory
 import by.academy.utils.FilesAndImagesUtils.appendLogFile
+import by.academy.utils.TextWatcherAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 const val APPLOG_LOG = "applog.log"
 const val REQUEST_CODE = 21
@@ -35,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var noCarsView: View
     private var lastAddedItem: CarInfoEntity? = null
     private lateinit var searchView: EditText
+    private lateinit var activityScope: CoroutineScope
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,17 +52,23 @@ class MainActivity : AppCompatActivity() {
         appendLogFile(applicationContext, APPLOG_LOG)
 
         // DB
-        dataStorage = RepositoryFactory().getRepository(this)
+        activityScope = CoroutineScope(Dispatchers.Main + Job())
+        dataStorage = RepositoryFactory().getRepository(this, activityScope)
 
         // Recycler view and adapter
         noCarsView = findViewById<TextView>(R.id.no_cars).apply { visibility = View.INVISIBLE }
         searchView = findViewById(R.id.searchView)
 
-        carItemsAdapter = CarDataItemAdapter2(dataStorage.getAllCars()
-        ) { invisible: Boolean -> onCheckVisibility(invisible) }.apply {
+        carItemsAdapter = CarDataItemAdapter2() { invisible: Boolean -> onCheckVisibility(invisible) }.apply {
             setEditCarListener { dataItem: CarInfoEntity, position: Int -> edit(dataItem, position) }
             setShowWorkListener { dataItem: CarInfoEntity, position: Int -> showWorks(dataItem, position) }
-            addFilteringBy(searchView) { dataStorage.getAllCars() }
+            searchView.addTextChangedListener(object : TextWatcherAdapter() {
+                override fun afterTextChanged(s: Editable) {
+                    activityScope.launch {
+                        filter(s, null, dataStorage.getAllCars())
+                    }
+                }
+            })
         }
         findViewById<RecyclerView>(R.id.recyclerView).apply {
             adapter = carItemsAdapter
@@ -65,6 +78,11 @@ class MainActivity : AppCompatActivity() {
         // add new button
         val addButton = findViewById<FloatingActionButton>(R.id.fab)
         addButton.setOnClickListener { add() }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activityScope.cancel()
     }
 
     private fun add() {
@@ -103,7 +121,9 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(api = Build.VERSION_CODES.N)
     override fun onResume() {
         super.onResume()
-        carItemsAdapter.filter(searchView.text, lastAddedItem, dataStorage.getAllCars())
+        activityScope.launch {
+            carItemsAdapter.filter(searchView.text, lastAddedItem, dataStorage.getAllCars())
+        }
     }
 
 }
