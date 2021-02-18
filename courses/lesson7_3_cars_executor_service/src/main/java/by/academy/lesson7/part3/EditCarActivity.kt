@@ -45,7 +45,7 @@ class EditCarActivity : AppCompatActivity() {
 
         // DB
         val dataStorage = RepositoryFactory().getRepository(this)
-        
+
         ownerView = findViewById(R.id.viewTextOwnerName)
         producerView = findViewById(R.id.viewTextProducer)
         modelView = findViewById(R.id.viewTextModel)
@@ -73,11 +73,12 @@ class EditCarActivity : AppCompatActivity() {
             setPhoto()
 
             removeButton.setOnClickListener {
-                dataStorage.removeCar(dataItem)
-                val data = Intent()
-                data.action = CMD_REMOVE
-                setResult(RESULT_OK, data)
-                finish()
+                dataStorage.removeCar(dataItem) {
+                    val data = Intent()
+                    data.action = CMD_REMOVE
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
             }
         }
 
@@ -88,8 +89,6 @@ class EditCarActivity : AppCompatActivity() {
             } else {
                 updateCar(dataItem, data, dataStorage)
             }
-            setResult(RESULT_OK, data)
-            finish()
         }
 
         findViewById<View>(R.id.backButton).setOnClickListener {
@@ -109,12 +108,14 @@ class EditCarActivity : AppCompatActivity() {
                 plateNumberView.text.toString(),
                 mCurrentPhotoPath
         )
-        val newId = dataStorage.addCar(newDataItem)
-
-        data.apply {
-            action = CMD_ADD
-            newDataItem.setId(newId);
-            putExtra(CAR_ITEM, newDataItem)
+        dataStorage.addCar(newDataItem) { newId ->
+            data.apply {
+                action = CMD_ADD
+                newDataItem.setId(newId);
+                putExtra(CAR_ITEM, newDataItem)
+                setResult(RESULT_OK, this)
+                finish()
+            }
         }
     }
 
@@ -126,10 +127,12 @@ class EditCarActivity : AppCompatActivity() {
                 modelView.text.toString(),
                 plateNumberView.text.toString(),
                 mCurrentPhotoPath)
-        dataStorage.updateCar(updatedDataItem)
-
-        data.apply {
-            action = CMD_EDIT
+        dataStorage.updateCar(updatedDataItem) {
+            data.apply {
+                action = CMD_EDIT
+                setResult(RESULT_OK, this)
+                finish()
+            }
         }
     }
 
