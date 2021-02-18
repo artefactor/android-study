@@ -3,6 +3,7 @@ package by.academy.lesson7.part2
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -11,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.academy.lesson7.part2.data.*
+import by.academy.utils.TextWatcherAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 const val REQUEST_CODE_WORKS = 28
 
@@ -43,9 +46,17 @@ class WorkListActivity : AppCompatActivity() {
         noWorksView = findViewById<TextView>(R.id.no_cars).apply { visibility = View.INVISIBLE }
         searchView = findViewById(R.id.searchView)
 
-        workItemsAdapter = WorkDataItemAdapter2(dataStorage.getWorkInfo(carDataItem.getId()), this::onCheckVisibility).apply {
+        workItemsAdapter = WorkDataItemAdapter2(arrayListOf(), this::onCheckVisibility).apply {
             setEditWorkListener { dataItem: WorkInfoEntity, position: Int -> onEditWork(dataItem, position) }
-            addFilteringBy(searchView) { dataStorage.getWorkInfo(carDataItem.getId()) }
+            searchView.addTextChangedListener(object : TextWatcherAdapter() {
+                override fun afterTextChanged(s: Editable) {
+                    dataStorage.getWorkInfo(carDataItem.getId())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe { list ->
+                                filter(s, null, list)
+                            }
+                }
+            })
         }
         findViewById<RecyclerView>(R.id.recyclerView).apply {
             adapter = workItemsAdapter
@@ -90,7 +101,11 @@ class WorkListActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val editableText = searchView.editableText
-        workItemsAdapter.filter(editableText, lastAddedItem, dataStorage.getWorkInfo(car.getId()))
+        dataStorage.getWorkInfo(car.getId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { list ->
+                    workItemsAdapter.filter(editableText, lastAddedItem, list)
+                }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

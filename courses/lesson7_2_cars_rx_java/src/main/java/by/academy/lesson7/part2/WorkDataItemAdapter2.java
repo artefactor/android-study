@@ -132,10 +132,6 @@ class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.Dat
     /**
      * Кроме этого, на данном экране должна быть реализована фильтрация работ по названию
      */
-    public void addFilteringBy(EditText viewById, Supplier<List<WorkInfoEntity>> itemsProvider) {
-        adapterBehavior.addFilteringBy(viewById, itemsProvider, entityMatcher);
-    }
-
     public void filter(@Nullable Editable editableText, @Nullable WorkInfoEntity lastAddedItem, @NotNull List<WorkInfoEntity> workInfo) {
         adapterBehavior.filter(editableText, lastAddedItem, workInfo, entityMatcher);
     }

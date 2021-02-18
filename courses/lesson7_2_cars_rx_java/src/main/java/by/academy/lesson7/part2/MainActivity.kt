@@ -3,6 +3,7 @@ package by.academy.lesson7.part2
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -10,12 +11,13 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import by.academy.lesson7.part2.R
 import by.academy.lesson7.part2.data.AbstractDataRepository
 import by.academy.lesson7.part2.data.CarInfoEntity
 import by.academy.lesson7.part2.data.RepositoryFactory
 import by.academy.utils.FilesAndImagesUtils.appendLogFile
+import by.academy.utils.TextWatcherAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 const val APPLOG_LOG = "applog.log"
 const val REQUEST_CODE = 21
@@ -51,11 +53,17 @@ class MainActivity : AppCompatActivity() {
         noCarsView = findViewById<TextView>(R.id.no_cars).apply { visibility = View.INVISIBLE }
         searchView = findViewById(R.id.searchView)
 
-        carItemsAdapter = CarDataItemAdapter2(dataStorage.getAllCars()
+        carItemsAdapter = CarDataItemAdapter2(arrayListOf()
         ) { invisible: Boolean -> onCheckVisibility(invisible) }.apply {
             setEditCarListener { dataItem: CarInfoEntity, position: Int -> edit(dataItem, position) }
             setShowWorkListener { dataItem: CarInfoEntity, position: Int -> showWorks(dataItem, position) }
-            addFilteringBy(searchView) { dataStorage.getAllCars() }
+            searchView.addTextChangedListener(object : TextWatcherAdapter() {
+                override fun afterTextChanged(s: Editable) {
+                    dataStorage.getAllCars()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe { list -> filter(s, null, list) }
+                }
+            })
         }
         findViewById<RecyclerView>(R.id.recyclerView).apply {
             adapter = carItemsAdapter
@@ -103,7 +111,9 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(api = Build.VERSION_CODES.N)
     override fun onResume() {
         super.onResume()
-        carItemsAdapter.filter(searchView.text, lastAddedItem, dataStorage.getAllCars())
+        dataStorage.getAllCars()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { list -> carItemsAdapter.filter(searchView.text, lastAddedItem, list) }
     }
 
 }

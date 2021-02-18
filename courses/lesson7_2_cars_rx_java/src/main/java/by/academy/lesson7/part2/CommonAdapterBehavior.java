@@ -38,25 +38,6 @@ public class CommonAdapterBehavior<T extends InfoEntity> {
         }
     }
 
-    public void addFilteringBy(EditText viewById, Supplier<List<T>> itemsProvider, InfoEntityMatcher<T> m
-    ) {
-        viewById.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void afterTextChanged(Editable s) {
-                filter(s, null, itemsProvider.get(), m);
-            }
-        });
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void filter(Editable filterString, T lastAddedItem, List<T> freshItems, InfoEntityMatcher<T> m) {
         Log.i(LoggingTags.TAG_SEARCH, "" + filterString);

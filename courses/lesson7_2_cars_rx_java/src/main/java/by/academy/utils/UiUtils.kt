@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import by.academy.lesson7.part2.R
 import by.academy.utils.LoggingTags
 
 fun setPhoto(imagePath: String?, imageView: ImageView, imageViewBack: ImageView) {
@@ -26,6 +25,7 @@ fun setPhoto(imagePath: String?, imageView: ImageView, imageViewBack: ImageView)
 
 fun setImage(imageView: ImageView, absolutePath: String?) {
     if (absolutePath == null) {
+        imageView.setImageResource(android.R.color.transparent);
         return
     }
     val myBitmap = BitmapFactory.decodeFile(absolutePath)
