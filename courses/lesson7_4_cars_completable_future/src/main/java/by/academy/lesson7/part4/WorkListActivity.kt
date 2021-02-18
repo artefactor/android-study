@@ -48,8 +48,10 @@ class WorkListActivity : AppCompatActivity() {
         workItemsAdapter = WorkDataItemAdapter2(this::onCheckVisibility).apply {
             setEditWorkListener { dataItem: WorkInfoEntity, position: Int -> onEditWork(dataItem, position) }
             searchView.addTextChangedListener(object : TextWatcherAdapter() {
+                @RequiresApi(Build.VERSION_CODES.P)
                 override fun afterTextChanged(s: Editable) {
-                    filter(s, null, dataStorage.getWorkInfo(carDataItem.getId()))
+                    dataStorage.getWorkInfo(carDataItem.getId()).thenAcceptAsync(
+                            { list -> filter(s, null, list) }, mainExecutor)
                 }
             })
         }
@@ -92,11 +94,12 @@ class WorkListActivity : AppCompatActivity() {
         noWorksView.visibility = View.VISIBLE
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
         val editableText = searchView.editableText
-        workItemsAdapter.filter(editableText, lastAddedItem, dataStorage.getWorkInfo(car.getId()))
+        dataStorage.getWorkInfo(car.getId()).thenAcceptAsync(
+                { list -> workItemsAdapter.filter(editableText, lastAddedItem, list) }, mainExecutor)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

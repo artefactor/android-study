@@ -1,14 +1,16 @@
 package by.academy.lesson7.part4.data
 
-interface AbstractDataRepository {
-    fun getAllCars(): List<CarInfoEntity>
-    fun addCar(item: CarInfoEntity): Long
-    fun removeCar(item: CarInfoEntity)
-    fun updateCar(item: CarInfoEntity)
+import java.util.concurrent.CompletableFuture
 
-    fun getAllWorks(): List<WorkInfoEntity>
-    fun getWorkInfo(carId: Long): List<WorkInfoEntity>
-    fun addWork(item: WorkInfoEntity): Long
-    fun updateWork(item: WorkInfoEntity)
-    fun deleteWork(item: WorkInfoEntity)
+interface AbstractDataRepository {
+    fun getAllCars(): CompletableFuture<List<CarInfoEntity>>
+    fun addCar(item: CarInfoEntity): CompletableFuture<Long>
+    fun removeCar(item: CarInfoEntity): CompletableFuture<Void>
+    fun updateCar(item: CarInfoEntity): CompletableFuture<Void>
+
+    fun getAllWorks(): CompletableFuture<List<WorkInfoEntity>>
+    fun getWorkInfo(carId: Long): CompletableFuture<List<WorkInfoEntity>>
+    fun addWork(item: WorkInfoEntity): CompletableFuture<Long>
+    fun updateWork(item: WorkInfoEntity): CompletableFuture<Void>
+    fun deleteWork(item: WorkInfoEntity): CompletableFuture<Void>
 }

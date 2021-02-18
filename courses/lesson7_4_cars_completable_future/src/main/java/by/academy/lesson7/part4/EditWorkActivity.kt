@@ -92,11 +92,10 @@ class EditWorkActivity : AppCompatActivity() {
             } else {
                 update(data, workBuilder, dataItem, carDataItemId)
             }
-            setResult(RESULT_OK, data)
-            finish()
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     private fun add(data: Intent, workBuilder: WorkBuilder, date: Date) {
         val newDataItem = WorkInfoEntity(0L,
                 date,
@@ -106,12 +105,18 @@ class EditWorkActivity : AppCompatActivity() {
                 workBuilder.workDescription
         )
         newDataItem.carId = workBuilder.carDataItemId
-        data.apply {
-            action = CMD_ADD
-            val newId = dataStorage.addWork(newDataItem)
-            newDataItem.setId(newId);
-            putExtra(WORK_ITEM, newDataItem)
-        }
+
+        dataStorage.addWork(newDataItem).thenApplyAsync(
+                { newId ->
+                    data.apply {
+                        action = CMD_ADD
+                        newDataItem.setId(newId);
+                        putExtra(WORK_ITEM, newDataItem)
+                        setResult(RESULT_OK, this)
+                        finish()
+                    }
+                }, mainExecutor
+        )
     }
 
     private fun update(data: Intent, workBuilder: WorkBuilder, dataItem: WorkInfoEntity, carDataItemId: Long) {
@@ -123,10 +128,12 @@ class EditWorkActivity : AppCompatActivity() {
                 workBuilder.workDescription
         )
         updatedDataItem.carId = carDataItemId
-
-        data.apply {
-            action = CMD_EDIT
-            dataStorage.updateWork(updatedDataItem)
+        dataStorage.updateWork(updatedDataItem).thenRun {
+            data.apply {
+                action = CMD_EDIT
+                setResult(RESULT_OK, this)
+                finish()
+            }
         }
     }
 
@@ -144,10 +151,12 @@ class EditWorkActivity : AppCompatActivity() {
 
     private fun remove(dataItem: WorkInfoEntity) {
         val data = Intent()
-        data.action = CMD_REMOVE
-        dataStorage.deleteWork(dataItem)
-        setResult(RESULT_OK, data)
-        finish()
-
+        dataStorage.deleteWork(dataItem).thenRun {
+            data.apply {
+                action = CMD_REMOVE
+                setResult(RESULT_OK, this)
+                finish()
+            }
+        }
     }
 }

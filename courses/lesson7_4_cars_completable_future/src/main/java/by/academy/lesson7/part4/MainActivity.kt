@@ -56,8 +56,10 @@ class MainActivity : AppCompatActivity() {
             setEditCarListener { dataItem: CarInfoEntity, position: Int -> edit(dataItem, position) }
             setShowWorkListener { dataItem: CarInfoEntity, position: Int -> showWorks(dataItem, position) }
             searchView.addTextChangedListener(object : TextWatcherAdapter() {
+                @RequiresApi(Build.VERSION_CODES.P)
                 override fun afterTextChanged(s: Editable) {
-                    filter(s, null, dataStorage.getAllCars())
+                    dataStorage.getAllCars().thenAcceptAsync(
+                            { list -> filter(s, null, list) }, mainExecutor)
                 }
             })
         }
@@ -104,10 +106,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
-        carItemsAdapter.filter(searchView.text, lastAddedItem, dataStorage.getAllCars())
+        dataStorage.getAllCars().thenAcceptAsync(
+                { list -> carItemsAdapter.filter(searchView.text, lastAddedItem, list) },
+                mainExecutor)
+
     }
 
 }
