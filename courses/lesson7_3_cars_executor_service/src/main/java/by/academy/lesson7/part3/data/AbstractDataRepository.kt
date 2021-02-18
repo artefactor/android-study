@@ -1,14 +1,14 @@
 package by.academy.lesson7.part3.data
 
 interface AbstractDataRepository {
-    fun getAllCars(): List<CarInfoEntity>
-    fun addCar(item: CarInfoEntity): Long
-    fun removeCar(item: CarInfoEntity)
-    fun updateCar(item: CarInfoEntity)
+    fun getAllCars(callback: (List<CarInfoEntity>) -> Unit)
+    fun addCar(item: CarInfoEntity, callback: (Long) -> Unit)
+    fun removeCar(item: CarInfoEntity, callback: () -> Unit)
+    fun updateCar(item: CarInfoEntity, callback: () -> Unit)
 
-    fun getAllWorks(): List<WorkInfoEntity>
-    fun getWorkInfo(carId: Long): List<WorkInfoEntity>
-    fun addWork(item: WorkInfoEntity): Long
-    fun updateWork(item: WorkInfoEntity)
-    fun deleteWork(item: WorkInfoEntity)
+    fun getAllWorks(callback: (List<WorkInfoEntity>) -> Unit)
+    fun getWorkInfo(carId: Long, callback: (List<WorkInfoEntity>) -> Unit)
+    fun addWork(item: WorkInfoEntity, callback: (Long) -> Unit)
+    fun updateWork(item: WorkInfoEntity, callback: () -> Unit)
+    fun deleteWork(item: WorkInfoEntity, callback: () -> Unit)
 }
