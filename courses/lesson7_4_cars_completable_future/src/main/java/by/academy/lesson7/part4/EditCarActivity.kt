@@ -37,7 +37,7 @@ class EditCarActivity : AppCompatActivity() {
 
     private var mCurrentPhotoPath: String? = null
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.car_add_edit)
@@ -45,7 +45,7 @@ class EditCarActivity : AppCompatActivity() {
 
         // DB
         val dataStorage = RepositoryFactory().getRepository(this)
-        
+
         ownerView = findViewById(R.id.viewTextOwnerName)
         producerView = findViewById(R.id.viewTextProducer)
         modelView = findViewById(R.id.viewTextModel)
@@ -73,11 +73,12 @@ class EditCarActivity : AppCompatActivity() {
             setPhoto()
 
             removeButton.setOnClickListener {
-                dataStorage.removeCar(dataItem)
-                val data = Intent()
-                data.action = CMD_REMOVE
-                setResult(RESULT_OK, data)
-                finish()
+                dataStorage.removeCar(dataItem).thenRun {
+                    val data = Intent()
+                    data.action = CMD_REMOVE
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
             }
         }
 
@@ -88,8 +89,6 @@ class EditCarActivity : AppCompatActivity() {
             } else {
                 updateCar(dataItem, data, dataStorage)
             }
-            setResult(RESULT_OK, data)
-            finish()
         }
 
         findViewById<View>(R.id.backButton).setOnClickListener {
@@ -100,6 +99,7 @@ class EditCarActivity : AppCompatActivity() {
         findViewById<View>(R.id.imageEdit).setOnClickListener(captureImageMultiVersion())
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     private fun addCar(data: Intent, dataStorage: AbstractDataRepository) {
         // add
         val newDataItem = CarInfoEntity(0L,
@@ -109,15 +109,20 @@ class EditCarActivity : AppCompatActivity() {
                 plateNumberView.text.toString(),
                 mCurrentPhotoPath
         )
-        val newId = dataStorage.addCar(newDataItem)
-
-        data.apply {
-            action = CMD_ADD
-            newDataItem.setId(newId);
-            putExtra(CAR_ITEM, newDataItem)
-        }
+        dataStorage.addCar(newDataItem).thenAcceptAsync(
+                { newId ->
+                    data.apply {
+                        action = CMD_ADD
+                        newDataItem.setId(newId);
+                        putExtra(CAR_ITEM, newDataItem)
+                        setResult(RESULT_OK, this)
+                        finish()
+                    }
+                }, mainExecutor
+        )
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     private fun updateCar(dataItem: CarInfoEntity, data: Intent, dataStorage: AbstractDataRepository) {
         // edit
         val updatedDataItem = CarInfoEntity(dataItem.getId(),
@@ -126,10 +131,12 @@ class EditCarActivity : AppCompatActivity() {
                 modelView.text.toString(),
                 plateNumberView.text.toString(),
                 mCurrentPhotoPath)
-        dataStorage.updateCar(updatedDataItem)
-
-        data.apply {
-            action = CMD_EDIT
+        dataStorage.updateCar(updatedDataItem).thenRun {
+            data.apply {
+                action = CMD_EDIT
+                setResult(RESULT_OK, this)
+                finish()
+            }
         }
     }
 
@@ -174,7 +181,7 @@ class EditCarActivity : AppCompatActivity() {
     private fun captureImageCameraIfPermitted() {
         Log.i(TAG_PHOTO, "captureImage: takePictureIntent")
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-          if (takePictureIntent.resolveActivity(packageManager) == null) {
+        if (takePictureIntent.resolveActivity(packageManager) == null) {
             displayMessage(baseContext, "Null during resolveActivity method");
             return;
         }
