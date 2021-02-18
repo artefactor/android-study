@@ -1,6 +1,6 @@
 @file:JvmName("UiUtils")
 
-package by.academy.lesson7.part1
+package by.academy.utils
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import by.academy.lesson7.part1.R
-import by.academy.utils.LoggingTags
 
 fun setPhoto(imagePath: String?, imageView: ImageView, imageViewBack: ImageView) {
     if (imagePath == null) {
@@ -26,6 +25,7 @@ fun setPhoto(imagePath: String?, imageView: ImageView, imageViewBack: ImageView)
 
 fun setImage(imageView: ImageView, absolutePath: String?) {
     if (absolutePath == null) {
+        imageView.setImageResource(android.R.color.transparent);
         return
     }
     val myBitmap = BitmapFactory.decodeFile(absolutePath)

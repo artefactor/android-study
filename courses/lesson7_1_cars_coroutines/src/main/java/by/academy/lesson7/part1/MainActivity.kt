@@ -3,6 +3,7 @@ package by.academy.lesson7.part1
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -14,14 +15,13 @@ import by.academy.lesson7.part1.data.AbstractDataRepository
 import by.academy.lesson7.part1.data.CarInfoEntity
 import by.academy.lesson7.part1.data.RepositoryFactory
 import by.academy.utils.FilesAndImagesUtils.appendLogFile
+import by.academy.utils.TextWatcherAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.util.function.Supplier
 
 const val APPLOG_LOG = "applog.log"
 const val REQUEST_CODE = 21
@@ -59,10 +59,16 @@ class MainActivity : AppCompatActivity() {
         noCarsView = findViewById<TextView>(R.id.no_cars).apply { visibility = View.INVISIBLE }
         searchView = findViewById(R.id.searchView)
 
-        carItemsAdapter = CarDataItemAdapter2(arrayListOf()) { invisible: Boolean -> onCheckVisibility(invisible) }.apply {
+        carItemsAdapter = CarDataItemAdapter2() { invisible: Boolean -> onCheckVisibility(invisible) }.apply {
             setEditCarListener { dataItem: CarInfoEntity, position: Int -> edit(dataItem, position) }
             setShowWorkListener { dataItem: CarInfoEntity, position: Int -> showWorks(dataItem, position) }
-            addFilteringBy(searchView, getCarsSupplier())
+            searchView.addTextChangedListener(object : TextWatcherAdapter() {
+                override fun afterTextChanged(s: Editable) {
+                    activityScope.launch {
+                        filter(s, null, dataStorage.getAllCars())
+                    }
+                }
+            })
         }
         findViewById<RecyclerView>(R.id.recyclerView).apply {
             adapter = carItemsAdapter
@@ -117,22 +123,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         activityScope.launch {
             carItemsAdapter.filter(searchView.text, lastAddedItem, dataStorage.getAllCars())
-        }
-    }
-
-    /* FIXME Денис. а будет ли такой подход работать?
-        у меня в 5й работе была лямбда, которая на фильтр возвращала свежий список,
-        здесь я постарался так же сделать.
-        Намучался пару часов, но думаю, что не совсем правильный подход.
-        можешь прокомментировать?
-     */
-    private fun getCarsSupplier(): Supplier<List<CarInfoEntity>>? {
-        return Supplier<List<CarInfoEntity>> {
-            val result: List<CarInfoEntity>
-            runBlocking {
-                result = dataStorage.getAllCars()
-            }
-            result
         }
     }
 

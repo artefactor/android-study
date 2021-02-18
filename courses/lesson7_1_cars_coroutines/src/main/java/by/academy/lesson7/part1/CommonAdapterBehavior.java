@@ -2,15 +2,12 @@ package by.academy.lesson7.part1;
 
 import android.os.Build;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.EditText;
 
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import by.academy.lesson7.part1.data.InfoEntity;
 import by.academy.utils.LoggingTags;
@@ -36,25 +33,6 @@ public class CommonAdapterBehavior<T extends InfoEntity> {
         if (checkVisibilityListener != null) {
             checkVisibilityListener.onCheckVisibility(workDataItemAdapterAaA.getItemCount() > 0);
         }
-    }
-
-    public void addFilteringBy(EditText viewById, Supplier<List<T>> itemsProvider, InfoEntityMatcher<T> m
-    ) {
-        viewById.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void afterTextChanged(Editable s) {
-                filter(s, null, itemsProvider.get(), m);
-            }
-        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

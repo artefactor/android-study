@@ -17,6 +17,8 @@ import by.academy.lesson7.part1.data.CarInfoEntity
 import by.academy.lesson7.part1.data.RepositoryFactory
 import by.academy.utils.FilesAndImagesUtils.createImageFile
 import by.academy.utils.LoggingTags.TAG_PHOTO
+import by.academy.utils.displayMessage
+import by.academy.utils.setPhoto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

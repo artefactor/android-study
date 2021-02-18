@@ -3,6 +3,7 @@ package by.academy.lesson7.part1
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -14,14 +15,13 @@ import by.academy.lesson7.part1.data.AbstractDataRepository
 import by.academy.lesson7.part1.data.CarInfoEntity
 import by.academy.lesson7.part1.data.RepositoryFactory
 import by.academy.lesson7.part1.data.WorkInfoEntity
+import by.academy.utils.TextWatcherAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.util.function.Supplier
 
 const val REQUEST_CODE_WORKS = 28
 
@@ -54,9 +54,15 @@ class WorkListActivity : AppCompatActivity() {
         noWorksView = findViewById<TextView>(R.id.no_cars).apply { visibility = View.INVISIBLE }
         searchView = findViewById(R.id.searchView)
 
-        workItemsAdapter = WorkDataItemAdapter2(arrayListOf()) { onCheckVisibility(it) }.apply {
+        workItemsAdapter = WorkDataItemAdapter2() { onCheckVisibility(it) }.apply {
             setEditWorkListener { dataItem: WorkInfoEntity, position: Int -> onEditWork(dataItem, position) }
-            addFilteringBy(searchView, getWorksSupplier(carDataItem.getId()))
+            searchView.addTextChangedListener(object : TextWatcherAdapter() {
+                override fun afterTextChanged(s: Editable) {
+                    activityScope.launch {
+                        filter(s, null, dataStorage.getWorkInfo(carDataItem.getId()))
+                    }
+                }
+            })
         }
         findViewById<RecyclerView>(R.id.recyclerView).apply {
             adapter = workItemsAdapter
@@ -80,16 +86,6 @@ class WorkListActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         activityScope.cancel()
-    }
-
-    private fun getWorksSupplier(carId: Long): Supplier<List<WorkInfoEntity>> {
-        return Supplier<List<WorkInfoEntity>> {
-            val result: List<WorkInfoEntity>
-            runBlocking {
-                result = dataStorage.getWorkInfo(carId)
-            }
-            result
-        }
     }
 
 
