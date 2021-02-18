@@ -12,13 +12,12 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import by.academy.lesson7.part2.BuildConfig
-import by.academy.lesson7.part2.R
-import by.academy.lesson7.part2.data.CarInfoEntity
 import by.academy.lesson7.part2.data.AbstractDataRepository
+import by.academy.lesson7.part2.data.CarInfoEntity
 import by.academy.lesson7.part2.data.RepositoryFactory
 import by.academy.utils.FilesAndImagesUtils.createImageFile
 import by.academy.utils.LoggingTags.TAG_PHOTO
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 //    For checking manual permissions for API level 23
 private const val MY_PERMISSIONS_REQUEST_CAMERA = 22
@@ -71,12 +70,14 @@ class EditCarActivity : AppCompatActivity() {
             setPhoto()
 
             removeButton.setOnClickListener {
-                dataStorage.removeCar(dataItem).subscribe {
-                    val data = Intent()
-                    data.action = CMD_REMOVE
-                    setResult(RESULT_OK, data)
-                    finish()
-                }
+                dataStorage.removeCar(dataItem)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            val data = Intent()
+                            data.action = CMD_REMOVE
+                            setResult(RESULT_OK, data)
+                            finish()
+                        }
             }
         }
 
@@ -107,13 +108,15 @@ class EditCarActivity : AppCompatActivity() {
                 mCurrentPhotoPath
         )
 
-        dataStorage.addCar(newDataItem).subscribe { newId ->
-            data.action = CMD_ADD
-            newDataItem.setId(newId);
-            data.putExtra(CAR_ITEM, newDataItem)
-            setResult(RESULT_OK, data)
-            finish()
-        }
+        dataStorage.addCar(newDataItem)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { newId ->
+                    data.action = CMD_ADD
+                    newDataItem.setId(newId);
+                    data.putExtra(CAR_ITEM, newDataItem)
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
     }
 
     private fun updateCar(dataItem: CarInfoEntity, data: Intent, dataStorage: AbstractDataRepository) {
@@ -124,11 +127,13 @@ class EditCarActivity : AppCompatActivity() {
                 modelView.text.toString(),
                 plateNumberView.text.toString(),
                 mCurrentPhotoPath)
-        dataStorage.updateCar(updatedDataItem).subscribe {
-            data.action = CMD_EDIT
-            setResult(RESULT_OK, data)
-            finish()
-        }
+        dataStorage.updateCar(updatedDataItem)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    data.action = CMD_EDIT
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
     }
 
 

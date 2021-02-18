@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import by.academy.lesson7.part2.data.*
 import by.academy.utils.TextWatcherAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 const val REQUEST_CODE_WORKS = 28
 
@@ -49,9 +50,11 @@ class WorkListActivity : AppCompatActivity() {
             setEditWorkListener { dataItem: WorkInfoEntity, position: Int -> onEditWork(dataItem, position) }
             searchView.addTextChangedListener(object : TextWatcherAdapter() {
                 override fun afterTextChanged(s: Editable) {
-                    dataStorage.getWorkInfo(carDataItem.getId()).subscribe { list ->
-                        filter(s, null, list)
-                    }
+                    dataStorage.getWorkInfo(carDataItem.getId())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe { list ->
+                                filter(s, null, list)
+                            }
                 }
             })
         }
@@ -98,9 +101,11 @@ class WorkListActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val editableText = searchView.editableText
-        dataStorage.getWorkInfo(car.getId()).subscribe { list ->
-            workItemsAdapter.filter(editableText, lastAddedItem, list)
-        }
+        dataStorage.getWorkInfo(car.getId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { list ->
+                    workItemsAdapter.filter(editableText, lastAddedItem, list)
+                }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

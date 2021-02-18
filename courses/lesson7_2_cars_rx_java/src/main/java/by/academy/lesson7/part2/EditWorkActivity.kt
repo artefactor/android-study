@@ -12,7 +12,8 @@ import by.academy.lesson7.part2.data.AbstractDataRepository
 import by.academy.lesson7.part2.data.RepositoryFactory
 import by.academy.lesson7.part2.data.WorkInfoEntity
 import by.academy.utils.dateFormat
-import java.util.*
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import java.util.Date
 
 class EditWorkActivity : AppCompatActivity() {
 
@@ -104,13 +105,15 @@ class EditWorkActivity : AppCompatActivity() {
         )
         newDataItem.carId = workBuilder.carDataItemId
 
-        dataStorage.addWork(newDataItem).subscribe { newId ->
-            data.action = CMD_ADD
-            newDataItem.setId(newId)
-            data.putExtra(WORK_ITEM, newDataItem)
-            setResult(RESULT_OK, data)
-            finish()
-        }
+        dataStorage.addWork(newDataItem)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { newId ->
+                    data.action = CMD_ADD
+                    newDataItem.setId(newId)
+                    data.putExtra(WORK_ITEM, newDataItem)
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
     }
 
     private fun update(data: Intent, workBuilder: WorkBuilder, dataItem: WorkInfoEntity, carDataItemId: Long) {
@@ -124,6 +127,7 @@ class EditWorkActivity : AppCompatActivity() {
         updatedDataItem.carId = carDataItemId
 
         dataStorage.updateWork(updatedDataItem)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     data.action = CMD_EDIT
                     setResult(RESULT_OK, data)
@@ -146,9 +150,11 @@ class EditWorkActivity : AppCompatActivity() {
     private fun remove(dataItem: WorkInfoEntity) {
         val data = Intent()
         data.action = CMD_REMOVE
-        dataStorage.deleteWork(dataItem).subscribe {
-            setResult(RESULT_OK, data)
-            finish()
-        }
+        dataStorage.deleteWork(dataItem)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
     }
 }

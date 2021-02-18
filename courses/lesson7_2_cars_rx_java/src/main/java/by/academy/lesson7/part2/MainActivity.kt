@@ -17,6 +17,7 @@ import by.academy.lesson7.part2.data.RepositoryFactory
 import by.academy.utils.FilesAndImagesUtils.appendLogFile
 import by.academy.utils.TextWatcherAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 const val APPLOG_LOG = "applog.log"
 const val REQUEST_CODE = 21
@@ -58,9 +59,9 @@ class MainActivity : AppCompatActivity() {
             setShowWorkListener { dataItem: CarInfoEntity, position: Int -> showWorks(dataItem, position) }
             searchView.addTextChangedListener(object : TextWatcherAdapter() {
                 override fun afterTextChanged(s: Editable) {
-                    dataStorage.getAllCars().subscribe { list ->
-                        filter(s, null, list)
-                    }
+                    dataStorage.getAllCars()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe { list -> filter(s, null, list) }
                 }
             })
         }
@@ -110,9 +111,9 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(api = Build.VERSION_CODES.N)
     override fun onResume() {
         super.onResume()
-        dataStorage.getAllCars().subscribe { list ->
-            carItemsAdapter.filter(searchView.text, lastAddedItem, list)
-        }
+        dataStorage.getAllCars()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { list -> carItemsAdapter.filter(searchView.text, lastAddedItem, list) }
     }
 
 }
