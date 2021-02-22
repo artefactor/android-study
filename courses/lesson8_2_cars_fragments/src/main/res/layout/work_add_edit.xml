@@ -5,7 +5,11 @@
     android:id="@+id/itemViewRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".EditWorkActivity">
+    tools:context=".fragment.EditWorkFragment">
+<!--    TODO  Denis,   влияет ли здесь что мы указываем в tools:context ?
+Нужно фрагмент или активити?
+-->
+
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

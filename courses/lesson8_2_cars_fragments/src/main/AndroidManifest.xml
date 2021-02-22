@@ -28,9 +28,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".EditCarActivity" />
-        <activity android:name=".EditWorkActivity" />
-        <activity android:name=".WorkListActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
