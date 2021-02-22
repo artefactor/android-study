@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.util.Date
 
@@ -63,6 +64,9 @@ class WorkInfoEntity(
             return arrayOfNulls(size)
         }
     }
+
+    @Ignore
+    override var lastAdded: Boolean = false
 
     override fun getId(): Long = id
 

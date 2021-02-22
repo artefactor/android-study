@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Objects;
 
 import by.academy.lesson8.part2.R;
-import by.academy.lesson8.part2.helper.WorkStatusComponent;
 import by.academy.lesson8.part2.entity.WorkInfoEntity;
+import by.academy.lesson8.part2.helper.WorkStatusComponent;
 import by.academy.utils.CommonUtils;
 import by.academy.utils.LoggingTags;
 
@@ -71,7 +71,7 @@ public class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapt
         return new DataItemViewHolder(view);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void onBindViewHolder(@NonNull DataItemViewHolder holder, int position) {
         holder.bind(dataItemList.get(position), position);
@@ -87,6 +87,7 @@ public class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapt
         private final TextView viewWorkDate;
         private final TextView viewWorkName;
         private final TextView viewCost;
+        private final TextView newTextView;
 
         private final ImageView imageView;
 
@@ -94,14 +95,20 @@ public class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapt
             super(itemView);
             viewWorkName = itemView.findViewById(R.id.viewTextWorkName);
             viewCost = itemView.findViewById(R.id.viewTextCost);
+            newTextView = itemView.findViewById(R.id.newTextView);
             viewWorkDate = itemView.findViewById(R.id.viewTextDate);
 
             imageView = itemView.findViewById(R.id.imageStatus);
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.N)
+        @RequiresApi(api = Build.VERSION_CODES.Q)
         void bind(WorkInfoEntity dataItem, int position) {
             Log.i(LoggingTags.TAG_BIND, "bind: " + position);
+            if (dataItem.getLastAdded()) {
+                newTextView.setVisibility(View.VISIBLE);
+            } else {
+                newTextView.setVisibility(View.INVISIBLE);
+            }
 
             ColorStateList colorStateList =
                     ColorStateList.valueOf(

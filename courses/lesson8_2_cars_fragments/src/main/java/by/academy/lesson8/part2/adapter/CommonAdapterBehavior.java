@@ -43,14 +43,19 @@ public class CommonAdapterBehavior<T extends InfoEntity> {
         String lowerCase = filterString.toString().toLowerCase();
         freshItems.stream()
                 .filter(r -> m.isMatches(r, lowerCase) || isEquals(lastAddedItem, r))
-                .forEach(dataItemList::add);
+                .forEach(e -> {
+                    if (isEquals(lastAddedItem, e)) {
+                        e.setLastAdded(true);
+                    }
+                    dataItemList.add(e);
+                });
         workDataItemAdapterAaA.notifyDataSetChanged();
         checkVisibility();
 
     }
 
     private boolean isEquals(T lastAddedItem, T r) {
-        if (lastAddedItem == null) {
+        if (lastAddedItem == null || r == null) {
             return false;
         }
         return r.getId() == lastAddedItem.getId();

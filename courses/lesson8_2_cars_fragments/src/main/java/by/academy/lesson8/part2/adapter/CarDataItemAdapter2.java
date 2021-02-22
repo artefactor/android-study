@@ -91,6 +91,8 @@ public class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter
         private final TextView ownerView;
         private final TextView plateNumberView;
 
+        private final TextView newTextView;
+
         private final ImageView imageView;
         private final ImageView imageViewBack;
 
@@ -99,6 +101,7 @@ public class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter
             ownerView = itemView.findViewById(R.id.viewTextOwnerName);
             plateNumberView = itemView.findViewById(R.id.viewTextPlateNumber);
             producerModelView = itemView.findViewById(R.id.viewTextProducerModel);
+            newTextView = itemView.findViewById(R.id.newTextView);
 
             imageView = itemView.findViewById(R.id.imagePreview);
             imageViewBack = itemView.findViewById(R.id.imagePreviewBackground);
@@ -108,6 +111,12 @@ public class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter
         void bind(CarInfoEntity dataItem, int position) {
             Log.i(LoggingTags.TAG_BIND, "bind: " + position);
             View viewEdit = itemView.findViewById(R.id.imageEdit);
+
+            if (dataItem.getLastAdded()) {
+                newTextView.setVisibility(View.VISIBLE);
+            } else {
+                newTextView.setVisibility(View.INVISIBLE);
+            }
 
             setPhotoAndInit(dataItem.getImagePath(), imageView, imageViewBack, viewEdit);
 
