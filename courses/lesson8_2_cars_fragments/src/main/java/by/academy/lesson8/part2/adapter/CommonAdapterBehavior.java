@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import by.academy.lesson8.part2.data.InfoEntity;
+import by.academy.lesson8.part2.entity.InfoEntity;
 import by.academy.utils.LoggingTags;
 
-class CommonAdapterBehavior<T extends InfoEntity> {
+public class CommonAdapterBehavior<T extends InfoEntity> {
     private final RecyclerView.Adapter workDataItemAdapterAaA;
     private final List<T> dataItemList;
 
-    interface OnCheckVisibilityListener {
+    public interface OnCheckVisibilityListener {
         void onCheckVisibility(boolean invisible);
     }
 

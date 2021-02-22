@@ -1,4 +1,4 @@
-package by.academy.lesson8.part2
+package by.academy.lesson8.part2.helper
 
 class WorkBuilder {
     var carDataItemId: Long = -1;

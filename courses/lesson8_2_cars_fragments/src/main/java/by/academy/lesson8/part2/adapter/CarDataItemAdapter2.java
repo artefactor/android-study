@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import by.academy.lesson8.part2.R;
-import by.academy.lesson8.part2.data.CarInfoEntity;
+import by.academy.lesson8.part2.entity.CarInfoEntity;
 import by.academy.utils.LoggingTags;
 import by.academy.utils.UiUtils;
 
@@ -42,7 +42,7 @@ public class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter
     //
     //------------------------------------------*/
 
-    interface EditCarListener {
+    public interface EditCarListener {
         void onEditCar(CarInfoEntity dataItem, int position);
     }
 
@@ -52,7 +52,7 @@ public class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter
         this.editCarListener = editCarListener;
     }
 
-    interface ShowWorkListener {
+    public interface ShowWorkListener {
         void onShowWorks(CarInfoEntity dataItem, int position);
     }
 

@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Objects;
 
 import by.academy.lesson8.part2.R;
-import by.academy.lesson8.part2.WorkStatusComponent;
-import by.academy.lesson8.part2.data.WorkInfoEntity;
+import by.academy.lesson8.part2.helper.WorkStatusComponent;
+import by.academy.lesson8.part2.entity.WorkInfoEntity;
 import by.academy.utils.CommonUtils;
 import by.academy.utils.LoggingTags;
 
@@ -48,7 +48,7 @@ public class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapt
     //
     //------------------------------------------*/
 
-    interface EditWorkListener {
+    public interface EditWorkListener {
         void onEditWork(WorkInfoEntity dataItem, int position);
     }
 
@@ -106,7 +106,7 @@ public class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapt
             ColorStateList colorStateList =
                     ColorStateList.valueOf(
                             ContextCompat.getColor(imageView.getContext(),
-                                    WorkStatusComponent.Companion.statusColor(dataItem.getStatus()))
+                                    WorkStatusComponent.Companion.getColorByStatus(dataItem.getStatus()))
                     );
             imageView.setImageTintList(colorStateList);
 

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import by.academy.lesson8.part2.entity.WorkInfoEntity
 
 
 @Dao
