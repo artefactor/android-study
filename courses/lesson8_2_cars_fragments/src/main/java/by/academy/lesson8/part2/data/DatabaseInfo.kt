@@ -6,9 +6,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import by.academy.lesson8.part2.WS_COMPLETED
-import by.academy.lesson8.part2.WS_IN_PROGRESS
-import by.academy.lesson8.part2.WS_PENDING
+import by.academy.lesson8.part2.helper.WS_COMPLETED
+import by.academy.lesson8.part2.helper.WS_IN_PROGRESS
+import by.academy.lesson8.part2.helper.WS_PENDING
+import by.academy.lesson8.part2.entity.CarInfoEntity
+import by.academy.lesson8.part2.entity.WorkInfoEntity
 import by.academy.utils.LoggingTags
 import java.util.*
 

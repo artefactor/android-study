@@ -1,9 +1,10 @@
-package by.academy.lesson8.part2.data
+package by.academy.lesson8.part2.entity
 
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "car_info")
@@ -49,6 +50,8 @@ class CarInfoEntity(
         }
     }
 
+    @Ignore
+    override var lastAdded: Boolean = false
     override fun getId(): Long = id
 
     fun setId(newId: Long) {

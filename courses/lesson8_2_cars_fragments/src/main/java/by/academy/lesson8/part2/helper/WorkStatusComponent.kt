@@ -1,4 +1,4 @@
-package by.academy.lesson8.part2
+package by.academy.lesson8.part2.helper
 
 import android.content.res.ColorStateList
 import android.os.Build
@@ -6,6 +6,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import by.academy.lesson8.part2.R
 
 const val WS_IN_PROGRESS = 0
 const val WS_COMPLETED = 2
@@ -34,16 +35,17 @@ class WorkStatusComponent(
             )
 
     fun init() {
-        workStatusRadioGroup.setOnCheckedChangeListener { _, _ -> setWorkStatusByIndex(getStatus()) }
+        workStatusRadioGroup.setOnCheckedChangeListener { _, _ -> setWorkStatusByIndex(getStatusByButtonId()) }
     }
 
     internal fun setWorkStatus(status: Int) {
         setWorkStatusByIndex(status)
-        workStatusRadioGroup.check(getStatusButtonId(status))
+        workStatusRadioGroup.check(getButtonIdByStatus(status))
     }
 
     private fun setWorkStatusByIndex(checkedIndex: Int) {
-        when (checkedIndex) {
+        val status = checkedIndex;
+        when (status) {
             WS_IN_PROGRESS -> {
                 lightOn(wStatusInProgress, WS_IN_PROGRESS_COLOR)
                 lightOFF(wStatusCompleted)
@@ -74,22 +76,22 @@ class WorkStatusComponent(
         wStatusRadio.setTextColor(color)
     }
 
-    fun getStatus(): Int = when (workStatusRadioGroup.checkedRadioButtonId) {
-        wStatusInProgress.id -> WS_IN_PROGRESS
-        wStatusCompleted.id -> WS_COMPLETED
-        wStatusInPending.id -> WS_PENDING
+    fun getStatusByButtonId(): Int = when (workStatusRadioGroup.checkedRadioButtonId) {
+        R.id.workStatusInProgress -> WS_IN_PROGRESS
+        R.id.workStatusCompleted -> WS_COMPLETED
+        R.id.workStatusPending -> WS_PENDING
         else -> WS_IN_PROGRESS
     }
 
-    fun getStatusButtonId(status: Int): Int = when (status) {
-        WS_IN_PROGRESS -> wStatusInProgress.id
-        WS_COMPLETED -> wStatusCompleted.id
-        WS_PENDING -> wStatusInPending.id
-        else -> wStatusInProgress.id
+    private fun getButtonIdByStatus(status: Int): Int = when (status) {
+        WS_IN_PROGRESS -> R.id.workStatusInProgress
+        WS_COMPLETED -> R.id.workStatusCompleted
+        WS_PENDING -> R.id.workStatusPending
+        else -> R.id.workStatusInProgress
     }
 
     companion object {
-        fun statusColor(status: Int): Int =
+        fun getColorByStatus(status: Int): Int =
                 when (status) {
                     WS_IN_PROGRESS -> WS_IN_PROGRESS_COLOR
                     WS_COMPLETED -> WS_COMPLETED_COLOR
