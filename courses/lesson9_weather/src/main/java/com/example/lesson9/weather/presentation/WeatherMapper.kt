@@ -15,7 +15,7 @@ class WeatherMapper : (WeatherRawDataRoot) -> WeatherDomainData {
             WeatherDomainData(
                     city,
                     SimpleDateFormat.getDateInstance().format(Date(dt.toLong() * 1000)),
-                    weather?.let { it[0]?.title },
+                    weather?.let { it[0]?.description },
                     main.temp,
                     weather?.let { it[0].icon },
                     coord.lon,
@@ -33,7 +33,7 @@ class WeatherListMapper : (WeatherRawDataOneCallRoot, String) -> List<WeatherDom
                 WeatherDomainData(
                         city,
                         SimpleDateFormat.getDateInstance().format(Date(dt.toLong() * 1000)),
-                        weather?.let { it[0]?.title },
+                        weather?.let { it[0]?.description },
                         temp.day,
                         weather?.let { it[0].icon },
                         rawData.lon,

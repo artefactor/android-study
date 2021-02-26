@@ -9,6 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 const val OPEN_WEATHER_BASE_URL = "https://api.openweathermap.org/"
+const val OPEN_WEATHER_IMAGE_URL = "https://openweathermap.org/img/w/"
 
 /*TODO Денис, я убрал эти 2,5 в какую-то отдельную переменную.
  Норм? Или на уровне ретривера это можно сделать?

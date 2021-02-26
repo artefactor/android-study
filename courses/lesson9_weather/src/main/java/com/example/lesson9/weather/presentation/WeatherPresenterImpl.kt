@@ -20,8 +20,8 @@ class WeatherPresenterImpl(
 
     override fun fetchCurrentWeather(city:String) {
         weatherRepository.getCurrentWeatherData(city)
-                .observeOn(AndroidSchedulers.mainThread())
                 .map { data -> mapper(data) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { data -> weatherView.showCurrentWeather(data) },
                         { error ->
@@ -33,8 +33,8 @@ class WeatherPresenterImpl(
 
     override fun fetchForecast(lat: String, lon: String, city: String) {
         weatherRepository.getHourlyForecast2days(lat, lon)
-                .observeOn(AndroidSchedulers.mainThread())
                 .map { data -> mapper2(data, city) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { data -> weatherView.showForecast(data) },
                         { error ->

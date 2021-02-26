@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">90_Weather</string>
+
+    <string name="button_back">back</string>
+    <string name="button_add_city">add city</string>
+    <string name="icon_selected">selected</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+
+    <string name="whether_image">Whether image</string>
+    <string name="choose_the_city">Choose the city</string>
+    <string name="dialog_text">Please put the city name</string>
+    <string name="city_name">City name</string>
 </resources>
