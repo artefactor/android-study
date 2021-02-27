@@ -15,12 +15,17 @@ data class WeatherRawDataRoot(
         val weather: List<WeatherRawData>,
         val main: WeatherRawDataMain,
         val dt: String,
+        val sys: Sys,
         val coord: Coord,
 )
 
 data class Coord(
         val lon: String,
         val lat: String,
+)
+
+data class Sys(
+        val country: String,
 )
 
 

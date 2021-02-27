@@ -8,6 +8,7 @@ class WeatherItemMapper : (WeatherDomainData) -> WeatherItem {
             with(data) {
                 WeatherItem(
                         city,
+                        country,
                         date,
                         title,
                         "${temp.toFloat().roundToInt()}\u00B0",

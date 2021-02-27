@@ -1,5 +1,6 @@
 package com.example.lesson9.weather.presentation
 
+import android.content.Context
 import android.util.Log
 import com.example.lesson9.weather.LOG_TAG
 import com.example.lesson9.weather.data.WeatherRepository
@@ -11,11 +12,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 class WeatherPresenterImpl(
+        context: Context,
         private val compositeDisposable: CompositeDisposable = CompositeDisposable(),
         private val weatherView: WeatherView,
-        private val weatherRepository: WeatherRepository = WeatherRepositoryImpl(),
+        private val weatherRepository: WeatherRepository = WeatherRepositoryImpl(context),
         private val mapper: (WeatherRawDataRoot) -> WeatherDomainData = WeatherMapper(),
-        private val mapper2: (WeatherRawDataOneCallRoot, String) -> List<WeatherDomainData> = WeatherListMapper(),
+        private val mapper2: (WeatherRawDataOneCallRoot, String, String) -> List<WeatherDomainData> = WeatherListMapper(),
 ) : WeatherPresenter {
 
     override fun fetchCurrentWeather(city:String) {
@@ -31,9 +33,9 @@ class WeatherPresenterImpl(
                 ).also { compositeDisposable.add(it) }
     }
 
-    override fun fetchForecast(lat: String, lon: String, city: String) {
+    override fun fetchForecast(lat: String, lon: String, city: String, country: String) {
         weatherRepository.getHourlyForecast2days(lat, lon)
-                .map { data -> mapper2(data, city) }
+                .map { data -> mapper2(data, city, country) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { data -> weatherView.showForecast(data) },

@@ -1,5 +1,6 @@
 package com.example.lesson9.weather.presentation
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,6 +26,10 @@ class WeatherViewModel(
     private val mutableWeatherErrorLiveData = MutableLiveData<String>()
     val weatherErrorLiveData: LiveData<String> = mutableWeatherErrorLiveData
 
+    fun init(context: Context) {
+        weatherUseCase.init(context)
+    }
+
     fun fetchCurrentWeather(city: String) {
         weatherUseCase.getCurrentWeatherData(city)
                 .map { data -> mapper(data) }
@@ -38,8 +43,8 @@ class WeatherViewModel(
                 ).also { compositeDisposable.add(it) }
     }
 
-    fun fetchForecast(city: String, lat: String, lon: String) {
-        weatherUseCase.getHourlyForecast2days(city, lat, lon)
+    fun fetchForecast(city: String, country: String, lat: String, lon: String) {
+        weatherUseCase.getHourlyForecast2days(city, country, lat, lon)
                 .map { data -> data.map { item -> mapper(item) } }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

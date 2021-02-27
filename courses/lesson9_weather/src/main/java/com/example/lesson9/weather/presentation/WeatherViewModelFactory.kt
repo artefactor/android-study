@@ -15,6 +15,13 @@ class WeatherViewModelFactory : ViewModelProvider.Factory {
                     mapper = WeatherItemMapper()
             ) as T
         }
+        if (modelClass.isAssignableFrom(CitiesViewModel::class.java)) {
+            return CitiesViewModel(
+                    compositeDisposable = CompositeDisposable(),
+                    weatherUseCase = WeatherUseCaseImpl(),
+                    mapper = CityItemMapper()
+            ) as T
+        }
         throw IllegalArgumentException(
                 "Unknown class fro the view model. Passed ${modelClass.canonicalName} " +
                         "but required NewsListViewModel"

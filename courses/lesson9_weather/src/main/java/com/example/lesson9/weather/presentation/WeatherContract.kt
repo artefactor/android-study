@@ -4,7 +4,7 @@ import com.example.lesson9.weather.domain.WeatherDomainData
 
 interface WeatherPresenter {
     fun fetchCurrentWeather(city: String)
-    fun fetchForecast(lat: String, lon: String, city: String)
+    fun fetchForecast(lat: String, lon: String, city: String, country: String)
     fun close()
 }
 

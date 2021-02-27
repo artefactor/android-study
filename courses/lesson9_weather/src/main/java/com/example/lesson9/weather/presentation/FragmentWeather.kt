@@ -14,7 +14,8 @@ import com.example.lesson9.weather.databinding.DayBinding
 import com.example.lesson9.weather.databinding.FragmentWeatherBinding
 import com.example.lesson9.weather.datasource.network.OPEN_WEATHER_IMAGE_URL
 import com.example.lesson9.weather.domain.WeatherDomainData
-import com.google.android.material.snackbar.Snackbar
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 
 /**
@@ -24,16 +25,17 @@ const val USE_PRESENTER = false
 
 class FragmentWeather : Fragment(R.layout.fragment_weather), WeatherView {
 
-    private val presenter = WeatherPresenterImpl(weatherView = this)
+    private lateinit var presenter: WeatherPresenter
     private lateinit var binding: FragmentWeatherBinding
     private lateinit var bindingDay1: DayBinding
     private lateinit var bindingDay2: DayBinding
     private lateinit var bindingDay3: DayBinding
     private lateinit var bindingDay4: DayBinding
 
+    private lateinit var fragmentManager: WeatherFragmentManager
     var viewModelFactory: ViewModelProvider.Factory = WeatherViewModelFactory()
-    private lateinit var viewModel: WeatherViewModel
-    private var snackbar: Snackbar? = null
+    private lateinit var viewModelWeather: WeatherViewModel
+    private lateinit var viewModelCity: CitiesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,9 @@ class FragmentWeather : Fragment(R.layout.fragment_weather), WeatherView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i(LOG_TAG, "onViewCreated")
+        Log.i(LOG_TAG, "FragmentWeather#onViewCreated")
+
+        presenter = WeatherPresenterImpl(requireActivity().applicationContext, weatherView = this)
 
         binding = FragmentWeatherBinding.bind(view)
         bindingDay1 = DayBinding.bind(binding.dayInfo1[0])
@@ -49,9 +53,24 @@ class FragmentWeather : Fragment(R.layout.fragment_weather), WeatherView {
         bindingDay3 = DayBinding.bind(binding.dayInfo3[0])
         bindingDay4 = DayBinding.bind(binding.dayInfo4[0])
 
+        fragmentManager = requireActivity() as WeatherFragmentManager
+        val selectedId: Long = fragmentManager.getStoredCityId()
+        //  get city by id from ...
+
+        binding.changeCity.setOnClickListener { fragmentManager.showChangeCityFragment() }
+
+        viewModelCity = ViewModelProvider(this, viewModelFactory).get(CitiesViewModel::class.java)
+        viewModelCity.init(requireActivity().applicationContext)
+        with(viewModelCity) {
+            cityLiveData.observe(viewLifecycleOwner, Observer { data -> fetchCurrentWeather(data.name) })
+            errorLiveData.observe(viewLifecycleOwner, Observer { err -> showError(err) })
+            fetchCity(selectedId)
+        }
+
         if (!USE_PRESENTER) {
-            viewModel = ViewModelProvider(this, viewModelFactory).get(WeatherViewModel::class.java)
-            with(viewModel) {
+            viewModelWeather = ViewModelProvider(this, viewModelFactory).get(WeatherViewModel::class.java)
+            viewModelWeather.init(requireActivity().applicationContext)
+            with(viewModelWeather) {
                 weatherLiveData.observe(viewLifecycleOwner, Observer { data -> showCurrentWeather(data) })
                 weatherListLiveData.observe(viewLifecycleOwner, Observer { data -> showForecastList(data) })
                 weatherErrorLiveData.observe(viewLifecycleOwner, Observer { error -> showError(error) })
@@ -61,11 +80,6 @@ class FragmentWeather : Fragment(R.layout.fragment_weather), WeatherView {
 
     override fun onResume() {
         super.onResume()
-        if (USE_PRESENTER) {
-            presenter.fetchCurrentWeather("Minsk")
-        } else {
-            viewModel.fetchCurrentWeather("Minsk")
-        }
     }
 
     override fun onStop() {
@@ -73,13 +87,21 @@ class FragmentWeather : Fragment(R.layout.fragment_weather), WeatherView {
         presenter.close()
     }
 
+    private fun fetchCurrentWeather(cityName: String) {
+        if (USE_PRESENTER) {
+            presenter.fetchCurrentWeather(cityName)
+        } else {
+            viewModelWeather.fetchCurrentWeather(cityName)
+        }
+    }
+
     override fun showCurrentWeather(data: WeatherDomainData) {
         Log.i(LOG_TAG, data.toString())
         if (USE_PRESENTER) {
-            presenter.fetchForecast(data.lat, data.lon, data.city)
+            presenter.fetchForecast(data.lat, data.lon, data.city, data.country)
         }
         binding.bind(WeatherItemMapper().invoke(data))
-        snackbar?.dismiss()
+        hideError()
     }
 
     override fun showForecast(data: List<WeatherDomainData>) {
@@ -89,14 +111,29 @@ class FragmentWeather : Fragment(R.layout.fragment_weather), WeatherView {
         bindingDay2.bind(weatherItemMapper.invoke(data[1]))
         bindingDay3.bind(weatherItemMapper.invoke(data[2]))
         bindingDay4.bind(weatherItemMapper.invoke(data[3]))
-        snackbar?.dismiss()
+        hideError()
     }
 
     private fun showCurrentWeather(data: WeatherItem) {
         Log.i(LOG_TAG, "Model:$data")
-        viewModel.fetchForecast(data.city, data.lat, data.lon)
+        viewModelWeather.fetchForecast(data.city, data.country, data.lat, data.lon)
+        /* здесь хотелось бы обновить данные в базе по городу, не уверен что правильно это делаю
+           хочу запустить в отдельном потоке сохранение
+         */
+        updateCity(data)
         binding.bind(data)
-        snackbar?.dismiss()
+        hideError()
+    }
+
+    private fun updateCity(data: WeatherItem) {
+        Single.create<Long> {
+            it.onSuccess(fragmentManager.getStoredCityId())
+        }.subscribeOn(Schedulers.io())
+                .map { id -> CityItem(id, data.city, data.country, data.lat, data.lon) }
+                .map { cityItem -> viewModelCity.updateCity(cityItem) }
+                .subscribe { result -> Log.i(LOG_TAG, result.toString()) }
+
+
     }
 
     private fun showForecastList(data: List<WeatherItem>) {
@@ -105,13 +142,14 @@ class FragmentWeather : Fragment(R.layout.fragment_weather), WeatherView {
         bindingDay2.bind(data[1])
         bindingDay3.bind(data[2])
         bindingDay4.bind(data[3])
-        snackbar?.dismiss()
+        hideError()
     }
 
     private fun DayBinding.bind(item: WeatherItem) {
         date.text = item.date
         temp.text = item.temp
         description.text = item.title
+        //TODO Денис, может глайд тоже нужно в ио-потоке выполнять?
         Glide.with(requireContext()).load("${OPEN_WEATHER_IMAGE_URL}${item.icon}.png").into(weatherIcon)
     }
 
@@ -125,9 +163,10 @@ class FragmentWeather : Fragment(R.layout.fragment_weather), WeatherView {
 
     override fun showError(errorMessage: String) {
         Log.e(LOG_TAG, errorMessage)
-        snackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
-                .also { it.show() }
+        fragmentManager.showError(errorMessage)
     }
 
-
+    private fun hideError() {
+        fragmentManager.hideError()
+    }
 }
