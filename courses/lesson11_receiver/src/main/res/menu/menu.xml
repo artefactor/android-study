@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <group android:menuCategory="secondary">
+        <item
+            android:id="@+id/sortMenu"
+            android:icon="@drawable/ic_baseline_sort_24"
+            android:title="@string/sort"
+            app:showAsAction="ifRoom" />
+    </group>
+
+    <group>
+        <item
+            android:id="@+id/clean"
+            android:title="@string/clean" />
+        <item
+            android:id="@+id/manualUpdate"
+            android:title="@string/manualUpdate" />
+    </group>
+
+    <!--    <ImageButton-->
+    <!--        android:id="@+id/sort"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:background="@color/purple_200"-->
+    <!--        android:contentDescription="@string/sort"-->
+    <!--        android:paddingHorizontal="-40dp"-->
+    <!--        android:src="@drawable/ic_baseline_sort_24"-->
+    <!--        android:tint="@color/white"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/title"-->
+    <!--        app:layout_constraintDimensionRatio="1:1"-->
+    <!--        app:layout_constraintEnd_toStartOf="@id/clean"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+
+</menu>

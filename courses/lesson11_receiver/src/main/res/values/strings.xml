@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">11_receiver</string>
+    <string name="sort">sort</string>
+    <string name="asc">asc</string>
+    <string name="desc">desc</string>
+    <string name="clean">clean log file</string>
+    <string name="manualUpdate">manual update list</string>
+</resources>
