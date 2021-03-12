@@ -1,5 +1,8 @@
 package by.academy.lesson8.part2.data
 
+import by.academy.lesson8.part2.entity.CarInfoEntity
+import by.academy.lesson8.part2.entity.WorkInfoEntity
+
 interface AbstractDataRepository {
     fun getAllCars(): List<CarInfoEntity>
     fun addCar(item: CarInfoEntity): Long

@@ -1,4 +1,4 @@
-package by.academy.lesson8.part2;
+package by.academy.lesson8.part2.adapter;
 
 import android.content.res.ColorStateList;
 import android.os.Build;
@@ -21,13 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import by.academy.lesson8.part2.data.WorkInfoEntity;
+import by.academy.lesson8.part2.R;
+import by.academy.lesson8.part2.entity.WorkInfoEntity;
+import by.academy.lesson8.part2.helper.WorkStatusComponent;
 import by.academy.utils.CommonUtils;
 import by.academy.utils.LoggingTags;
 
 import static android.view.LayoutInflater.from;
 
-class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.DataItemViewHolder> {
+public class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.DataItemViewHolder> {
 
     private final List<WorkInfoEntity> dataItemList;
     private final CommonAdapterBehavior<WorkInfoEntity> adapterBehavior;
@@ -46,7 +48,7 @@ class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.Dat
     //
     //------------------------------------------*/
 
-    interface EditWorkListener {
+    public interface EditWorkListener {
         void onEditWork(WorkInfoEntity dataItem, int position);
     }
 
@@ -69,7 +71,7 @@ class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.Dat
         return new DataItemViewHolder(view);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void onBindViewHolder(@NonNull DataItemViewHolder holder, int position) {
         holder.bind(dataItemList.get(position), position);
@@ -85,6 +87,7 @@ class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.Dat
         private final TextView viewWorkDate;
         private final TextView viewWorkName;
         private final TextView viewCost;
+        private final TextView newTextView;
 
         private final ImageView imageView;
 
@@ -92,19 +95,25 @@ class WorkDataItemAdapter2 extends RecyclerView.Adapter<WorkDataItemAdapter2.Dat
             super(itemView);
             viewWorkName = itemView.findViewById(R.id.viewTextWorkName);
             viewCost = itemView.findViewById(R.id.viewTextCost);
+            newTextView = itemView.findViewById(R.id.newTextView);
             viewWorkDate = itemView.findViewById(R.id.viewTextDate);
 
             imageView = itemView.findViewById(R.id.imageStatus);
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.N)
+        @RequiresApi(api = Build.VERSION_CODES.Q)
         void bind(WorkInfoEntity dataItem, int position) {
             Log.i(LoggingTags.TAG_BIND, "bind: " + position);
+            if (dataItem.getLastAdded()) {
+                newTextView.setVisibility(View.VISIBLE);
+            } else {
+                newTextView.setVisibility(View.INVISIBLE);
+            }
 
             ColorStateList colorStateList =
                     ColorStateList.valueOf(
                             ContextCompat.getColor(imageView.getContext(),
-                                    WorkStatusComponent.Companion.statusColor(dataItem.getStatus()))
+                                    WorkStatusComponent.Companion.getColorByStatus(dataItem.getStatus()))
                     );
             imageView.setImageTintList(colorStateList);
 

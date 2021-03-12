@@ -69,5 +69,16 @@
         app:layout_constraintTop_toBottomOf="@+id/imagePreviewBackground"
         tools:text="1234 HA-7" />
 
+    <TextView
+        android:id="@+id/newTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="new"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/viewTextPlateNumber"
+        app:layout_constraintStart_toEndOf="@+id/viewTextProducerModel"
+        app:layout_constraintTop_toTopOf="@+id/viewTextPlateNumber" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

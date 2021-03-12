@@ -56,5 +56,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="1200$" />
 
+    <TextView
+        android:id="@+id/newTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="new"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/viewTextCost"
+        app:layout_constraintEnd_toStartOf="@+id/viewTextCost"
+        app:layout_constraintStart_toEndOf="@+id/viewTextWorkName"
+        app:layout_constraintTop_toTopOf="@+id/viewTextCost" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package by.academy.lesson8.part2;
+package by.academy.lesson8.part2.adapter;
 
 import android.os.Build;
 import android.text.Editable;
@@ -16,14 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import by.academy.lesson8.part2.data.CarInfoEntity;
+import by.academy.lesson8.part2.R;
+import by.academy.lesson8.part2.entity.CarInfoEntity;
 import by.academy.utils.LoggingTags;
 import by.academy.utils.UiUtils;
 
 import static android.view.LayoutInflater.from;
 import static androidx.core.content.ContextCompat.getColor;
 
-class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataItemViewHolder> {
+public class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataItemViewHolder> {
 
     private final List<CarInfoEntity> dataItemList;
     private final CommonAdapterBehavior<CarInfoEntity> adapterBehavior;
@@ -41,7 +42,7 @@ class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataI
     //
     //------------------------------------------*/
 
-    interface EditCarListener {
+    public interface EditCarListener {
         void onEditCar(CarInfoEntity dataItem, int position);
     }
 
@@ -51,7 +52,7 @@ class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataI
         this.editCarListener = editCarListener;
     }
 
-    interface ShowWorkListener {
+    public interface ShowWorkListener {
         void onShowWorks(CarInfoEntity dataItem, int position);
     }
 
@@ -90,6 +91,8 @@ class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataI
         private final TextView ownerView;
         private final TextView plateNumberView;
 
+        private final TextView newTextView;
+
         private final ImageView imageView;
         private final ImageView imageViewBack;
 
@@ -98,6 +101,7 @@ class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataI
             ownerView = itemView.findViewById(R.id.viewTextOwnerName);
             plateNumberView = itemView.findViewById(R.id.viewTextPlateNumber);
             producerModelView = itemView.findViewById(R.id.viewTextProducerModel);
+            newTextView = itemView.findViewById(R.id.newTextView);
 
             imageView = itemView.findViewById(R.id.imagePreview);
             imageViewBack = itemView.findViewById(R.id.imagePreviewBackground);
@@ -107,6 +111,12 @@ class CarDataItemAdapter2 extends RecyclerView.Adapter<CarDataItemAdapter2.DataI
         void bind(CarInfoEntity dataItem, int position) {
             Log.i(LoggingTags.TAG_BIND, "bind: " + position);
             View viewEdit = itemView.findViewById(R.id.imageEdit);
+
+            if (dataItem.getLastAdded()) {
+                newTextView.setVisibility(View.VISIBLE);
+            } else {
+                newTextView.setVisibility(View.INVISIBLE);
+            }
 
             setPhotoAndInit(dataItem.getImagePath(), imageView, imageViewBack, viewEdit);
 

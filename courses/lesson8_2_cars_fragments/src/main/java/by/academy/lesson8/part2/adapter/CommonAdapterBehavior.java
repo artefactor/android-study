@@ -1,4 +1,4 @@
-package by.academy.lesson8.part2;
+package by.academy.lesson8.part2.adapter;
 
 import android.os.Build;
 import android.text.Editable;
@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import by.academy.lesson8.part2.data.InfoEntity;
+import by.academy.lesson8.part2.entity.InfoEntity;
 import by.academy.utils.LoggingTags;
 
 public class CommonAdapterBehavior<T extends InfoEntity> {
     private final RecyclerView.Adapter workDataItemAdapterAaA;
     private final List<T> dataItemList;
 
-    interface OnCheckVisibilityListener {
+    public interface OnCheckVisibilityListener {
         void onCheckVisibility(boolean invisible);
     }
 
@@ -43,14 +43,19 @@ public class CommonAdapterBehavior<T extends InfoEntity> {
         String lowerCase = filterString.toString().toLowerCase();
         freshItems.stream()
                 .filter(r -> m.isMatches(r, lowerCase) || isEquals(lastAddedItem, r))
-                .forEach(dataItemList::add);
+                .forEach(e -> {
+                    if (isEquals(lastAddedItem, e)) {
+                        e.setLastAdded(true);
+                    }
+                    dataItemList.add(e);
+                });
         workDataItemAdapterAaA.notifyDataSetChanged();
         checkVisibility();
 
     }
 
     private boolean isEquals(T lastAddedItem, T r) {
-        if (lastAddedItem == null) {
+        if (lastAddedItem == null || r == null) {
             return false;
         }
         return r.getId() == lastAddedItem.getId();

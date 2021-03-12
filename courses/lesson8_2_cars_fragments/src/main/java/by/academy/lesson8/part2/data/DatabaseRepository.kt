@@ -1,5 +1,8 @@
 package by.academy.lesson8.part2.data
 
+import by.academy.lesson8.part2.entity.CarInfoEntity
+import by.academy.lesson8.part2.entity.WorkInfoEntity
+
 
 internal class DatabaseRepository(
         private val carInfoDAO: CarInfoDAO,
