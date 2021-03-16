@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemViewRoot"
+    style="@style/card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/viewTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Результаты - Артем" />
+
+    <TextView
+        android:id="@+id/viewTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:text="Долгое описание"
+        app:layout_constraintTop_toBottomOf="@+id/viewTextTitle"
+        tools:text="Долгое описание" />
+
+    <!--    действия   -->
+    <TextView
+        android:id="@+id/buttonsHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/size12"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:text="Действия"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/viewTextDescription" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/StyleRounded.Button"
+        android:id="@+id/button1Home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/size12"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:text="Вернуться в список"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonsHeader" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/StyleRounded.Button"
+        android:id="@+id/button2Restart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:text="Сбросить и пройти заново"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button1Home" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/StyleRounded.Button"
+        android:id="@+id/button3Repeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingVertical="@dimen/size4"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:text="Пройти еще раз"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button2Restart" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/StyleRounded.Button"
+        android:id="@+id/button4RepeatFried"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:text="Пройти  другом"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button3Repeat" />
+
+
+    <!--    другие результаты   -->
+    <TextView
+        android:id="@+id/otherResultsHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:text="Другие результаты"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/button4RepeatFried" />
+
+    <TextView
+        android:id="@+id/no_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="пусто"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otherResultsHeader" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otherResultsHeader" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
