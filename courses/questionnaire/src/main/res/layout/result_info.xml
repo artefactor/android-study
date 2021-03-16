@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemViewRoot"
+    style="@style/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/purple_500">
+
+    <ImageView
+        android:id="@+id/imageStatus"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/size16"
+        android:background="@color/teal_100"
+        android:src="@drawable/ic_sharp_person_24"
+        app:layout_constraintBottom_toBottomOf="@id/viewTextDescription"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/viewTextTitle" />
+
+    <TextView
+        android:id="@+id/viewTextTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:layout_marginStart="@dimen/size16"
+        android:layout_marginTop="@dimen/size16"
+        android:maxLines="1"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/imageStatus"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Артём" />
+
+    <TextView
+        android:id="@+id/viewTextDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:layout_marginBottom="@dimen/size16"
+        android:maxLines="1"
+        app:layout_constraintStart_toEndOf="@id/imageStatus"
+        app:layout_constraintTop_toBottomOf="@+id/viewTextTitle"
+        tools:text="11.11.2021" />
+
+    <TextView
+        android:id="@+id/viewTextRight"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/size16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/itemViewRoot"
+        tools:background="@color/teal_100"
+        tools:text="сравнить" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
