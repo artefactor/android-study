@@ -9,13 +9,25 @@
 
     <TextView
         android:id="@+id/viewTextTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size16"
         android:layout_marginTop="20dp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="В процессе - Артем" />
+
+    <TextView
+        android:id="@+id/viewTextTitleRight"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Фильтр одинаковых" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -46,14 +58,26 @@
         app:layout_constraintBottom_toTopOf="@id/submit" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/submit"
-        android:layout_width="wrap_content"
+        android:id="@+id/cancel"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size32"
+        android:layout_marginBottom="@dimen/size16"
+        android:text="Не проходить"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/submit"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/submit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size32"
         android:layout_marginBottom="@dimen/size16"
         android:text="submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/cancel" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

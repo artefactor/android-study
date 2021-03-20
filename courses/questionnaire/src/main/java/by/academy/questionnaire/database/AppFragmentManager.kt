@@ -1,12 +1,16 @@
 package by.academy.questionnaire.database
 
+import by.academy.questionnaire.domain.FURContext
+import by.academy.questionnaire.domain.QUseCase
+
 interface AppFragmentManager {
     fun showError(error:String )
     fun hideError()
 
-    fun getDatabaseInfo(): DatabaseInfo
+    fun getQUseCase(): QUseCase
 
-    fun showFormResultFragment(formId: Long, userId: Long)
-    fun showFormFragment(formId: Long, userId: Long = 1L, addToBackStack: Boolean = false)
+    fun showFormResultFragment(furContext: FURContext, forward: Boolean = true)
+    fun showFormFragment(furContext: FURContext, addToBackStack: Boolean = false)
+    fun showFormFragmentInCompareMode(furContext: FURContext, anotherFurContext: FURContext)
     fun showFormListFragment()
 }

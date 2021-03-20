@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.academy.questionnaire.database.AppFragmentManager
 import by.academy.questionnaire.database.entity.FormQuestionStatus
 import by.academy.questionnaire.databinding.FormListBinding
+import by.academy.questionnaire.domain.FURContext
+import by.academy.questionnaire.domain.FormStatus
+import by.academy.questionnaire.domain.convertToFormStatus
 
 class FragmentFormList : Fragment(R.layout.form_list) {
     private lateinit var binding: FormListBinding
@@ -29,19 +32,31 @@ class FragmentFormList : Fragment(R.layout.form_list) {
         binding.noItems.visibility = View.VISIBLE
     }
 
-    private fun onItemClicked(id: Long) {
-        // если пройден - то сразу результаты
-        if (formListAdapter.isPassed(id)) {
-            fragmentManager.showFormResultFragment(id, 1)
-        } else {
-            // todo другой опльзователь - нужно показать его ответы
-            fragmentManager.showFormFragment(id, addToBackStack = true)
+    private fun onItemClicked(item: FormQuestionStatus) {
+        // тут варианты такие
+        when (convertToFormStatus(item)) {
+            // 1. не начат - открываем на старт
+            FormStatus.NOT_STARTED -> {
+                val userId = 1L
+                val resultId = fragmentManager.getQUseCase().startTest(item.formId, userId)
+                val furContext = FURContext(item.formId, userId, resultId)
+                fragmentManager.showFormFragment(furContext, addToBackStack = true)
+            }
+            // 2. есть активное прохождение  - открываем его
+            FormStatus.IN_PROCESS -> {
+                val furContext = FURContext(item.formId, item.userId, item.mainResultId)
+                fragmentManager.showFormFragment(furContext, addToBackStack = true)
+            }
+            FormStatus.FINISHED -> {
+                // 3. пройден, нет активных  - открываем на результат
+                val furContext = fragmentManager.getQUseCase().findLastResult(item.formId)
+                fragmentManager.showFormResultFragment(furContext)
+            }
         }
     }
 
     private fun onClearAll() {
-        fragmentManager.getDatabaseInfo().getAnswerDAO().deleteAll()
-        fragmentManager.getDatabaseInfo().getResultDAO().deleteAll()
+        fragmentManager.getQUseCase().clearAllAnswers()
         formListAdapter.clearAnswers()
     }
 
@@ -92,9 +107,8 @@ class FragmentFormList : Fragment(R.layout.form_list) {
         }
     }
 
-    //todo fetch move
     private fun fetchForms() {
-        val allForms: List<FormQuestionStatus> = fragmentManager.getDatabaseInfo().getFormDAO().getAllInfo()
+        val allForms: List<FormQuestionStatus> = fragmentManager.getQUseCase().getAllFormsInfo()
         showFormsList(allForms)
     }
 

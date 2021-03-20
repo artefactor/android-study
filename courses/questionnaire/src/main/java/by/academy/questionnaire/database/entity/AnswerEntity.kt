@@ -8,16 +8,17 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "answer",
-        foreignKeys = [ForeignKey(
-                entity = QuestionEntity::class,
-                parentColumns = ["q_id"],
-                childColumns = ["fk_q_id"],
-                onDelete = ForeignKey.CASCADE
-        ),
+        foreignKeys = [
             ForeignKey(
-                    entity = UserEntity::class,
-                    parentColumns = ["u_id"],
-                    childColumns = ["fk_u_id"],
+                    entity = QuestionEntity::class,
+                    parentColumns = ["q_id"],
+                    childColumns = ["fk_q_id"],
+                    onDelete = ForeignKey.CASCADE
+            ),
+            ForeignKey(
+                    entity = ResultEntity::class,
+                    parentColumns = ["r_id"],
+                    childColumns = ["fk_r_id"],
                     onDelete = ForeignKey.CASCADE
             )
         ]
@@ -30,14 +31,12 @@ class AnswerEntity(
         @ColumnInfo(name = "fk_q_id")
         var questionId: Long = 0,
         val option: Int,
-        val attempt: Int = 1,
-        @ColumnInfo(name = "fk_u_id")
-        var userId: Long = 1,
+        @ColumnInfo(name = "fk_r_id")
+        var resultId: Long,
 ) : Parcelable, InfoEntity {
     constructor(parcel: Parcel) : this(
             parcel.readLong(),
             parcel.readLong(),
-            parcel.readInt(),
             parcel.readInt(),
             parcel.readLong(),
     )
@@ -47,8 +46,7 @@ class AnswerEntity(
             writeLong(id)
             writeLong(questionId)
             writeInt(option)
-            writeInt(attempt)
-            writeLong(userId)
+            writeLong(resultId)
         }
     }
 

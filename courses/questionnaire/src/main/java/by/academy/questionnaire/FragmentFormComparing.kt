@@ -1,9 +1,12 @@
 package by.academy.questionnaire
 
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.academy.questionnaire.database.AppFragmentManager
@@ -11,13 +14,15 @@ import by.academy.questionnaire.database.entity.AnswerQuestion
 import by.academy.questionnaire.databinding.QuestionListBinding
 import by.academy.questionnaire.domain.FURContext
 
-class FragmentForm : Fragment(R.layout.question_list) {
-    internal var furContext: FURContext = FURContext(0, 1, 0)
+
+class FragmentFormComparing : Fragment(R.layout.question_list) {
+    internal lateinit var furContext: FURContext
+    internal lateinit var anotherFurContext: FURContext
 
     private lateinit var binding: QuestionListBinding
     private lateinit var fragmentManager: AppFragmentManager
     private val questionListAdapter by lazy {
-        QuestionListItemsAdapter(this::onCheckVisibility, this::onItemClicked)
+        QuestionListItemsComparingAdapter(this::onCheckVisibility, this::onItemClicked)
     }
     //    private val viewModelFactory: ViewModelProvider.Factory = MyViewModelFactory()
     //    private lateinit var viewModel: FormsViewModel
@@ -29,33 +34,9 @@ class FragmentForm : Fragment(R.layout.question_list) {
     }
 
     private fun onItemClicked(answerQuestion: AnswerQuestion, option: Int) {
-        fragmentManager.hideError()
-        fragmentManager.getQUseCase().handleAnswer(answerQuestion, option, furContext, this::onItemAdded)
-    }
-
-    private fun onItemAdded() {
-        // show progress
-        binding.progressbar.progress = binding.progressbar.progress + 1
-    }
-
-    private fun onSubmit() {
-        //todo show confirm dialog
-        val answers: List<AnswerQuestion> = questionListAdapter.allItems
-        if (fragmentManager.getQUseCase().submitTest(furContext, answers)) {
-            fragmentManager.showFormResultFragment(furContext)
-        } else {
-            // TODO show dialog instead
-            //почему-то не показывается, а только со второго нажатия..
-            showError("Please fill all questions")
-            questionListAdapter.filterUnanswered()
-            showError("Please fill all questions")
-        }
     }
 
     private fun onCancel() {
-        //todo show confirm dialog
-        fragmentManager.getQUseCase().deleteAttempt(furContext.resultId)
-        fragmentManager.showFormListFragment()
     }
 
     override fun onResume() {
@@ -75,12 +56,17 @@ class FragmentForm : Fragment(R.layout.question_list) {
                         layoutManager = LinearLayoutManager(context)
                     }
                     it.submit.visibility = VISIBLE
-                    it.submit.text = "Завершить"
-                    it.cancel.visibility = VISIBLE
+                    it.submit.text = "назад"
                     it.submit.setOnClickListener { onSubmit() }
-                    it.cancel.setOnClickListener { onCancel() }
-                    val username = fragmentManager.getQUseCase().getUserName(furContext.userId)
-                    it.viewTextTitle.text = "В процессе: $username "
+                    it.cancel.visibility = GONE
+
+                    val username1 = fragmentManager.getQUseCase().getUserName(furContext.userId)
+                    val username2 = fragmentManager.getQUseCase().getUserName(anotherFurContext!!.userId)
+
+                    val text = "Сравниваем: <font color=#ee0000>$username1</font> и  <font color=#0000ee>$username2</font>"
+                    it.viewTextTitle.text = Html.fromHtml(text)
+                    it.viewTextTitleRight.text = "Фильтр одинаковых"
+                    it.viewTextTitleRight.setOnClickListener { onFilter(binding.viewTextTitleRight) }
                 }
 //        viewModel = ViewModelProvider(this, viewModelFactory).get(FormsViewModel::class.java)
 //        viewModel.init(requireActivity().applicationContext)
@@ -91,17 +77,29 @@ class FragmentForm : Fragment(R.layout.question_list) {
 //        }
     }
 
+    private fun onFilter(viewText: TextView) {
+        viewText.text = questionListAdapter.toggleFilterSimilar()
+    }
+
+    private fun onSubmit() {
+        fragmentManager.showFormResultFragment(furContext, false)
+    }
+
     private fun fetchForm() {
-        val questions: List<AnswerQuestion> = fragmentManager.getQUseCase().getAttemptAnswers(furContext)
+        val questions1: List<AnswerQuestion> = fragmentManager.getQUseCase().getAttemptAnswers(furContext)
+        val questions2: List<AnswerQuestion> = fragmentManager.getQUseCase().getAttemptAnswers(anotherFurContext)
+        val questions = arrayListOf<Pair<AnswerQuestion, AnswerQuestion>>()
+        for (i in 1..questions1.size) {
+            questions.add(questions1[i - 1] to questions2[i - 1])
+        }
         showFormsList(questions)
     }
 
-    private fun showFormsList(data: List<AnswerQuestion>) {
+    private fun showFormsList(data: List<Pair<AnswerQuestion, AnswerQuestion>>) {
         Log.i(LOG_TAG, "Model:$data")
         hideError()
-        val passedCount = data.count { answerQuestion -> answerQuestion.answerEntity != null }
-        binding.progressbar.max = data.size
-        binding.progressbar.progress = passedCount
+//        binding.progressbar.max = data.size
+//        binding.progressbar.progress = passedCount
         questionListAdapter.items = data
         questionListAdapter.allItems = data
     }
@@ -113,6 +111,11 @@ class FragmentForm : Fragment(R.layout.question_list) {
 
     fun hideError() {
         fragmentManager.hideError()
+    }
+
+    fun setContexts(furContext: FURContext, anotherFurContext: FURContext) {
+        this.furContext = furContext
+        this.anotherFurContext = anotherFurContext
     }
 
 }

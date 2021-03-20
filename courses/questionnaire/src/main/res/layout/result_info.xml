@@ -51,10 +51,22 @@
         android:gravity="center"
         android:paddingHorizontal="@dimen/size16"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/delButton"
         app:layout_constraintTop_toTopOf="@id/itemViewRoot"
         tools:background="@color/teal_100"
         tools:text="сравнить" />
+
+    <ImageButton
+        tools:tint="@color/red"
+        android:id="@+id/delButton"
+        style="@style/buttonToolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:src="@drawable/ic_baseline_delete_forever_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,7 +13,7 @@ import java.util.stream.Collectors.toList
 
 class QuestionListItemsAdapter(
         private val checkVisibilityListener: (Boolean) -> Unit,
-        private val onItemClickEvent: (AnswerQuestion) -> Unit,
+        private val onItemClickEvent: (AnswerQuestion, Int) -> Unit,
 
         ) : RecyclerView.Adapter<QuestionListItemsAdapter.QuestionListItemViewHolder>() {
 
@@ -45,14 +45,6 @@ class QuestionListItemsAdapter(
         checkVisibilityListener.invoke(itemCount > 0)
     }
 
-    fun unbindAnswers(): List<AnswerEntity> {
-        return allItems.stream().map { item -> item.answerEntity }.collect(toList()).filterNotNull()
-    }
-
-    fun update(answerQuestion: AnswerQuestion) {
-        // пока метод ненужный
-    }
-
     //todo rename and organize view, move strings
     class QuestionListItemViewHolder(
             private val adapter: QuestionListItemsAdapter,
@@ -82,25 +74,11 @@ class QuestionListItemsAdapter(
                 radioWorkStatus.setOnCheckedChangeListener { _, checkedId ->
                     // get the radio group checked radio button
                     radioWorkStatus.findViewById<RadioButton>(checkedId)?.apply {
-                        adapter.onItemClickEvent.invoke(unbind(item, this.text))
+                        adapter.onItemClickEvent.invoke(item, text.toString().toInt())
                     }
                 }
 
             }
-        }
-
-        fun unbind(item: AnswerQuestion, text: CharSequence): AnswerQuestion {
-            val option = text.toString().toInt()
-            val answerEntity = item.answerEntity
-            if (answerEntity == null) {
-                // add answer. Add answered count
-                item.answerEntity = AnswerEntity(0, item.question.getId(), option)
-                //
-            } else {
-                // update answer
-                item.answerEntity = AnswerEntity(answerEntity.getId(), item.question.getId(), option)
-            }
-            return item
         }
     }
 

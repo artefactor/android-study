@@ -5,17 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import by.academy.questionnaire.database.entity.ResultUser
 import by.academy.questionnaire.databinding.ResultInfoBinding
+import by.academy.questionnaire.domain.FURContext
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ResultListItemsAdapter(
         private val checkVisibilityListener: (Boolean) -> Unit,
-        private val onItemClickEvent: (Long) -> Unit,
-        private val onItemCompareClicked: (Long) -> Unit,
+        private val onItemClickEvent: (FURContext) -> Unit,
+        private val onItemCompareClicked: (FURContext) -> Unit,
+        private val onDeleteClickEvent: (FURContext) -> Unit,
 
         ) : RecyclerView.Adapter<ResultListItemsAdapter.ResultListItemViewHolder>() {
 
-    var currentUserId: Long = 1
-    var userIdInCompere: Long = -1
+    var currentResultId: Long = 1
+    var resultIdInCompare: Long = -1
 
     var allItems: List<ResultUser> = emptyList()
     var items: List<ResultUser> = emptyList()
@@ -56,18 +60,23 @@ class ResultListItemsAdapter(
             with(itemBinding) {
                 viewTextTitle.text = item.userName
 
+                val furContext = FURContext(
+                        item.resultEntity.formId,
+                        item.resultEntity.userId,
+                        item.resultEntity.getId(),
+                )
                 viewTextRight.setOnClickListener {
-                    adapter.onItemCompareClicked(item.resultEntity.userId)
+                    adapter.onItemCompareClicked(furContext)
                 }
-                when (item.resultEntity.userId) {
-                    adapter.currentUserId -> viewTextRight.text = "Текущий"
-                    adapter.userIdInCompere -> viewTextRight.text = "В сравнении"
+                when (item.resultEntity.getId()) {
+                    adapter.currentResultId -> viewTextRight.text = "Текущий"
+                    adapter.resultIdInCompare -> viewTextRight.text = "В сравнении"
                     else -> viewTextRight.text = "Сравнить"
                 }
-
-                root.setOnClickListener {
-                    adapter.onItemClickEvent(item.resultEntity.userId)
-                }
+                val timeStamp = SimpleDateFormat("yyyy-MM-dd hh:mm").format(item.resultEntity.dateEnd)
+                viewTextDescription.text = timeStamp
+                delButton.setOnClickListener { adapter.onDeleteClickEvent(furContext)}
+                root.setOnClickListener { adapter.onItemClickEvent(furContext) }
             }
         }
     }

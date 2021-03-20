@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/itemViewRoot"
     style="@style/card"
-    android:backgroundTint="@color/purple_300"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/purple_300">
 
     <TextView
         android:id="@+id/viewTextTitle"
@@ -17,21 +17,26 @@
         android:layout_marginTop="@dimen/size16"
         android:textStyle="bold"
 
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1. вопросочень много тестка собержит этот вопрос. очень большой вопрос просто" />
 
-
-    <RadioGroup
-        android:id="@+id/radioWorkStatus"
+    <LinearLayout
+        android:id="@+id/radioWorkStatusLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size16"
         android:layout_marginVertical="@dimen/size16"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/viewTextTitle">
-    </RadioGroup>
 
+        <RadioGroup
+            android:id="@+id/radioWorkStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/viewTextTitle" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

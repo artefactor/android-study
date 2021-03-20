@@ -19,13 +19,13 @@ class ResultCalculatorFactory {
     private val engagement: ResultCalculator = ResultCalculatorEngagement()
     private val defaultAvg: ResultCalculator = ResultCalculatorAverage()
 
-    fun calculateResult(formId: Long, userId: Long, answers: List<AnswerEntity>): ResultEntity {
+    fun calculateResult(formId: Long, userId: Long, answers: List<AnswerEntity>): String {
         val result = when (formId) {
             FORM_BURNOUT_MBI -> burnout.calculateResult(answers)
             FORM_WORK_ENGAGEMENT_UWES -> engagement.calculateResult(answers)
             else -> defaultAvg.calculateResult(answers)
         }
-        return ResultEntity(0, formId = formId, userId = userId, result = result)
+        return result
     }
 
     // ---------  parse result

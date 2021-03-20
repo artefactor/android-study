@@ -9,13 +9,26 @@
 
     <TextView
         android:id="@+id/viewTextTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size16"
         android:layout_marginTop="20dp"
         android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Результаты - Артем" />
+
+    <TextView
+        android:id="@+id/viewTextTitleCompare"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/viewTextTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Сравнить ответы" />
 
     <TextView
         android:id="@+id/viewTextDescription"
@@ -58,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginHorizontal="@dimen/size16"
-        android:text="Сбросить и пройти заново"
+        android:text="Перепройти заново"
         android:textAllCaps="false"
         android:textSize="@dimen/text_button"
         app:layout_constraintStart_toStartOf="parent"

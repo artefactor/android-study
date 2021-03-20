@@ -7,11 +7,13 @@ import by.academy.questionnaire.database.FORM_BURNOUT_MBI
 import by.academy.questionnaire.database.FORM_WORK_ENGAGEMENT_UWES
 import by.academy.questionnaire.database.entity.FormQuestionStatus
 import by.academy.questionnaire.databinding.FormInfoBinding
+import by.academy.questionnaire.domain.FormStatus
+import by.academy.questionnaire.domain.convertToFormStatus
 
 
 class FormListItemsAdapter(
         private val checkVisibilityListener: (Boolean) -> Unit,
-        private val onItemClickEvent: (Long) -> Unit,
+        private val onItemClickEvent: (FormQuestionStatus) -> Unit,
 
         ) : RecyclerView.Adapter<FormListItemsAdapter.FormListItemViewHolder>() {
 
@@ -43,18 +45,23 @@ class FormListItemsAdapter(
         checkVisibilityListener.invoke(itemCount > 0)
     }
 
-    //todo REWRITE
-    fun isPassed(id: Long): Boolean {
-        allItems.find { item -> item.id == id }?.also {
-            val remainingQuestions = it.questionCount - it.passedQuestionCount
-            return (remainingQuestions == 0)
-        }
-        return false
-    }
-
     fun clearAnswers() {
-        allItems.forEach { item -> item.passedQuestionCount = 0 }
-        items.forEach { item -> item.passedQuestionCount = 0 }
+        allItems.forEach { item ->
+            with(item) {
+                passedQuestionCount = 0
+                countPasses = 0
+                mainResultId = 0
+                userId = 0
+            }
+        }
+        items.forEach { item ->
+            with(item) {
+                passedQuestionCount = 0
+                countPasses = 0
+                mainResultId = 0
+                userId = 0
+            }
+        }
         notifyDataSetChanged()
     }
 
@@ -67,7 +74,7 @@ class FormListItemsAdapter(
         fun bind(item: FormQuestionStatus) {
             with(itemBinding) {
                 //TODO move to database
-                when (item.id) {
+                when (item.formId) {
                     FORM_WORK_ENGAGEMENT_UWES -> imageStatus.setImageResource(R.drawable.ic_noun_user_engagement_995657)
                     FORM_BURNOUT_MBI -> imageStatus.setImageResource(R.drawable.ic_noun_occupational_burnout_2717886)
 
@@ -75,18 +82,19 @@ class FormListItemsAdapter(
                 }
 
                 viewTextTitle.text = item.title
-                when (val remainingQuestions = item.questionCount - item.passedQuestionCount) {
-                    0 -> {
+                when (convertToFormStatus(item)) {
+                    FormStatus.FINISHED -> {
                         // all passed
                         viewTextDescription.text = "Результаты"
                         viewTextRight.text = ""
                     }
-                    item.questionCount -> {
+                    FormStatus.NOT_STARTED -> {
                         // not started
                         viewTextDescription.text = ""
                         viewTextRight.text = item.questionCount.toString()
                     }
-                    else -> {
+                    FormStatus.IN_PROCESS -> {
+                        val remainingQuestions = item.questionCount - item.passedQuestionCount
                         // in the middle
                         viewTextDescription.text = "Продолжить. Осталось вопросов: "
                         viewTextRight.text = remainingQuestions.toString()
@@ -95,7 +103,7 @@ class FormListItemsAdapter(
 
 
                 root.setOnClickListener {
-                    adapter.onItemClickEvent(item.id)
+                    adapter.onItemClickEvent(item)
                 }
             }
         }

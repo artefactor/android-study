@@ -7,7 +7,7 @@ class Converters {
 
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
-        return value?.let { Date(it) }
+        return value?.let { if (it == -1L) return null else Date(it) }
     }
 
     @TypeConverter

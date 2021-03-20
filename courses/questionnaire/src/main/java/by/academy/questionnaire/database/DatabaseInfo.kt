@@ -18,7 +18,7 @@ const val FORM_BURNOUT_MBI = 1L
 const val FORM_WORK_ENGAGEMENT_UWES = 2L
 const val FORM_DEMO = 3L
 
-@Database(exportSchema = false, version = 5,
+@Database(exportSchema = false, version = 8,
         entities = [
             FormEntity::class, QuestionEntity::class, AnswerEntity::class, UserEntity::class,
             ResultEntity::class
@@ -108,12 +108,6 @@ abstract class DatabaseInfo : RoomDatabase() {
 
                 add(QuestionEntity(demoQuestion + 1, FORM_DEMO, 1, "Моя работа вдохновляет меня"))
                 add(QuestionEntity(demoQuestion + 2, FORM_DEMO, 2, "Я горжусь своей работой"))
-            }
-
-            db.getAnswerDAO().apply {
-                val firstChoice = 1
-                add(AnswerEntity(1, demoQuestion + 1, firstChoice, 1, 1L))
-
             }
 
         }
