@@ -1,4 +1,4 @@
-package by.academy.questionnaire
+package by.academy.questionnaire.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -15,14 +15,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.academy.questionnaire.database.AppFragmentManager
+import by.academy.questionnaire.LOG_TAG
+import by.academy.questionnaire.R
+import by.academy.questionnaire.adapters.ResultListItemsAdapter
+import by.academy.questionnaire.adapters.toFurContext
 import by.academy.questionnaire.database.entity.FormQuestionStatus
 import by.academy.questionnaire.database.entity.ResultUser
 import by.academy.questionnaire.database.entity.UserEntity
 import by.academy.questionnaire.databinding.ResultBinding
 import by.academy.questionnaire.domain.FURContext
 import by.academy.questionnaire.logic.ResultCalculatorFactory
-
 
 class FragmentFormResult : Fragment(R.layout.result) {
     private val resultCalculator: ResultCalculatorFactory = ResultCalculatorFactory()
@@ -34,14 +36,17 @@ class FragmentFormResult : Fragment(R.layout.result) {
                 this::onCheckVisibility,
                 this::onItemClicked,
                 this::onItemCompareClicked,
-                this::onDeleteClicked
+                this::onDeleteClickedConfirm
         )
     }
     //    private val viewModelFactory: ViewModelProvider.Factory = WeatherViewModelFactory()
     //    private lateinit var viewModel: FormsViewModel
 
-    private fun onDeleteClicked(furContext: FURContext) {
-        //todo confirm dialog
+    private fun onDeleteClickedConfirm(furContext: FURContext) {
+        fragmentManager.showConfirmDialog(getString(R.string.confirm_delete)) { onDelete(furContext) }
+    }
+
+    private fun onDelete(furContext: FURContext) {
         fragmentManager.getQUseCase().deleteAttempt(furContext.resultId)
         //maybe optimized
         val resetCurrentResultId = this.furContext.resultId == furContext.resultId
@@ -87,9 +92,7 @@ class FragmentFormResult : Fragment(R.layout.result) {
 //        }
     }
 
-    private fun onHomeButton() {
-        fragmentManager.showFormListFragment()
-    }
+    private fun onHomeButton() = fragmentManager.showFormListFragment()
 
     private fun setButtonBehavior(hasAnyOtherUser: Boolean) {
         (binding).also {
@@ -111,20 +114,19 @@ class FragmentFormResult : Fragment(R.layout.result) {
 
     private fun onRestartButton() {
         // clear last answers
-        fragmentManager.getQUseCase().restartTest(furContext)
+        val newResultId = fragmentManager.getQUseCase().restartTest(furContext)
+        val (f, u) = furContext
         // show form fragment
         // выбор пользователя если уже их несколько
-        fragmentManager.showFormFragment(furContext)
+        fragmentManager.showFormFragment(FURContext(f, u, newResultId))
     }
 
     private fun onRepeatButton() {
         // show form fragment
         // выбор пользователя если уже их несколько
         val newResultId = fragmentManager.getQUseCase().startNextAttemptTest(furContext)
-        fragmentManager.showFormFragment(FURContext(furContext.formId,
-                furContext.userId,
-                newResultId
-        ))
+        val (f, u) = furContext
+        fragmentManager.showFormFragment(FURContext(f, u, newResultId))
     }
 
     private fun onRepeatFriendButton(repeat: Boolean = true) {
@@ -137,60 +139,62 @@ class FragmentFormResult : Fragment(R.layout.result) {
         val dialogBuilder: AlertDialog = AlertDialog.Builder(this.requireContext()).create()
         val dialogView: View = layoutInflater.inflate(R.layout.custom_dialog, null)
         with(dialogView) {
-            val editText = findViewById<View>(R.id.edt_comment) as EditText
-            val descriptionView = findViewById<View>(R.id.textView) as TextView
+            val editText = findViewById<EditText>(R.id.edt_comment)
+            val descriptionView = findViewById<TextView>(R.id.textView)
 
             val choseUser = findViewById<View>(R.id.userChoose) as RadioGroup
 
             val users: List<UserEntity> = fragmentManager.getQUseCase().getAllUsers()
             users.forEach { user ->
-                val newRadioButton = AppCompatRadioButton(context)
-                newRadioButton.text = "${user.name}"
-                newRadioButton.textSize = 16f
-                newRadioButton.setPadding(16, 1, 4, 1)
-                choseUser.addView(newRadioButton)
+                AppCompatRadioButton(context).apply {
+                    text = "${user.name}"
+                    textSize = 16f
+                    setPadding(16, 1, 4, 1)
+                    choseUser.addView(this)
+                }
             }
-            val newRadioButton = AppCompatRadioButton(context)
-            newRadioButton.textSize = 16f
-            newRadioButton.setPadding(16, 1, 4, 1)
-            newRadioButton.text = "Добавить нового"
-            choseUser.addView(newRadioButton)
-            choseUser.setOnCheckedChangeListener { _, checkedId ->
-                // get the radio group checked radio button
-                if (checkedId == newRadioButton.id) {
-                    editText.visibility = VISIBLE
-                    descriptionView.visibility = VISIBLE
-                } else {
-                    editText.visibility = GONE
-                    descriptionView.visibility = GONE
+            val newRadioButton = AppCompatRadioButton(context).apply {
+                textSize = 16f
+                setPadding(16, 1, 4, 1)
+                text = context.getString(R.string.addNewUser)
+                choseUser.addView(this)
+                choseUser.setOnCheckedChangeListener { _, checkedId ->
+                    // get the radio group checked radio button
+                    if (checkedId == this.id) {
+                        editText.visibility = VISIBLE
+                        descriptionView.visibility = VISIBLE
+                    } else {
+                        editText.visibility = GONE
+                        descriptionView.visibility = GONE
+                    }
                 }
             }
 
+            findViewById<Button>(R.id.buttonCancel).apply { setOnClickListener { dialogBuilder.dismiss() } }
+            findViewById<Button>(R.id.buttonSubmit).apply {
+                setOnClickListener {
+                    val checkedId = choseUser.checkedRadioButtonId
+                    if (checkedId == -1) {
+                        showError(context.getString(R.string.suggestion_choose_any))
+                        return@setOnClickListener
+                    }
+                    val editTextText = editText.text.toString()
+                    val checkedText = choseUser.findViewById<RadioButton>(checkedId).text.toString()
+                    fragmentManager.getQUseCase()
+                            .startTestForUser(furContext.formId, checkedId, checkedText, newRadioButton.id, editTextText, repeat)
+                            .also {
+                                if (it.userId <= 0) {
+                                    showError(context.getString(R.string.suggestion_choose_another))
+                                    return@setOnClickListener
+                                }
 
-            val buttonSubmit = findViewById<View>(R.id.buttonSubmit) as Button
-            val buttonCancel = findViewById<View>(R.id.buttonCancel) as Button
+                                dialogBuilder.dismiss()
+                                // show form fragment
+                                fragmentManager.showFormFragment(it)
+                            }
 
-            buttonCancel.setOnClickListener { dialogBuilder.dismiss() }
-            buttonSubmit.setOnClickListener {
-                val checkedId = choseUser.checkedRadioButtonId
-                if (checkedId == -1) {
-                    showError("Выберите вариант")
-                    return@setOnClickListener
                 }
-                val editTextText = editText.text.toString()
-                val checkedText = choseUser.findViewById<RadioButton>(checkedId).text.toString()
-                val newFURContext: FURContext = fragmentManager.getQUseCase()
-                        .startTestForUser(furContext.formId, checkedId, checkedText, newRadioButton.id, editTextText, repeat)
-                if (newFURContext.userId <= 0) {
-                    showError("Такой уже есть, выберите другое имя")
-                    return@setOnClickListener
-                }
-
-                dialogBuilder.dismiss()
-                // show form fragment
-                fragmentManager.showFormFragment(newFURContext)
             }
-
             dialogBuilder.setView(this)
         }
         dialogBuilder.show()
@@ -207,27 +211,28 @@ class FragmentFormResult : Fragment(R.layout.result) {
     }
 
     private fun fillInfo() {
-        binding.viewTextTitleCompare.text = ""
-        resultListAdapter.currentResultId = furContext.resultId
-        resultListAdapter.resultIdInCompare = -1
-        val resultUser = fragmentManager.getQUseCase().getAttempt(furContext.resultId)
-        val resultInfo = resultCalculator.parseResult(resultUser.resultEntity.result, furContext.formId)
-        binding.viewTextTitle.text = "Результаты  ${resultUser.userName}"
-        binding.viewTextDescription.text = """Вы прошли тест. Результаты ниже
-$resultInfo""".trimMargin().trimIndent().trimStart().trim()
+        with(binding) {
+            viewTextTitleCompare.text = ""
+            resultListAdapter.currentResultId = furContext.resultId
+            resultListAdapter.resultIdInCompare = -1
+            val resultUser = fragmentManager.getQUseCase().getAttempt(furContext.resultId)
+            val resultInfo = resultCalculator.parseResult(resultUser.resultEntity.result, furContext.formId)
+            viewTextTitle.text = getString(R.string.resultsTitle, resultUser.userName)
+            viewTextDescription.text = getString(R.string.resultsDescription, resultInfo)
+//            viewTextDescription.text = """ ${getString(R.string.resultsDescription)}
+//$resultInfo""".trimMargin().trimIndent().trimStart().trim()
+        }
     }
 
     private fun checkOnEmptyList(resetCurrentResultId: Boolean, data: List<ResultUser>): Boolean {
         if (resetCurrentResultId) {
             if (data.isEmpty()) {
                 // no items
-                binding.viewTextTitle.text = "Результатов нет"
-                binding.viewTextDescription.text = """Вы удалили все результаты. Пройдите заново"""
+                binding.viewTextTitle.text = getString(R.string.no_results)
+                binding.viewTextDescription.text = getString(R.string.no_results_suggestion)
                 return true
             } else {
-                data[0].resultEntity.also {
-                    furContext = FURContext(it.formId, it.userId, it.getId())
-                }
+                furContext = data[0].resultEntity.toFurContext()
             }
         }
         return false
@@ -247,12 +252,15 @@ $resultInfo""".trimMargin().trimIndent().trimStart().trim()
                 resultUser2.resultEntity.result,
                 furContext.formId
         )
-        binding.viewTextTitleCompare.text = "Сравнить ответы"
-        binding.viewTextTitleCompare.setOnClickListener { this.onCompareAnswers(furContext, anotherFurContext) }
-        binding.viewTextTitle.text = "Результаты  ${resultUser1.userName} vs ${resultUser2.userName}"
-        binding.viewTextDescription.text = """Вы прошли тест. Сравниваем результаты
-$resultInfo
-""".trimMargin().trimIndent()
+        with(binding) {
+            viewTextTitleCompare.text = getString(R.string.action_compare_answers)
+            viewTextTitleCompare.setOnClickListener { onCompareAnswers(furContext, anotherFurContext) }
+            viewTextTitle.text = getString(R.string.resultsTwoTitle, resultUser1.userName, resultUser2.userName)
+            viewTextDescription.text = getString(R.string.resultsDescription, resultInfo)
+//            viewTextDescription.text = """Вы прошли тест. Сравниваем результаты
+//$resultInfo
+//""".trimMargin().trimIndent()
+        }
     }
 
     private fun onCompareAnswers(furContext: FURContext, anotherFurContext: FURContext) {

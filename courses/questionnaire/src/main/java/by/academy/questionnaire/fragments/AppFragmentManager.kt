@@ -1,9 +1,11 @@
-package by.academy.questionnaire.database
+package by.academy.questionnaire.fragments
 
 import by.academy.questionnaire.domain.FURContext
 import by.academy.questionnaire.domain.QUseCase
+import kotlin.reflect.KFunction0
 
 interface AppFragmentManager {
+    fun showConfirmDialog(question: String, yesFunction: () -> Unit)
     fun showError(error:String )
     fun hideError()
 

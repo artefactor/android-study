@@ -17,6 +17,7 @@ interface FormDAO {
 
     @Query("""SELECT form.f_id as formId,
                     form.title,
+                    form.icon,
                     count(DISTINCT q.q_id) as questionCount,
                     count(DISTINCT r1.r_id) as countPasses,
                     count(a.a_id) as passedQuestionCount,

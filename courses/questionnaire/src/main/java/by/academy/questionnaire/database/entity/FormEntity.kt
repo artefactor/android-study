@@ -12,9 +12,11 @@ class FormEntity(
         @ColumnInfo(name = "f_id")
         private var id: Long,
         val title: String,
+        val icon: String,
 ) : Parcelable, InfoEntity {
     constructor(parcel: Parcel) : this(
             parcel.readLong(),
+            parcel.readString().toString(),
             parcel.readString().toString(),
     )
 
@@ -22,6 +24,7 @@ class FormEntity(
         parcel.apply {
             writeLong(id)
             writeString(title)
+            writeString(icon)
         }
     }
 

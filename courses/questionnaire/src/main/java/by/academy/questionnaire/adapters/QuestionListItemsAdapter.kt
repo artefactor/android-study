@@ -1,4 +1,4 @@
-package by.academy.questionnaire
+package by.academy.questionnaire.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,10 +6,8 @@ import android.widget.RadioButton
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
-import by.academy.questionnaire.database.entity.AnswerEntity
 import by.academy.questionnaire.database.entity.AnswerQuestion
 import by.academy.questionnaire.databinding.QuestionInfoBinding
-import java.util.stream.Collectors.toList
 
 class QuestionListItemsAdapter(
         private val checkVisibilityListener: (Boolean) -> Unit,
@@ -21,31 +19,21 @@ class QuestionListItemsAdapter(
     var items: List<AnswerQuestion> = emptyList()
         set(value) {
             field = value
-            checkVisibility()
-            notifyDataSetChanged()
+            update()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            QuestionListItemViewHolder(this@QuestionListItemsAdapter,
-                    itemBinding = QuestionInfoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuestionListItemViewHolder(this,
+            itemBinding = QuestionInfoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: QuestionListItemViewHolder, position: Int) {
-        holder.bind(items[position])
-    }
-
+    override fun onBindViewHolder(holder: QuestionListItemViewHolder, position: Int) = holder.bind(items[position])
     override fun getItemCount() = items.size
+    private fun update() = notifyDataSetChanged().also { checkVisibilityListener.invoke(itemCount > 0) }
 
     fun filterUnanswered() {
         items = allItems.filter { t -> t.answerEntity == null }
-        notifyDataSetChanged()
-        checkVisibility()
+        update()
     }
 
-    private fun checkVisibility() {
-        checkVisibilityListener.invoke(itemCount > 0)
-    }
-
-    //todo rename and organize view, move strings
     class QuestionListItemViewHolder(
             private val adapter: QuestionListItemsAdapter,
             private val itemBinding: QuestionInfoBinding,

@@ -13,7 +13,7 @@
         android:layout_height="@dimen/size64"
         android:layout_marginStart="@dimen/size16"
         android:layout_marginTop="@dimen/size8"
-        android:src="@drawable/ic_noun_occupational_burnout_2717886"
+        android:src="@drawable/ic_noun_occupational_burnout"
         app:layout_constraintBottom_toBottomOf="@id/viewTextDescription"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/viewTextTitle"

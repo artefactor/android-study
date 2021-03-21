@@ -57,7 +57,7 @@ class UseCasesTest {
         @BeforeClass
         fun setUpClass() {
             with(databaseInfo) {
-                anotherFormId = getFormDAO().add(FormEntity(0, "Тест опросник"))
+                anotherFormId = getFormDAO().add(FormEntity(0, "Тест опросник", "icon"))
                 val questionId = getQuestionDAO().add(QuestionEntity(0, anotherFormId, 1, "title"))
                 val resultId = getResultDAO().add(ResultEntity(0, anotherFormId, 1L, ""))
                 getAnswerDAO().add(AnswerEntity(0, questionId, 2, resultId))

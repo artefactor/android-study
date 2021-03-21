@@ -1,4 +1,39 @@
 <resources>
     <string name="app_name">Psy Questionnaire</string>
-    <string name="search" >Search</string>
+    <string name="search">Search</string>
+    <string name="form_list_results">Результаты</string>
+    <string name="form_list_continue">"Продолжить. Осталось вопросов: %1$d"</string>
+
+    <string name="result_compare_status_current">Текущий</string>
+    <string name="result_compare_status_compare">Сравнить</string>
+    <string name="result_compare_status_in_compare">В сравнении</string>
+
+    <string name="compareTitle">Сравниваем</string>
+    <string name="and">и</string>
+    <string name="comparing_filter">Фильтр одинаковых</string>
+    <string name="comparing_filter_all">все</string>
+    <string name="comparing_filter_diff">разные</string>
+    <string name="comparing_filter_sim">одинаковые</string>
+
+    <string name="in_processTitle">В процессе: %1$s </string>
+    <string name="action_finish">Завершить</string>
+    <string name="navigation_back">назад</string>
+
+    <string name="confirm_finish">Подтверждаете?</string>
+    <string name="confirm_abort">Отменить тест?</string>
+    <string name="confirm_delete">Удалить?</string>
+    <string name="warning_fill">Please fill all questions</string>
+    <string name="suggestion_choose_any">Выберите вариант</string>
+    <string name="suggestion_choose_another">Такой уже есть, выберите другое имя</string>
+
+    <string name="addNewUser">Добавить нового</string>
+
+    <string name="resultsTitle">Результаты %1$s</string>
+    <string name="resultsTwoTitle">Результаты %1$s vs %2$s</string>
+    <string name="resultsDescription">Вы прошли тест. Результаты ниже \n %1$s </string>
+    <string name="resultsTwoDescription">Вы прошли тест. Сравниваем результаты \n %1$s </string>
+    <string name="no_results">Результатов нет</string>
+    <string name="no_results_suggestion">Вы удалили все результаты. Пройдите заново</string>
+    <string name="action_compare_answers">Сравнить ответы</string>
+
 </resources>

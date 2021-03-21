@@ -7,18 +7,21 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import by.academy.questionnaire.database.AppFragmentManager
 import by.academy.questionnaire.database.DatabaseInfo
 import by.academy.questionnaire.domain.FURContext
 import by.academy.questionnaire.domain.QUseCase
 import by.academy.questionnaire.domain.QUseCaseImpl
+import by.academy.questionnaire.fragments.AppFragmentManager
+import by.academy.questionnaire.fragments.FragmentForm
+import by.academy.questionnaire.fragments.FragmentFormComparing
+import by.academy.questionnaire.fragments.FragmentFormList
+import by.academy.questionnaire.fragments.FragmentFormResult
 import com.google.android.material.snackbar.Snackbar
 
 const val LOG_TAG = "LOG_TAG"
 
 class MainActivity : AppCompatActivity(), AppFragmentManager {
 
-    //TODO use navigation?
     private val fragmentFormList by lazy { FragmentFormList() }
     private val fragmentForm by lazy { FragmentForm() }
     private val fragmentFormResult by lazy { FragmentFormResult() }
@@ -162,6 +165,11 @@ class MainActivity : AppCompatActivity(), AppFragmentManager {
 
     override fun hideError() {
         snackbar?.dismiss()
+    }
+
+    override fun showConfirmDialog(question: String, yesFunction: () -> Unit) {
+        //TODO("Not yet implemented")
+        yesFunction.invoke()
     }
 
     override fun getQUseCase() = usecase

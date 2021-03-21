@@ -1,4 +1,4 @@
-package by.academy.questionnaire
+package by.academy.questionnaire.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -6,7 +6,9 @@ import android.view.View
 import android.view.View.VISIBLE
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.academy.questionnaire.database.AppFragmentManager
+import by.academy.questionnaire.LOG_TAG
+import by.academy.questionnaire.R
+import by.academy.questionnaire.adapters.QuestionListItemsAdapter
 import by.academy.questionnaire.database.entity.AnswerQuestion
 import by.academy.questionnaire.databinding.QuestionListBinding
 import by.academy.questionnaire.domain.FURContext
@@ -38,22 +40,28 @@ class FragmentForm : Fragment(R.layout.question_list) {
         binding.progressbar.progress = binding.progressbar.progress + 1
     }
 
+    private fun onSubmitConfirm() {
+        fragmentManager.showConfirmDialog(getString(R.string.confirm_finish)) { onSubmit() }
+    }
+
     private fun onSubmit() {
-        //todo show confirm dialog
         val answers: List<AnswerQuestion> = questionListAdapter.allItems
         if (fragmentManager.getQUseCase().submitTest(furContext, answers)) {
             fragmentManager.showFormResultFragment(furContext)
         } else {
-            // TODO show dialog instead
             //почему-то не показывается, а только со второго нажатия..
-            showError("Please fill all questions")
+            // TODO show dialog instead
+            showError(getString(R.string.warning_fill))
             questionListAdapter.filterUnanswered()
-            showError("Please fill all questions")
+            showError(getString(R.string.warning_fill))
         }
     }
 
+    private fun onCancelConfirm() {
+        fragmentManager.showConfirmDialog(getString(R.string.confirm_abort)) { onCancel() }
+    }
+
     private fun onCancel() {
-        //todo show confirm dialog
         fragmentManager.getQUseCase().deleteAttempt(furContext.resultId)
         fragmentManager.showFormListFragment()
     }
@@ -68,19 +76,23 @@ class FragmentForm : Fragment(R.layout.question_list) {
 
         fragmentManager = requireActivity() as AppFragmentManager
         binding = QuestionListBinding.bind(view)
-                .also {
-                    it.progressbar.progress = 0
-                    it.recyclerView.apply {
+                .apply {
+                    progressbar.progress = 0
+                    recyclerView.apply {
                         adapter = questionListAdapter
                         layoutManager = LinearLayoutManager(context)
                     }
-                    it.submit.visibility = VISIBLE
-                    it.submit.text = "Завершить"
-                    it.cancel.visibility = VISIBLE
-                    it.submit.setOnClickListener { onSubmit() }
-                    it.cancel.setOnClickListener { onCancel() }
+                    submit.apply {
+                        submit.visibility = VISIBLE
+                        text = getString(R.string.action_finish)
+                        setOnClickListener { onSubmitConfirm() }
+                    }
+                    cancel.apply {
+                        visibility = VISIBLE
+                        setOnClickListener { onCancelConfirm() }
+                    }
                     val username = fragmentManager.getQUseCase().getUserName(furContext.userId)
-                    it.viewTextTitle.text = "В процессе: $username "
+                    viewTextTitle.text = getString(R.string.in_processTitle, username)
                 }
 //        viewModel = ViewModelProvider(this, viewModelFactory).get(FormsViewModel::class.java)
 //        viewModel.init(requireActivity().applicationContext)

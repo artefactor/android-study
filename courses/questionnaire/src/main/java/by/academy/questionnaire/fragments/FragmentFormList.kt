@@ -1,4 +1,4 @@
-package by.academy.questionnaire
+package by.academy.questionnaire.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +8,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.academy.questionnaire.database.AppFragmentManager
+import by.academy.questionnaire.LOG_TAG
+import by.academy.questionnaire.R
+import by.academy.questionnaire.adapters.FormListItemsAdapter
 import by.academy.questionnaire.database.entity.FormQuestionStatus
 import by.academy.questionnaire.databinding.FormListBinding
 import by.academy.questionnaire.domain.FURContext
@@ -94,7 +96,6 @@ class FragmentFormList : Fragment(R.layout.form_list) {
 
             val searchView = menu.findItem(R.id.search)?.actionView as SearchView
             searchView.apply {
-                imeOptions = EditorInfo.IME_ACTION_DONE
                 setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(text: String?) = false
 
