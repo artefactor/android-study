@@ -13,6 +13,9 @@ import by.academy.questionnaire.database.entity.AnswerQuestionRelation
 @Dao
 interface AnswerDAO {
 
+    @Query("SELECT count(1) FROM answer")
+    fun size(): Long
+
     @Query("SELECT * FROM answer order by a_id")
     fun getAllInfo(): List<AnswerEntity>
 

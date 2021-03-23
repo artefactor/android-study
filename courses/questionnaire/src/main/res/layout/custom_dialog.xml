@@ -3,23 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/purple_200"
     android:layout_height="match_parent"
-    android:padding="@dimen/size8"
-    android:layout_margin="@dimen/size8">
+    android:layout_margin="@dimen/size8"
+    android:background="@color/purple_200"
+    android:padding="@dimen/size8">
 
-    <!--    style="@style/big_title.black"-->
     <TextView
-        android:textStyle="bold"
-        android:textSize="@dimen/text_search"
         android:id="@+id/textViewTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/size8"
+        android:layout_marginTop="@dimen/size8"
+        android:layout_marginEnd="@dimen/size8"
         android:padding="@dimen/size8"
         android:text="Выберите пользователя"
+        android:textSize="@dimen/text_search"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,37 +27,37 @@
         android:id="@+id/userChoose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/textViewTitle" >
+        app:layout_constraintTop_toBottomOf="@id/textViewTitle">
 
-<!--        <androidx.appcompat.widget.AppCompatRadioButton-->
-<!--            style="@style/radioButtonDialogStyle" />-->
+        <!--        <androidx.appcompat.widget.AppCompatRadioButton-->
+        <!--            style="@style/radioButtonDialogStyle" />-->
     </RadioGroup>
 
     <TextView
         android:id="@+id/textView"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/size8"
+        android:layout_marginTop="@dimen/size8"
+        android:layout_marginEnd="@dimen/size8"
         android:padding="@dimen/size8"
         android:text="Или добавьте нового"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/userChoose" />
 
     <EditText
-        android:visibility="gone"
         android:id="@+id/edt_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/size8"
+        android:layout_marginTop="@dimen/size8"
+        android:layout_marginEnd="@dimen/size8"
         android:hint="введите имя"
         android:inputType="textMultiLine|text"
         android:padding="@dimen/size8"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -68,9 +67,9 @@
         style="@style/StyleRounded.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="@dimen/size12"
+        android:layout_marginEnd="@dimen/size8"
+        android:layout_marginBottom="@dimen/size8"
         android:text="Выбрать"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -81,9 +80,9 @@
         style="@style/StyleRounded.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="@dimen/size8"
+        android:layout_marginTop="@dimen/size12"
+        android:layout_marginBottom="@dimen/size8"
         android:text="Отмена"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

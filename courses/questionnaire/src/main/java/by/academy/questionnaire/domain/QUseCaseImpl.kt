@@ -1,5 +1,6 @@
 package by.academy.questionnaire.domain
 
+import android.util.Log
 import by.academy.questionnaire.database.DatabaseInfo
 import by.academy.questionnaire.database.entity.AnswerEntity
 import by.academy.questionnaire.database.entity.AnswerQuestion
@@ -8,6 +9,9 @@ import by.academy.questionnaire.database.entity.ResultEntity
 import by.academy.questionnaire.database.entity.ResultUser
 import by.academy.questionnaire.database.entity.UserEntity
 import by.academy.questionnaire.logic.ResultCalculatorFactory
+import io.reactivex.Completable
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.stream.Collectors
 
@@ -39,10 +43,6 @@ class QUseCaseImpl(private val databaseInfo: DatabaseInfo) : QUseCase {
     }
 
 
-    override fun getAttemptAnswers(furContext: FURContext): List<AnswerQuestion> {
-        return databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId)
-    }
-
     override fun findLastResult(formId: Long): FURContext {
         val allByFormId = databaseInfo.getResultDAO().getAllByFormId(formId)
         if (allByFormId.isEmpty()) {
@@ -65,10 +65,6 @@ class QUseCaseImpl(private val databaseInfo: DatabaseInfo) : QUseCase {
 
     }
 
-//    override fun cancelTest(furContext: FURContext) {
-//        databaseInfo.getResultDAO().deleteById(furContext.resultId)
-//    }
-
     override fun submitTest(furContext: FURContext, answers: List<AnswerQuestion>): Boolean {
         val existedAnswers: List<AnswerEntity> = answers.stream().map { item -> item.answerEntity }.collect(Collectors.toList()).filterNotNull()
         if (answers.size != existedAnswers.size) {
@@ -86,22 +82,57 @@ class QUseCaseImpl(private val databaseInfo: DatabaseInfo) : QUseCase {
     override fun getUserName(userId: Long): String = databaseInfo.getUserDAO().getInfo(userId)?.name
             ?: "потеряно имя для $userId"
 
-    override fun getAllFormsInfo(): List<FormQuestionStatus> {
-        val allForms: List<FormQuestionStatus> = databaseInfo.getFormDAO().getAllInfo()
-        return allForms
+    override fun getAllFormsInfo(): Single<List<FormQuestionStatus>> {
+        return Single.create<List<FormQuestionStatus>> {
+            it.onSuccess(databaseInfo.getFormDAO().getAllInfo())
+                    .also {
+                        Log.i("model", "Single.createList ${Thread.currentThread()}")
+                    }
+        }.subscribeOn(Schedulers.io())
     }
+
+    override fun getAttemptAnswers(furContext: FURContext): Single<List<AnswerQuestion>> {
+        return Single.create<List<AnswerQuestion>> {
+            it.onSuccess(databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId))
+                    .also {
+                        Log.i("model", "Single.createOne ${Thread.currentThread()}")
+                    }
+        }.subscribeOn(Schedulers.io())
+    }
+
+    override fun getAttemptAnswers(furContext1: FURContext, furContext2: FURContext): Single<List<Pair<AnswerQuestion, AnswerQuestion>>> {
+        return Single.create<List<Pair<AnswerQuestion, AnswerQuestion>>> {
+            it.onSuccess(pair(furContext1, furContext2))
+                    .also {
+                        Log.i("model", "Single.createOne ${Thread.currentThread()}")
+                    }
+        }.subscribeOn(Schedulers.io())
+    }
+
+    private fun pair(furContext1: FURContext, furContext2: FURContext): List<Pair<AnswerQuestion, AnswerQuestion>> {
+        val questions1: List<AnswerQuestion> = databaseInfo.getAnswerDAO().getAttemptAnswers(furContext1.resultId)
+        val questions2: List<AnswerQuestion> = databaseInfo.getAnswerDAO().getAttemptAnswers(furContext2.resultId)
+        val questions = arrayListOf<Pair<AnswerQuestion, AnswerQuestion>>()
+        for (i in 1..questions1.size) {
+            questions.add(questions1[i - 1] to questions2[i - 1])
+        }
+        return questions
+    }
+
 
     override fun clearAllAnswers() {
         databaseInfo.getAnswerDAO().deleteAll()
         databaseInfo.getResultDAO().deleteAll()
     }
 
-    override fun getResults(formId: Long, hasAnyOtherUserHandler: (Boolean) -> Unit): List<ResultUser> {
-        val resultDAO = databaseInfo.getResultDAO()
-        val data: List<ResultUser> = resultDAO.getAllByFormId(formId)
-        val hasAnyOtherUser = data.count { r -> r.resultEntity.userId != 1L } > 0
-        hasAnyOtherUserHandler(hasAnyOtherUser)
-        return data
+
+    override fun getResults(formId: Long): Single<List<ResultUser>> {
+        return Single.create<List<ResultUser>> {
+            it.onSuccess(databaseInfo.getResultDAO().getAllByFormId(formId))
+                    .also {
+                        Log.i("model", "Single.createList ${Thread.currentThread()}")
+                    }
+        }.subscribeOn(Schedulers.io())
     }
 
     override fun getAttempt(resultId: Long): ResultUser {
@@ -115,9 +146,10 @@ class QUseCaseImpl(private val databaseInfo: DatabaseInfo) : QUseCase {
         databaseInfo.getResultDAO().delete(findLastResult)
     }
 
-    override fun deleteAttempt(resultId: Long) {
+    override fun deleteAttempt(resultId: Long): Completable = Completable.create {
         databaseInfo.getResultDAO().deleteById(resultId)
-    }
+        it.onComplete()
+    }.subscribeOn(Schedulers.io())
 
     override fun getAllUsers(): List<UserEntity> = databaseInfo.getUserDAO().getAll()
 
@@ -143,8 +175,8 @@ class QUseCaseImpl(private val databaseInfo: DatabaseInfo) : QUseCase {
     }
 
     override fun restartTest(furContext: FURContext): Long {
-        databaseInfo.getAnswerDAO().deleteByResultId(furContext.resultId)
-        return startTest(furContext.formId, furContext.userId)
+        databaseInfo.getResultDAO().deleteById(furContext.resultId)
+        return startNextAttemptTest(furContext)
     }
 
     override fun startNextAttemptTest(furContext: FURContext): Long {
@@ -199,4 +231,18 @@ class QUseCaseImpl(private val databaseInfo: DatabaseInfo) : QUseCase {
         return item
     }
 
+    override fun getAppStatistics(): Single<String> {
+        Log.i("model", "getAppStatistics ${Thread.currentThread()}")
+        return Single.create<String> {
+            it.onSuccess("""
+            Опросников: ${databaseInfo.getFormDAO().size()}
+            Вопросов: ${databaseInfo.getQuestionDAO().size()}
+            Ответов: ${databaseInfo.getAnswerDAO().size()}
+            Прохождений: ${databaseInfo.getResultDAO().size()}
+            Пользователей: ${databaseInfo.getUserDAO().size()}
+            """.also {
+                Log.i("model", "Single.create ${Thread.currentThread()}")
+            })
+        }.subscribeOn(Schedulers.io())
+    }
 }

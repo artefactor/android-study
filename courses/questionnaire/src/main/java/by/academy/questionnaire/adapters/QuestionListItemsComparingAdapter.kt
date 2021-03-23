@@ -1,10 +1,9 @@
 package by.academy.questionnaire.adapters
 
-import android.content.Context
-import android.graphics.Color
-import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.RadioGroup
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.core.content.ContextCompat
@@ -63,38 +62,50 @@ class QuestionListItemsComparingAdapter(
                 viewTextTitle.text = "${item.first.question.index}. ${item.first.question.title}"
                 radioWorkStatusLayout.removeAllViews()
                 // options
+                val layoutParamsGroup = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { gravity = Gravity.CENTER }
+                val layoutParamsButton = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { gravity = Gravity.CENTER }
+
                 val option1 = item.first.answerEntity!!.option
                 val option2 = item.second.answerEntity!!.option
                 val optionCount = 7 // todo get form db
                 for (i in 0 until optionCount) {
                     AppCompatRadioButton(itemView.context)
                             .also {
+                                it.layoutParams = layoutParamsButton
                                 it.text = "$i"
-                                RadioGroup(itemView.context).apply {
-                                    this.addView(it)
-                                    radioWorkStatusLayout.addView(this)
-                                }
-
-                                if (option1 == i && option2 == i) {
-                                    it.isChecked = true
-                                    it.setBackgroundColor(ContextCompat.getColor(root.context, R.color.violet))
-                                    return@also
-                                }
-                                if (option1 == i) {
-                                    it.isChecked = true
-                                    it.setBackgroundColor(ContextCompat.getColor(root.context, R.color.red))
-                                    return@also
-                                }
-                                if (option2 == i) {
-                                    it.isChecked = true
-                                    it.setBackgroundColor(ContextCompat.getColor(root.context, R.color.blue))
-                                    return@also
-                                }
-                                it.isEnabled = false
+                                defineColor(it, i, option1, option2)
+                                radioWorkStatusLayout.addView(wrapInRadioGroup(it, layoutParamsGroup))
                             }
                 }
             }
         }
+
+        private fun defineColor(radioButton: AppCompatRadioButton, i: Int, option1: Int, option2: Int) {
+            if (option1 == i && option2 == i) {
+                radioButton.isChecked = true
+                radioButton.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.violet))
+                return
+            }
+            if (option1 == i) {
+                radioButton.isChecked = true
+                radioButton.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.red))
+                return
+            }
+            if (option2 == i) {
+                radioButton.isChecked = true
+                radioButton.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.blue))
+                return
+            }
+            radioButton.isEnabled = false
+        }
+
+        private fun wrapInRadioGroup(radioButton: AppCompatRadioButton, params: LinearLayout.LayoutParams) =
+                RadioGroup(itemView.context).apply {
+                    layoutParams = params
+                    gravity = Gravity.CENTER
+                    setPadding(0, 1, 0, 1)
+                    addView(radioButton)
+                }
     }
 
 }

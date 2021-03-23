@@ -3,10 +3,10 @@ package by.academy.questionnaire.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.academy.questionnaire.LOG_TAG
 import by.academy.questionnaire.R
@@ -16,17 +16,15 @@ import by.academy.questionnaire.databinding.FormListBinding
 import by.academy.questionnaire.domain.FURContext
 import by.academy.questionnaire.domain.FormStatus
 import by.academy.questionnaire.domain.convertToFormStatus
+import by.academy.questionnaire.viewmodel.FormsViewModel
 
 class FragmentFormList : Fragment(R.layout.form_list) {
     private lateinit var binding: FormListBinding
     private lateinit var fragmentManager: AppFragmentManager
-
+    private lateinit var viewModel: FormsViewModel
     private val formListAdapter by lazy {
         FormListItemsAdapter(this::onCheckVisibility, this::onItemClicked)
     }
-
-    //    private val viewModelFactory: ViewModelProvider.Factory = WeatherViewModelFactory()
-    //    private lateinit var viewModel: FormsViewModel
 
     private fun onCheckVisibility(invisible: Boolean) = if (invisible) {
         binding.noItems.visibility = View.INVISIBLE
@@ -75,13 +73,19 @@ class FragmentFormList : Fragment(R.layout.form_list) {
                         layoutManager = LinearLayoutManager(context)
                     }
                 }
-//        viewModel = ViewModelProvider(this, viewModelFactory).get(FormsViewModel::class.java)
-//        viewModel.init(requireActivity().applicationContext)
-//        with(viewModel) {
-//            FormsListLiveData.observe(viewLifecycleOwner, Observer { data -> showFormsList(data) })
-//            errorLiveData.observe(viewLifecycleOwner, Observer { err -> showError(err) })
-        fetchForms()
-//        }
+        // получается она одна на фрагмент, при каждом переходе на другой фрагмент - все данные перечитываются.
+        // может это и неплохо. Но можно их и не перечитывать, а точечно обновлять в моем случае.
+        // там же ничего не меняется. Максимум данные от отдного теста
+        // и в памяти пусть висят эти модели?
+        // или очищаются? как лучше?
+        // создавать каждый раз все заново только для одного экрана
+        // или вычитывать и сохранять в оперативную память?
+        viewModel = ViewModelProvider(this, fragmentManager.getModelFactory()).get(FormsViewModel::class.java).also {
+            it.formListLiveData.observe(viewLifecycleOwner, this::showFormsList)
+            it.errorLiveData.observe(viewLifecycleOwner, this::showError)
+            it.infoLiveData.observe(viewLifecycleOwner, this::onDbInfo)
+            it.fetchForms()
+        }
     }
 
 
@@ -90,6 +94,8 @@ class FragmentFormList : Fragment(R.layout.form_list) {
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.clearAll -> onClearAll()
+//                    R.id.userManagement -> onUserMgmt()
+                    R.id.dbInfo -> viewModel.onDbInfo()
                 }
                 true
             }
@@ -108,13 +114,21 @@ class FragmentFormList : Fragment(R.layout.form_list) {
         }
     }
 
-    private fun fetchForms() {
-        val allForms: List<FormQuestionStatus> = fragmentManager.getQUseCase().getAllFormsInfo()
-        showFormsList(allForms)
+    private fun onDbInfo(info: String) {
+        val myDialogFragment = DialogFragment("Статистика", info)
+        val manager = requireActivity().supportFragmentManager
+        myDialogFragment.show(manager, "myDialog")
     }
 
+    private fun onUserMgmt() {
+        val myDialogFragment = DialogFragment("", "")
+        val manager = requireActivity().supportFragmentManager
+        myDialogFragment.show(manager, "myDialog")
+    }
+
+
     private fun showFormsList(data: List<FormQuestionStatus>) {
-        Log.i(LOG_TAG, "Model:$data")
+        Log.i("model", "Model:$data")
         hideError()
         formListAdapter.items = data
         formListAdapter.allItems = data

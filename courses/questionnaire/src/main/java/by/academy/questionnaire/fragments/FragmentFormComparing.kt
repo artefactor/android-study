@@ -9,6 +9,7 @@ import android.view.View.VISIBLE
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.academy.questionnaire.LOG_TAG
 import by.academy.questionnaire.R
@@ -16,6 +17,7 @@ import by.academy.questionnaire.adapters.QuestionListItemsComparingAdapter
 import by.academy.questionnaire.database.entity.AnswerQuestion
 import by.academy.questionnaire.databinding.QuestionListBinding
 import by.academy.questionnaire.domain.FURContext
+import by.academy.questionnaire.viewmodel.FormsViewModel
 
 
 class FragmentFormComparing : Fragment(R.layout.question_list) {
@@ -24,11 +26,10 @@ class FragmentFormComparing : Fragment(R.layout.question_list) {
 
     private lateinit var binding: QuestionListBinding
     private lateinit var fragmentManager: AppFragmentManager
+    private lateinit var viewModel: FormsViewModel
     private val questionListAdapter by lazy {
         QuestionListItemsComparingAdapter(this::onCheckVisibility, this::onItemClicked)
     }
-    //    private val viewModelFactory: ViewModelProvider.Factory = MyViewModelFactory()
-    //    private lateinit var viewModel: FormsViewModel
 
     private fun onCheckVisibility(invisible: Boolean) = if (invisible) {
         binding.noItems.visibility = View.INVISIBLE
@@ -80,13 +81,11 @@ class FragmentFormComparing : Fragment(R.layout.question_list) {
                         setOnClickListener { onFilter(binding.viewTextTitleRight) }
                     }
                 }
-//        viewModel = ViewModelProvider(this, viewModelFactory).get(FormsViewModel::class.java)
-//        viewModel.init(requireActivity().applicationContext)
-//        with(viewModel) {
-//            FormsListLiveData.observe(viewLifecycleOwner, Observer { data -> showFormsList(data) })
-//            errorLiveData.observe(viewLifecycleOwner, Observer { err -> showError(err) })
-        fetchForm()
-//        }
+        viewModel = ViewModelProvider(this, fragmentManager.getModelFactory()).get(FormsViewModel::class.java).also {
+            it.formComparingMutableLiveData.observe(viewLifecycleOwner, this::showFormsList)
+            it.errorLiveData.observe(viewLifecycleOwner, this::showError)
+            it.fetchFormsComparing(furContext, anotherFurContext)
+        }
     }
 
     private fun onFilter(viewText: TextView) {
@@ -97,15 +96,6 @@ class FragmentFormComparing : Fragment(R.layout.question_list) {
         fragmentManager.showFormResultFragment(furContext, false)
     }
 
-    private fun fetchForm() {
-        val questions1: List<AnswerQuestion> = fragmentManager.getQUseCase().getAttemptAnswers(furContext)
-        val questions2: List<AnswerQuestion> = fragmentManager.getQUseCase().getAttemptAnswers(anotherFurContext)
-        val questions = arrayListOf<Pair<AnswerQuestion, AnswerQuestion>>()
-        for (i in 1..questions1.size) {
-            questions.add(questions1[i - 1] to questions2[i - 1])
-        }
-        showFormsList(questions)
-    }
 
     private fun showFormsList(data: List<Pair<AnswerQuestion, AnswerQuestion>>) {
         Log.i(LOG_TAG, "Model:$data")

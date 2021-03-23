@@ -12,6 +12,9 @@ import by.academy.questionnaire.database.entity.FormQuestionStatus
 @Dao
 interface FormDAO {
 
+    @Query("SELECT count(1) FROM form")
+    fun size(): Long
+
     @Query("SELECT * FROM form order by f_id")
     fun getAll(): List<FormEntity>
 
@@ -20,7 +23,7 @@ interface FormDAO {
                     form.icon,
                     count(DISTINCT q.q_id) as questionCount,
                     count(DISTINCT r1.r_id) as countPasses,
-                    count(a.a_id) as passedQuestionCount,
+                    count(DISTINCT a.a_id) as passedQuestionCount,
                     r.r_id as mainResultId,  
                     r.fk_ur_id as userId  
                     FROM form 

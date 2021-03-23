@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.VISIBLE
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.academy.questionnaire.LOG_TAG
 import by.academy.questionnaire.R
@@ -12,17 +14,17 @@ import by.academy.questionnaire.adapters.QuestionListItemsAdapter
 import by.academy.questionnaire.database.entity.AnswerQuestion
 import by.academy.questionnaire.databinding.QuestionListBinding
 import by.academy.questionnaire.domain.FURContext
+import by.academy.questionnaire.viewmodel.FormsViewModel
 
 class FragmentForm : Fragment(R.layout.question_list) {
     internal var furContext: FURContext = FURContext(0, 1, 0)
 
     private lateinit var binding: QuestionListBinding
     private lateinit var fragmentManager: AppFragmentManager
+    private lateinit var viewModel: FormsViewModel
     private val questionListAdapter by lazy {
         QuestionListItemsAdapter(this::onCheckVisibility, this::onItemClicked)
     }
-    //    private val viewModelFactory: ViewModelProvider.Factory = MyViewModelFactory()
-    //    private lateinit var viewModel: FormsViewModel
 
     private fun onCheckVisibility(invisible: Boolean) = if (invisible) {
         binding.noItems.visibility = View.INVISIBLE
@@ -73,7 +75,8 @@ class FragmentForm : Fragment(R.layout.question_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i(LOG_TAG, "FragmentForm#onViewCreated")
-
+        furContext = requireArguments().getParcelable("furContext")!!
+        questionListAdapter.allItems = emptyList()
         fragmentManager = requireActivity() as AppFragmentManager
         binding = QuestionListBinding.bind(view)
                 .apply {
@@ -81,6 +84,7 @@ class FragmentForm : Fragment(R.layout.question_list) {
                     recyclerView.apply {
                         adapter = questionListAdapter
                         layoutManager = LinearLayoutManager(context)
+                        startAnimation(AnimationUtils.loadAnimation(context, R.anim.placeholder))
                     }
                     submit.apply {
                         submit.visibility = VISIBLE
@@ -94,28 +98,25 @@ class FragmentForm : Fragment(R.layout.question_list) {
                     val username = fragmentManager.getQUseCase().getUserName(furContext.userId)
                     viewTextTitle.text = getString(R.string.in_processTitle, username)
                 }
-//        viewModel = ViewModelProvider(this, viewModelFactory).get(FormsViewModel::class.java)
-//        viewModel.init(requireActivity().applicationContext)
-//        with(viewModel) {
-//            FormsListLiveData.observe(viewLifecycleOwner, Observer { data -> showFormsList(data) })
-//            errorLiveData.observe(viewLifecycleOwner, Observer { err -> showError(err) })
-        fetchForm()
-//        }
+
+        viewModel = ViewModelProvider(this, fragmentManager.getModelFactory()).get(FormsViewModel::class.java).also {
+            it.formLiveData.observe(viewLifecycleOwner, this::showForm)
+            it.errorLiveData.observe(viewLifecycleOwner, this::showError)
+            it.fetchForm(furContext)
+        }
     }
 
-    private fun fetchForm() {
-        val questions: List<AnswerQuestion> = fragmentManager.getQUseCase().getAttemptAnswers(furContext)
-        showFormsList(questions)
-    }
-
-    private fun showFormsList(data: List<AnswerQuestion>) {
+    private fun showForm(data: List<AnswerQuestion>) {
         Log.i(LOG_TAG, "Model:$data")
         hideError()
+        binding.recyclerView.clearAnimation()
         val passedCount = data.count { answerQuestion -> answerQuestion.answerEntity != null }
-        binding.progressbar.max = data.size
-        binding.progressbar.progress = passedCount
         questionListAdapter.items = data
         questionListAdapter.allItems = data
+        binding.progressbar.max = 0
+        binding.progressbar.progress = 0
+        binding.progressbar.max = data.size
+        binding.progressbar.progress = passedCount
     }
 
     fun showError(errorMessage: String) {

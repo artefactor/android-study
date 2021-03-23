@@ -11,6 +11,9 @@ import by.academy.questionnaire.database.entity.UserEntity
 @Dao
 interface UserDAO {
 
+    @Query("SELECT count(1) FROM user")
+    fun size(): Long
+
     @Query("SELECT * FROM user order by u_id")
     fun getAll(): List<UserEntity>
 

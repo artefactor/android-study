@@ -15,6 +15,7 @@ import by.academy.questionnaire.database.entity.UserEntity
 import by.academy.questionnaire.domain.FURContext
 import by.academy.questionnaire.domain.QUseCase
 import by.academy.questionnaire.domain.QUseCaseImpl
+import io.reactivex.android.schedulers.AndroidSchedulers
 import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.assertNull
 import org.junit.After
@@ -109,15 +110,18 @@ class UseCasesTest {
         assertNull(results[0].resultEntity.dateEnd)
         assertFormInfo(0, 2, 0, resultId, userId)
 
-        usecase.getAttemptAnswers(furContext).forEach { q -> assertNull(q.answerEntity) }
-
+        usecase.getAttemptAnswers(furContext)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { data ->
+                    data.forEach { q -> assertNull(q.answerEntity) }
+                }
     }
 
     @Test
     fun тест_в_середине() {
         val resultId = usecase.startTest(formId, userId)
         val furContext = FURContext(formId, userId, resultId)
-        val questions: List<AnswerQuestion> = usecase.getAttemptAnswers(furContext)
+        val questions: List<AnswerQuestion> = databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId)
         usecase.handleAnswer(questions[0], 2, furContext) {}
 
         val results = resultDAO.getAllByFormId(formId)
@@ -143,7 +147,7 @@ class UseCasesTest {
     private fun finishTest(): Boolean {
         val resultId = usecase.startTest(formId, userId)
         furContext = FURContext(formId, userId, resultId)
-        val questions: List<AnswerQuestion> = usecase.getAttemptAnswers(furContext)
+        val questions: List<AnswerQuestion> = databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId)
         usecase.handleAnswer(questions[0], 2, furContext) {}
         usecase.handleAnswer(questions[1], 2, furContext) {}
         val result = usecase.submitTest(furContext, questions)
@@ -154,14 +158,14 @@ class UseCasesTest {
     fun `начать_перепройти_тест`() {
         finishTest()
 
-        usecase.restartTest(furContext)
+        val newId = usecase.restartTest(furContext)
 
         val results = resultDAO.getAllByFormId(formId)
         assertEquals(1, results.size)
         assertNull(results[0].resultEntity.dateEnd)
-        assertFormInfo(0, 2, 0, furContext.resultId, furContext.userId)
+        assertFormInfo(0, 2, 0, newId, furContext.userId)
 
-        usecase.getAttemptAnswers(furContext).forEach { q -> assertNull(q.answerEntity) }
+        databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId).forEach { q -> assertNull(q.answerEntity) }
     }
 
     @Test
@@ -175,7 +179,7 @@ class UseCasesTest {
         assertNull(results[0].resultEntity.dateEnd)
         assertFormInfo(0, 2, 0, furContext.resultId, furContext.userId)
 
-        usecase.getAttemptAnswers(furContext).forEach { q -> assertNull(q.answerEntity) }
+        databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId).forEach { q -> assertNull(q.answerEntity) }
     }
 
     @Test
@@ -186,8 +190,8 @@ class UseCasesTest {
 
         val furContext1 = FURContext(formId, userId, newResultId)
         assertNewAttemptAdded(resultDAO.getAllByFormId(formId), furContext1)
-        usecase.getAttemptAnswers(furContext).forEach { q -> assertNotNull(q.answerEntity) }
-        usecase.getAttemptAnswers(furContext1).forEach { q -> assertNull(q.answerEntity) }
+        databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId).forEach { q -> assertNotNull(q.answerEntity) }
+        databaseInfo.getAnswerDAO().getAttemptAnswers(furContext1.resultId).forEach { q -> assertNull(q.answerEntity) }
     }
 
     @Test
@@ -197,7 +201,7 @@ class UseCasesTest {
         var newResultId = usecase.startNextAttemptTest(furContext)
 
         val furContext = FURContext(formId, userId, newResultId)
-        val questions: List<AnswerQuestion> = usecase.getAttemptAnswers(furContext)
+        val questions: List<AnswerQuestion> = databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId)
         usecase.handleAnswer(questions[0], 2, furContext) {}
         usecase.handleAnswer(questions[1], 2, furContext) {}
         usecase.submitTest(furContext, questions)
@@ -207,8 +211,8 @@ class UseCasesTest {
         val furContext2 = FURContext(formId, userId, newResultId2)
         val info = databaseInfo.getResultDAO().getInfo(formId, userId)
         assertEquals(3, info.size)
-        usecase.getAttemptAnswers(furContext).forEach { q -> assertNotNull(q.answerEntity) }
-        usecase.getAttemptAnswers(furContext2).forEach { q -> assertNull(q.answerEntity) }
+        databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId).forEach { q -> assertNotNull(q.answerEntity) }
+        databaseInfo.getAnswerDAO().getAttemptAnswers(furContext2.resultId).forEach { q -> assertNull(q.answerEntity) }
     }
 
 
@@ -250,7 +254,7 @@ class UseCasesTest {
 
         val furContext = usecase.startTestForUser(formId, 1, name, 2, "", false)
 
-        val questions: List<AnswerQuestion> = usecase.getAttemptAnswers(furContext)
+        val questions: List<AnswerQuestion> = databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId)
         usecase.handleAnswer(questions[0], 2, furContext) {}
         usecase.handleAnswer(questions[1], 2, furContext) {}
         val result = usecase.submitTest(furContext, questions)

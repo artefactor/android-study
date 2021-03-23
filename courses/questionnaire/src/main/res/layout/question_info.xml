@@ -20,7 +20,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="1. вопросочень много тестка собержит этот вопрос. очень большой вопрос просто" />
+        tools:text="1. вопросочень много тестка собержит вопросочень много тестка собержитвопросочень много тестка собержитвопросочень много тестка
+        вопросочень тестка  много тестка собержит
+        быввает что  тестка  много тестка собержит
+        часто много тестка собержиттестка
+        вопросочень много тестка собержит
+        неприлично много тестка собержит собержит этот вопрос. очень большой вопрос просто" />
 
     <LinearLayout
         android:id="@+id/radioWorkStatusLayout"
@@ -36,7 +41,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/viewTextTitle" />
+            app:layout_constraintTop_toBottomOf="@id/viewTextTitle">
+
+<!--            <RadioButton-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="A" />-->
+
+        </RadioGroup>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

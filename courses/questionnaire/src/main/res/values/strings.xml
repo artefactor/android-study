@@ -25,6 +25,7 @@
     <string name="warning_fill">Please fill all questions</string>
     <string name="suggestion_choose_any">Выберите вариант</string>
     <string name="suggestion_choose_another">Такой уже есть, выберите другое имя</string>
+    <string name="button_yes">Да</string>
 
     <string name="addNewUser">Добавить нового</string>
 
