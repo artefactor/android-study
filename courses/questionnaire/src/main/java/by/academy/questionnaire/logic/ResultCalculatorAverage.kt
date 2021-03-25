@@ -9,12 +9,26 @@ class ResultCalculatorAverage : ResultCalculator {
     }
 
 
-    override fun parseResult(result: String): String {
-        return "result: $result"
+    override fun parseResult(result: String): Pair<String, BarChartModel> {
+        val model = BarChartModel("Cреднее").apply {
+            name = "Среднее"
+            addLine1(result.toFloat())
+            addLineDescription1(result)
+        }
+
+        return Pair("result: $result", model)
     }
 
-    override fun parseResults(result1: String, result2: String): String {
-        return "result: $result1 - $result2 "
+    override fun parseResults(result1: String, result2: String): Pair<String, BarChartModel> {
+        val model = BarChartModel("Cреднее").apply {
+            name = "Среднее"
+            addLine1(result1.toFloat())
+            addLineDescription1(result1)
+            addLine2(result2.toFloat())
+            addLineDescription2(result2)
+        }
+
+        return Pair("result: $result1 - $result2 ", model)
     }
 
 

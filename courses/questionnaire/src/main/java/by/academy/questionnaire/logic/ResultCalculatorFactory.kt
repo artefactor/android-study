@@ -3,9 +3,8 @@ package by.academy.questionnaire.logic
 import by.academy.questionnaire.database.FORM_BURNOUT_MBI
 import by.academy.questionnaire.database.FORM_WORK_ENGAGEMENT_UWES
 import by.academy.questionnaire.database.entity.AnswerEntity
-import by.academy.questionnaire.database.entity.ResultEntity
 
-const val separator = ","
+const val separator = ":"
 
 /**
 хотелось бы сделать этот модуль более универсальным,
@@ -17,7 +16,7 @@ class ResultCalculatorFactory {
 
     private val burnout: ResultCalculator = ResultCalculatorBurnout()
     private val engagement: ResultCalculator = ResultCalculatorEngagement()
-    private val defaultAvg: ResultCalculator = ResultCalculatorAverage()
+    private val defaultAvg: ResultCalculator = ResultCalculatorAverageDetailed()
 
     fun calculateResult(formId: Long, userId: Long, answers: List<AnswerEntity>): String {
         val result = when (formId) {
@@ -29,7 +28,7 @@ class ResultCalculatorFactory {
     }
 
     // ---------  parse result
-    fun parseResult(result: String, formId: Long): String {
+    fun parseResult(result: String, formId: Long): Pair<String, BarChartModel> {
         return when (formId) {
             FORM_BURNOUT_MBI -> burnout.parseResult(result)
             FORM_WORK_ENGAGEMENT_UWES -> engagement.parseResult(result)
@@ -37,7 +36,7 @@ class ResultCalculatorFactory {
         }
     }
 
-    fun parseResults(result1: String, result2: String, formId: Long): String {
+    fun parseResults(result1: String, result2: String, formId: Long): Pair<String, BarChartModel> {
         return when (formId) {
             FORM_BURNOUT_MBI -> burnout.parseResults(result1, result2)
             FORM_WORK_ENGAGEMENT_UWES -> engagement.parseResults(result1, result2)

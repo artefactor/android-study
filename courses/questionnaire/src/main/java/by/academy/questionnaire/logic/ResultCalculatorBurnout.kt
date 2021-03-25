@@ -31,10 +31,10 @@ class ResultCalculatorBurnout : ResultCalculator {
         return string
     }
 
-    override fun parseResult(result: String): String = parseResultBurnout(result)
-    override fun parseResults(result1: String, result2: String): String = parseResultsBurnout(result1, result2)
+    override fun parseResult(result: String): Pair<String, BarChartModel> = parseResultBurnout(result)
+    override fun parseResults(result1: String, result2: String): Pair<String, BarChartModel> = parseResultsBurnout(result1, result2)
 
-    private fun parseResultBurnout(result: String): String {
+    private fun parseResultBurnout(result: String): Pair<String, BarChartModel> {
         val split: List<String> = result.split(separator, limit = 4)
         val scale1 = split[0].toInt()
         val scale2 = split[1].toInt()
@@ -47,15 +47,21 @@ class ResultCalculatorBurnout : ResultCalculator {
         val commonText = scaleBurnOut(common)
 
 
-        return """$scale1Name - $scale1 ($scale1Text)
+        val model = BarChartModel(scale1Name, scale2Name, scale3Name, scaleAllName).apply {
+            name = "Выгорание"
+            addLine1(scale1, scale2, scale3, common)
+            addLineDescription1(scale1Text, scale2Text, scale3Text, commonText)
+        }
+
+        return Pair("""$scale1Name - $scale1 ($scale1Text)
 $scale2Name - $scale2 ($scale2Text)
 $scale3Name - $scale3 ($scale3Text)
 $scaleAllName - $common ($commonText)
-""".trimIndent()
+""".trimIndent(), model)
     }
 
 
-    fun parseResultsBurnout(result1: String, result2: String): String {
+    fun parseResultsBurnout(result1: String, result2: String): Pair<String, BarChartModel> {
         val Asplit: List<String> = result1.split(separator, limit = 4)
         val Ascale1 = Asplit[0].toInt()
         val Ascale2 = Asplit[1].toInt()
@@ -78,16 +84,19 @@ $scaleAllName - $common ($commonText)
         val Bscale3Text = scaleBurnOut(Bscale3, 3)
         val BcommonText = scaleBurnOut(Bcommon)
 
+        val model = BarChartModel(scale1Name, scale2Name, scale3Name, scaleAllName).apply {
+            name = "Выгорание"
+            addLine1(Ascale1, Ascale2, Ascale3, Acommon)
+            addLineDescription1(Ascale1Text, Ascale2Text, Ascale3Text, AcommonText)
+            addLine2(Bscale1, Bscale2, Bscale3, Bcommon)
+            addLineDescription2(Bscale1Text, Bscale2Text, Bscale3Text, BcommonText)
+        }
 
-        return """$scale1Name: 
-$Ascale1 ($Ascale1Text) - $Bscale1 ($Bscale1Text)
-$scale2Name: 
-$Ascale2 ($Ascale2Text) - $Bscale2 ($Bscale2Text)
-$scale3Name: 
-$Ascale3 ($Ascale3Text) - $Bscale3 ($Bscale3Text)
-$scaleAllName:   
-$Acommon ($AcommonText) - $Bcommon ($BcommonText)
-""".trimIndent().trimStart().trimMargin()
+        return Pair("""$scale1Name - $Ascale1 ($Ascale1Text) - $Bscale1 ($Bscale1Text)
+$scale2Name - $Ascale2 ($Ascale2Text) - $Bscale2 ($Bscale2Text)
+$scale3Name - $Ascale3 ($Ascale3Text) - $Bscale3 ($Bscale3Text)
+$scaleAllName -   $Acommon ($AcommonText) - $Bcommon ($BcommonText)
+""".trimIndent().trimStart().trimMargin(), model)
     }
 
     private fun scaleBurnOut(scaleValue: Int, scale: Int = 0): String {

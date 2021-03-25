@@ -25,15 +25,18 @@ import by.academy.questionnaire.database.entity.UserEntity
 import by.academy.questionnaire.databinding.CustomDialogBinding
 import by.academy.questionnaire.databinding.ResultBinding
 import by.academy.questionnaire.domain.FURContext
+import by.academy.questionnaire.viewmodel.BarChartViewModel
 import by.academy.questionnaire.logic.ResultCalculatorFactory
 import by.academy.questionnaire.viewmodel.FormsViewModel
 
 class FragmentFormResult : Fragment(R.layout.result) {
+    private val barChartFragment by lazy { BarChartFragment() }
     private val resultCalculator: ResultCalculatorFactory = ResultCalculatorFactory()
     internal var furContext: FURContext = FURContext(0, 1, 0)
     private lateinit var binding: ResultBinding
     private lateinit var fragmentManager: AppFragmentManager
     private lateinit var viewModel: FormsViewModel
+    lateinit var barChartViewModel: BarChartViewModel
     private var resetCurrentResultId: Boolean = false
 
     private val resultListAdapter by lazy {
@@ -72,11 +75,30 @@ class FragmentFormResult : Fragment(R.layout.result) {
         binding.noItems.visibility = VISIBLE
     }
 
+    override fun onDetach() {
+        requireActivity().supportFragmentManager.beginTransaction()
+                .remove(barChartFragment)
+                .commit()
+        super.onDetach()
+    }
+
+    //TODO DENIS. Здесь я хотел подключить фрагмент во фрагмент
+    //где мне его лучше хранить и где подключать?
+    // я сделать что он в креатед создается, а в детаче отключается
+    // но может раз, в детаче - то тогда в аттаче подключить?
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i(LOG_TAG, "FragmentResultList#onViewCreated")
 
+        requireActivity().supportFragmentManager.beginTransaction()
+                .add(R.id.chartFragmentContainer, barChartFragment, "chart")
+                .commit()
         fragmentManager = requireActivity() as AppFragmentManager
+        barChartViewModel = ViewModelProvider(requireActivity()).get(BarChartViewModel::class.java)
         binding = ResultBinding.bind(view)
                 .also {
                     it.recyclerView.apply {
@@ -216,8 +238,10 @@ class FragmentFormResult : Fragment(R.layout.result) {
             resultListAdapter.resultIdInCompare = -1
             val resultUser = fragmentManager.getQUseCase().getAttempt(furContext.resultId)
             val resultInfo = resultCalculator.parseResult(resultUser.resultEntity.result, furContext.formId)
+            barChartViewModel.chartMutableLiveData.value = (resultInfo.second)
             viewTextTitle.text = getString(R.string.resultsTitle, resultUser.userName)
-            viewTextDescription.text = getString(R.string.resultsDescription, resultInfo)
+//            viewTextDescription.text = getString(R.string.resultsDescription, resultInfo)
+            viewTextDescription.visibility = GONE
         }
     }
 
@@ -225,8 +249,12 @@ class FragmentFormResult : Fragment(R.layout.result) {
         if (resetCurrentResultId) {
             if (data.isEmpty()) {
                 // no items
-                binding.viewTextTitle.text = getString(R.string.no_results)
-                binding.viewTextDescription.text = getString(R.string.no_results_suggestion)
+                with(binding) {
+                    viewTextTitle.text = getString(R.string.no_results)
+                    chartFragmentContainer.visibility = GONE
+                    viewTextDescription.visibility = VISIBLE
+                    viewTextDescription.text = getString(R.string.no_results_suggestion)
+                }
                 return true
             } else {
                 furContext = data[0].resultEntity.toFurContext()
@@ -249,11 +277,17 @@ class FragmentFormResult : Fragment(R.layout.result) {
                 resultUser2.resultEntity.result,
                 furContext.formId
         )
+        barChartViewModel.chartMutableLiveData.value = (resultInfo.second)
         with(binding) {
-            viewTextTitleCompare.text = getString(R.string.action_compare_answers)
-            viewTextTitleCompare.setOnClickListener { onCompareAnswers(furContext, anotherFurContext) }
+            viewTextTitleCompare.apply {
+                text = getString(R.string.action_compare_answers)
+                paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                startAnimation(AnimationUtils.loadAnimation(context, R.anim.placeholder))
+                setOnClickListener { onCompareAnswers(furContext, anotherFurContext) }
+            }
             viewTextTitle.text = getString(R.string.resultsTwoTitle, resultUser1.userName, resultUser2.userName)
-            viewTextDescription.text = getString(R.string.resultsDescription, resultInfo)
+//            viewTextDescription.text = getString(R.string.resultsDescription, resultInfo)
+            viewTextDescription.visibility = GONE
         }
     }
 
