@@ -60,7 +60,7 @@ abstract class DatabaseInfo : RoomDatabase() {
             db.getFormDAO().apply {
                 add(FormEntity(FORM_BURNOUT_MBI, "Опросник эмоционального выгорания","ic_noun_occupational_burnout"))
                 add(FormEntity(FORM_WORK_ENGAGEMENT_UWES, "Опросник увлеченности работой", "ic_noun_user_engagement"))
-                add(FormEntity(FORM_DEMO, "Демо опросник", "ic_noun_questionnaire"))
+                add(FormEntity(FORM_DEMO, "Demo опросник", "ic_noun_questionnaire"))
             }
             db.getQuestionDAO().apply {
                 add(QuestionEntity(1, FORM_BURNOUT_MBI, 1, "Я чувствую себя эмоционально опустошенным."))

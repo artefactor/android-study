@@ -2,12 +2,14 @@ package by.academy.questionnaire
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -26,12 +28,14 @@ import by.academy.questionnaire.fragments.FragmentFormResult
 import by.academy.questionnaire.viewmodel.MyViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 
+
 const val LOG_TAG = "LOG_TAG"
 const val USE_CONFIRMS = true
 
 class MainActivity : AppCompatActivity(), AppFragmentManager {
 
     private val fragmentFormList by lazy { FragmentFormList() }
+
     // нахер. Оно работает криво. Создаю заново фрагмент
 //    private val fragmentForm by lazy { FragmentForm() }
     private val fragmentFormResult by lazy { FragmentFormResult() }
@@ -69,16 +73,10 @@ class MainActivity : AppCompatActivity(), AppFragmentManager {
     }
 
     override fun showFormFragment(furContext: FURContext, fromList: Boolean) {
-//        fragmentForm.furContext = furContext
-//        if (fromList) {
         levelCount++
-//            previousFragment  = fragmentFormList
-//        }
-//        else{
         Log.i("FRAGMENT_TAG", "showFormFragment(). $levelCount prev set to $previousFragment  -> $fragmentFormList")
         previousFragment = fragmentFormList
-//        }
-        supportFragmentManager.commit(){
+        supportFragmentManager.commit() {
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             replace(R.id.fragmentContainer, FragmentForm::class.java, bundleOf("furContext" to furContext))
         }
@@ -144,6 +142,11 @@ class MainActivity : AppCompatActivity(), AppFragmentManager {
             Log.i("FRAGMENT_TAG", "onBackPressed(). $levelCount prev set to $previousFragment  -> $currentFragment")
             previousFragment = currentFragment
         }
+
+        // ЧТо только не пробовал для бэка - вот все ниже.
+        // КОРОЧе, написал свою навигацию
+        // я так понял, что все равно свою нужно писать, потому что логика не тривиальна
+
 //        super.onBackPressed()
 //        val backStackEntryCount = supportFragmentManager.backStackEntryCount
 //        if (backStackEntryCount <= 1) {
@@ -171,8 +174,17 @@ class MainActivity : AppCompatActivity(), AppFragmentManager {
     override fun getModelFactory() = viewModelFactory
 
     override fun showError(error: String) {
-        val baseContext: View = findViewById(R.id.fragmentContainer)
-        snackbar = Snackbar.make(baseContext, error, Snackbar.LENGTH_INDEFINITE).also { it.show() }
+        val baseContext: View = findViewById(R.id.top_coordinator)
+        snackbar = Snackbar.make(baseContext, error, Snackbar.LENGTH_INDEFINITE).also {
+            val view = it.view as Snackbar.SnackbarLayout
+            val params = view.layoutParams as CoordinatorLayout.LayoutParams
+            params.height = 300
+            params.setMargins(10, 50, 10, 50)
+            view.layoutParams = params
+            view.setPadding(10, 10, 10, 10);
+            it.setBackgroundTint(resources.getColor(R.color.teal_700))
+            it.show()
+        }
     }
 
     override fun hideError() {

@@ -9,12 +9,12 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/clearAll"
-        android:title="сбросить все" />
-<!--    <item-->
-<!--        android:id="@+id/userManagement"-->
-<!--        android:title="пользователи" />-->
+        android:title="@string/action_clear_all" />
+    <!--        <item-->
+    <!--            android:id="@+id/userManagement"-->
+    <!--            android:title="@string/action_users" />-->
     <item
         android:id="@+id/dbInfo"
-        android:title="статистика" />
+        android:title="@string/action_stats" />
 
 </menu>

@@ -12,7 +12,6 @@ class MyViewModelFactory(val usecase: QUseCase) : ViewModelProvider.Factory {
             return FormsViewModel(
                     compositeDisposable = CompositeDisposable(),
                     useCase = usecase,
-//                    mapper = ItemMapper()
             ) as T
         }
         throw IllegalArgumentException(

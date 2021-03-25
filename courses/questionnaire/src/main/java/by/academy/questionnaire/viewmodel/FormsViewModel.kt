@@ -18,14 +18,8 @@ const val LOG_TAG = "model"
 
 class FormsViewModel(
         private val compositeDisposable: CompositeDisposable = CompositeDisposable(),
-        // example
-//        private val mapper: (CityEntity) -> CityItem = CityItemMapper(),
-//        private val mapperBack: (CityItem) -> CityEntity = CityBackItemMapper(),
         private val useCase: QUseCase,
 ) : ViewModel() {
-// example
-//    private val mutableCityLiveData = MutableLiveData<CityItem>()
-//    val cityLiveData: LiveData<CityItem> = mutableCityLiveData
 
     val formListMutableLiveData = MutableLiveData<List<FormQuestionStatus>>()
     val formListLiveData: LiveData<List<FormQuestionStatus>> = formListMutableLiveData
@@ -81,66 +75,6 @@ class FormsViewModel(
                     mutableErrorLiveData.value = (error.toString())
                 }).also { compositeDisposable.add(it) }
     }
-
-// example
-//    fun updateCity(city: CityItem) {
-//        Log.i("useCase", "updateCity ${Thread.currentThread()}")
-//        useCase.updateCity(mapperBack.invoke(city))
-//                .observeOn(Schedulers.io())
-//                .subscribe(
-//                        {
-//                            run {
-//                                Log.i("useCase", "updateCitySuccess ${Thread.currentThread()}")
-//                                fetchCities()
-//                            }
-//                        },
-//                        { error ->
-//                            Log.e("useCase", "exception during update data", error)
-//                            mutableErrorLiveData.value = (error.toString())
-//                        }
-//                ).also { compositeDisposable.add(it) }
-//    }
-//
-//    fun fetchCities() {
-//        Log.i("useCase", "fetchCities ${Thread.currentThread()}")
-//        useCase.getAllCities()
-//                .map { data -> data.map { item -> mapper(item) } }
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(
-//                        { data ->
-//                            run {
-//                                Log.i("useCase", "fetchCitiesOnsuccess ${Thread.currentThread()}")
-//                                formListMutableLiveData.value = data
-//                            }
-//                        },
-//                        { error ->
-//                            Log.e(LOG_TAG, "exception during fetch data", error)
-//                            mutableErrorLiveData.value = (error.toString())
-//                        }
-//                ).also { compositeDisposable.add(it) }
-//    }
-//
-//    fun addCity(city: String, country: String, lat: String, lon: String) {
-//        Log.i("useCase", "addCity $city " + Thread.currentThread())
-//        val addCity: Single<Long> = useCase.addCity(city, country, lat, lon)
-//
-//        addCity
-//                .observeOn(Schedulers.io())
-//                .subscribe(
-//                        {
-//                            run {
-//                                Log.i("useCase", "addCitySuccess ${Thread.currentThread()}")
-//                                fetchCities()
-//                            }
-//                        },
-//                        { error ->
-//                            Log.e("useCase", "exception during fetch data", error)
-//                            mutableErrorLiveData.value = (error.toString())
-//                        }
-//                )
-//                .also { compositeDisposable.add(it) }
-//    }
-//
 
     override fun onCleared() {
         super.onCleared()

@@ -9,7 +9,8 @@
         <item name="android:layout_marginRight">@dimen/size8</item>
         <item name="android:layout_marginTop">@dimen/size4</item>
         <item name="android:layout_marginBottom">1dp</item>
-        <item name="android:padding">@dimen/size8</item>
+        <item name="android:paddingHorizontal">@dimen/size4</item>
+        <item name="android:paddingVertical">@dimen/size8</item>
 
     </style>
 
@@ -29,12 +30,16 @@
         <item name="android:layout_marginLeft">@dimen/size32</item>
         <item name="android:layout_marginTop">@dimen/size16</item>
         <item name="android:layout_marginBottom">106dp</item>
-<!--        <item name="android:backgroundTint">@color/teal_100</item>-->
+        <!--        <item name="android:backgroundTint">@color/teal_100</item>-->
         <item name="android:textColor">@color/teal_700</item>
     </style>
 
     <style name="StyleRounded.Button">
         <item name="android:background">@drawable/button_main</item>
+    </style>
+
+    <style name="StyleRounded.ButtonInverted">
+        <item name="android:background">@drawable/button_main_inverted</item>
     </style>
 
     <!--===============================================  -->
@@ -92,41 +97,20 @@
         <item name="android:backgroundTint">@color/purple_100</item>
     </style>
 
-    <style name="camera_img">
-        <item name="android:layout_width">@dimen/size64</item>
-        <item name="android:layout_height">@dimen/size64</item>
-        <item name="android:layout_margin">@dimen/size32</item>
-        <item name="android:background">@color/design_default_color_secondary</item>
-    </style>
-
-    <style name="work_status_radio">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:baselineAligned">false</item>
-        <item name="android:checked">false</item>
-        <item name="android:button">@null</item>
-<!--        <item name="android:drawableTop">@drawable/ic_repair</item>-->
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">@dimen/text_normal</item>
-    </style>
-
-    <style name="textView">
-        <item name="android:layout_marginLeft">@dimen/size16</item>
-        <item name="android:layout_marginRight">@dimen/size16</item>
-        <item name="android:layout_marginTop">@dimen/size4</item>
-        <item name="android:layout_marginBottom">@dimen/size4</item>
-        <item name="android:maxLines">1</item>
-    </style>
-
-<!--    TODO не понял как его применить-->
+    <!--    TODO не понял как его применить-->
     <style name="radioButtonDialogStyle" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/size8</item>
         <item name="android:paddingStart">@dimen/size16</item>
         <item name="android:textSize">@dimen/text_medium</item>
+    </style>
+
+    <style name="action_style">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/teal_800</item>
+        <item name="android:layout_marginHorizontal">@dimen/size16</item>
+        <item name="android:layout_marginTop">@dimen/size20</item>
     </style>
 
 </resources>

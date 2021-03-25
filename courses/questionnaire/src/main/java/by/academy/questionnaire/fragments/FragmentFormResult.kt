@@ -1,11 +1,14 @@
 package by.academy.questionnaire.fragments
 
+import android.content.Context
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
+import android.view.animation.AnimationUtils
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatRadioButton
@@ -38,7 +41,8 @@ class FragmentFormResult : Fragment(R.layout.result) {
                 this::onCheckVisibility,
                 this::onItemClicked,
                 this::onItemCompareClicked,
-                this::onDeleteClickedConfirm
+                this::onDeleteClickedConfirm,
+                this.requireContext()
         )
     }
 
@@ -99,10 +103,12 @@ class FragmentFormResult : Fragment(R.layout.result) {
             if (hasAnyOtherUser) {
                 it.button3Repeat.setOnClickListener { onRepeatFriendButton() }
                 it.button2Restart.setOnClickListener { onRepeatFriendButton(false) }
+                it.button2Restart.text = getString(R.string.button_restart)
                 it.button4RepeatFried.visibility = GONE
             } else {
                 it.button3Repeat.setOnClickListener { onRepeatButton() }
                 it.button2Restart.setOnClickListener { onRestartButton() }
+                it.button2Restart.text = getString(R.string.button_restart_simple)
                 it.button4RepeatFried.visibility = VISIBLE
             }
         }

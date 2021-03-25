@@ -1,33 +1,38 @@
 <resources>
-    <string name="app_name">Psy Questionnaire</string>
-    <string name="search">Search</string>
+    <string name="app_name">Опросник</string>
+
+    <!--    menu-->
+    <string name="action_clear_all">Сбросить все</string>
+    <string name="action_stats">Статистика</string>
+    <string name="action_users">Пользователи</string>
+
+    <!--    form page -->
+    <string name="search">Найти</string>
     <string name="form_list_results">Результаты</string>
-    <string name="form_list_continue">"Продолжить. Осталось вопросов: %1$d"</string>
+    <string name="form_list_continue">Продолжить. Осталось вопросов: %1$d</string>
 
-    <string name="result_compare_status_current">Текущий</string>
-    <string name="result_compare_status_compare">Сравнить</string>
-    <string name="result_compare_status_in_compare">В сравнении</string>
+    <!--    form page -->
+    <string name="in_processTitle">В процессе: %1$s </string>
+    <string name="button_abort">Не проходить</string>
+    <string name="button_finish">Завершить</string>
+    <string name="confirm_abort">Отменить тест?</string>
+    <string name="confirm_finish">Подтверждаете?</string>
+    <string name="warning_fill">Заполните все ответы</string>
 
+    <!--    compare page -->
     <string name="compareTitle">Сравниваем</string>
     <string name="and">и</string>
-    <string name="comparing_filter">Фильтр одинаковых</string>
-    <string name="comparing_filter_all">все</string>
-    <string name="comparing_filter_diff">разные</string>
-    <string name="comparing_filter_sim">одинаковые</string>
+    <string name="comparing_filter"><u>Фильтр одинаковых</u></string>
+    <string name="comparing_filter_all"><u>Все</u></string>
+    <string name="comparing_filter_diff"><u>Разные</u></string>
+    <string name="comparing_filter_sim"><u>Одинаковые</u></string>
+    <string name="navigation_back">Назад</string>
 
-    <string name="in_processTitle">В процессе: %1$s </string>
-    <string name="action_finish">Завершить</string>
-    <string name="navigation_back">назад</string>
-
-    <string name="confirm_finish">Подтверждаете?</string>
-    <string name="confirm_abort">Отменить тест?</string>
-    <string name="confirm_delete">Удалить?</string>
-    <string name="warning_fill">Please fill all questions</string>
-    <string name="suggestion_choose_any">Выберите вариант</string>
-    <string name="suggestion_choose_another">Такой уже есть, выберите другое имя</string>
-    <string name="button_yes">Да</string>
-
-    <string name="addNewUser">Добавить нового</string>
+    <!--    result page -->
+    <string name="result_compare_status_current"><u>Текущий</u></string>
+    <string name="result_compare_status_compare"><u>Сравнить</u></string>
+    <string name="result_compare_status_in_compare"><u>В сравнении</u></string>
+    <string name="empty_list">Пусто</string>
 
     <string name="resultsTitle">Результаты %1$s</string>
     <string name="resultsTwoTitle">Результаты %1$s vs %2$s</string>
@@ -35,6 +40,26 @@
     <string name="resultsTwoDescription">Вы прошли тест. Сравниваем результаты \n %1$s </string>
     <string name="no_results">Результатов нет</string>
     <string name="no_results_suggestion">Вы удалили все результаты. Пройдите заново</string>
-    <string name="action_compare_answers">Сравнить ответы</string>
+    <string name="action_compare_answers"><u>Сравнить ответы</u></string>
+    <string name="confirm_delete">Удалить?</string>
+
+    <string name="text_actions">Действия</string>
+    <string name="button_home">В список</string>
+    <string name="button_repeat">Еще раз</string>
+    <string name="button_repeat_friend">Пройти другом</string>
+    <string name="button_restart">Перепройти последний</string>
+    <string name="button_restart_simple">Заново</string>
+    <string name="text_other_results">Другие результаты</string>
+
+    <!--    pass user dialog-->
+    <string name="button_yes">Да</string>
+    <string name="dialog_choose_user_title">Выберите пользователя</string>
+    <string name="add_new_user_desc">Или добавьте нового</string>
+    <string name="suggestion_choose_any">Выберите вариант</string>
+    <string name="suggestion_choose_another">Такой уже есть, выберите другое имя</string>
+    <string name="addNewUser">Добавить нового</string>
+    <string name="hint_enter_name">Введите имя</string>
+    <string name="button_choose_user">Выбрать</string>
+    <string name="button_cancel">Отмена</string>
 
 </resources>

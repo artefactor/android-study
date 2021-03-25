@@ -10,24 +10,24 @@
     <TextView
         android:id="@+id/viewTextTitle"
         android:layout_width="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size16"
         android:layout_marginTop="20dp"
         android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="В процессе - Артем" />
 
     <TextView
         android:id="@+id/viewTextTitleRight"
+        style="@style/action_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size16"
         android:layout_marginTop="20dp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Фильтр одинаковых" />
+        tools:text="@string/comparing_filter" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -42,7 +42,7 @@
         android:id="@+id/no_items"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="пусто"
+        android:text="@string/empty_list"
         android:textSize="@dimen/text_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,28 +53,41 @@
         android:id="@+id/progressbar"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:progressDrawable="@drawable/progressbar"
+        android:layout_height="20dp"
+        android:layout_marginBottom="@dimen/size8"
         app:layout_constraintBottom_toTopOf="@id/submit" />
+
+    <TextView
+        android:id="@+id/progressbarText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/progressbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/progressbar"
+        tools:text="22" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/cancel"
+        style="@style/StyleRounded.ButtonInverted"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size32"
         android:layout_marginBottom="@dimen/size16"
-        android:text="Не проходить"
+        android:text="@string/button_abort"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/submit"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/submit"
+        style="@style/StyleRounded.ButtonInverted"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size32"
         android:layout_marginBottom="@dimen/size16"
-        android:text="submit"
+        android:text="@string/button_finish"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cancel" />

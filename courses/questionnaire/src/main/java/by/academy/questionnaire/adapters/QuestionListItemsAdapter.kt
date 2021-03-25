@@ -46,20 +46,19 @@ class QuestionListItemsAdapter(
         fun bind(item: AnswerQuestion) {
             with(itemBinding) {
                 viewTextTitle.text = "${item.question.index}. ${item.question.title}"
-//                root.startAnimation(AnimationUtils.loadAnimation(itemView.context, R.anim.placeholder))
 
                 // options
                 val optionCount = 7 // todo get form db
                 radioWorkStatus.clearCheck()
                 val lp = LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f).apply { gravity = Gravity.CENTER }
                 if (radioWorkStatus.children.count() == 0) {
-                    for (i in 1..optionCount) {
+                    for (i in 0 until optionCount) {
                         AppCompatRadioButton(itemView.context)
                                 .also {
                                     it.layoutParams = lp
                                     it.setPadding(0, 1, 0, 1)
                                     it.gravity = Gravity.CENTER
-                                    it.text = "${i - 1}"
+                                    it.text = "$i"
                                     radioWorkStatus.addView(it)
                                 }
                     }

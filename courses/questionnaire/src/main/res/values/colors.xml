@@ -8,10 +8,33 @@
     <color name="teal_200">#49bb79</color>
     <color name="teal_100">#6dc790</color>
     <color name="teal_700">#005d2b</color>
+    <color name="teal_800">#013E1D</color>
     <color name="black">#FF000000</color>
     <color name="gray_50">#99fafafa</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#ee0000</color>
     <color name="blue">#0000ee</color>
     <color name="violet">#ee00ee</color>
+<!--    TODO Денис, вопрос
+ я могу программно эти цвета считать
+ а могу здесь прописать
+ нормально ли много цветов в ресурсах?
+ не замедляет ли это работу приложениея?
+ -->
+    <color name="col1">#ffcdc733</color>
+    <color name="col2">#F2649B1E</color>
+    <color name="col3">#F2603B0B</color>
+    <color name="col4">#ffffd56b</color>
+
+    <color name="col1a">#bbcfc833</color>
+    <color name="col2a">#CC6EA51E</color>
+    <color name="col3a">#F2604114</color>
+    <color name="col4a">#C96EA514</color>
+
+    <color name="line1">#DDCCBF62</color>
+    <color name="line2">#CFDC8B</color>
+    <color name="line3">#DDFEF8CC</color>
+    <color name="line4">#DEFFEE8E</color>
+
+    <color name="selected">#F7C076</color>
 </resources>

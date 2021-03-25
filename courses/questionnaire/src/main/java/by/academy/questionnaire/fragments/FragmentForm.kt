@@ -15,6 +15,7 @@ import by.academy.questionnaire.database.entity.AnswerQuestion
 import by.academy.questionnaire.databinding.QuestionListBinding
 import by.academy.questionnaire.domain.FURContext
 import by.academy.questionnaire.viewmodel.FormsViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class FragmentForm : Fragment(R.layout.question_list) {
     internal var furContext: FURContext = FURContext(0, 1, 0)
@@ -39,7 +40,9 @@ class FragmentForm : Fragment(R.layout.question_list) {
 
     private fun onItemAdded() {
         // show progress
-        binding.progressbar.progress = binding.progressbar.progress + 1
+        val progress = binding.progressbar.progress
+        binding.progressbar.progress = progress + 1
+        binding.progressbarText.text = (progress + 1).toString()
     }
 
     private fun onSubmitConfirm() {
@@ -48,15 +51,22 @@ class FragmentForm : Fragment(R.layout.question_list) {
 
     private fun onSubmit() {
         val answers: List<AnswerQuestion> = questionListAdapter.allItems
-        if (fragmentManager.getQUseCase().submitTest(furContext, answers)) {
-            fragmentManager.showFormResultFragment(furContext)
-        } else {
-            //почему-то не показывается, а только со второго нажатия..
-            // TODO show dialog instead
-            showError(getString(R.string.warning_fill))
-            questionListAdapter.filterUnanswered()
-            showError(getString(R.string.warning_fill))
-        }
+        // TODO Денис. праваильно ли я использую такую конструкцию? ПОчему варнинг пишет что возвращаемое значение нужно как-то использовать?
+        fragmentManager.getQUseCase().submitTest(furContext, answers)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (it) {
+                        fragmentManager.showFormResultFragment(furContext)
+                    } else {
+                        // можно показать диалог вместо этого
+                        questionListAdapter.filterUnanswered()
+                        //почему-то не показывается, а только со второго нажатия..
+                        showError(getString(R.string.warning_fill))
+                    }
+
+                }, { error ->
+                    Log.e(LOG_TAG, "exception during fetch data", error)
+                })
     }
 
     private fun onCancelConfirm() {
@@ -65,7 +75,10 @@ class FragmentForm : Fragment(R.layout.question_list) {
 
     private fun onCancel() {
         fragmentManager.getQUseCase().deleteAttempt(furContext.resultId)
-        fragmentManager.showFormListFragment()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ fragmentManager.showFormListFragment() }, { error ->
+                    Log.e(LOG_TAG, "exception during fetch data", error)
+                })
     }
 
     override fun onResume() {
@@ -81,6 +94,7 @@ class FragmentForm : Fragment(R.layout.question_list) {
         binding = QuestionListBinding.bind(view)
                 .apply {
                     progressbar.progress = 0
+                    progressbarText.text = "0"
                     recyclerView.apply {
                         adapter = questionListAdapter
                         layoutManager = LinearLayoutManager(context)
@@ -88,7 +102,7 @@ class FragmentForm : Fragment(R.layout.question_list) {
                     }
                     submit.apply {
                         submit.visibility = VISIBLE
-                        text = getString(R.string.action_finish)
+                        text = getString(R.string.button_finish)
                         setOnClickListener { onSubmitConfirm() }
                     }
                     cancel.apply {
@@ -117,6 +131,7 @@ class FragmentForm : Fragment(R.layout.question_list) {
         binding.progressbar.progress = 0
         binding.progressbar.max = data.size
         binding.progressbar.progress = passedCount
+        binding.progressbarText.text = passedCount.toString()
     }
 
     fun showError(errorMessage: String) {

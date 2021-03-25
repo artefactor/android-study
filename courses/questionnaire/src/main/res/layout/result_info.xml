@@ -6,7 +6,8 @@
     style="@style/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="@color/purple_500">
+    android:backgroundTint="@color/purple_500"
+    >
 
     <ImageView
         android:id="@+id/imageStatus"
@@ -50,6 +51,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:paddingHorizontal="@dimen/size16"
+        android:textColor="@color/teal_800"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/delButton"
         app:layout_constraintTop_toTopOf="@id/itemViewRoot"
@@ -57,7 +59,6 @@
         tools:text="сравнить" />
 
     <ImageButton
-        tools:tint="@color/red"
         android:id="@+id/delButton"
         style="@style/buttonToolbar"
         android:layout_width="wrap_content"
@@ -66,7 +67,8 @@
         android:src="@drawable/ic_baseline_delete_forever_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:tint="@color/red" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

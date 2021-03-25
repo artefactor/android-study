@@ -65,7 +65,20 @@ class QUseCaseImpl(private val databaseInfo: DatabaseInfo) : QUseCase {
 
     }
 
-    override fun submitTest(furContext: FURContext, answers: List<AnswerQuestion>): Boolean {
+    override fun submitTest(furContext: FURContext, answers: List<AnswerQuestion>): Single<Boolean> {
+        // TODO денис, вопрос: я тут ответы беру из адаптера.
+        //  делаю относительно несложные вычисления
+        //  а в базу сохраняю обновленную одну запись
+        //  нужно ли метод делать асинхронным?
+        // по идее если логика подсчета усложнится (например, нужно будет за ней в базу лезть
+        //  то тогда нужно асинхрон. а так - не обязательно
+        return Single.create<Boolean> {
+            it.onSuccess(calculateResult(furContext, answers))
+        }.subscribeOn(Schedulers.io())
+
+    }
+
+    private fun calculateResult(furContext: FURContext, answers: List<AnswerQuestion>): Boolean {
         val existedAnswers: List<AnswerEntity> = answers.stream().map { item -> item.answerEntity }.collect(Collectors.toList()).filterNotNull()
         if (answers.size != existedAnswers.size) {
             return false

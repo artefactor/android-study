@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">Psy Questionnaire</string>
+
+    <!--    menu-->
+    <string name="action_clear_all">Reset all</string>
+    <string name="action_stats">Stats</string>
+    <string name="action_users">Users</string>
+
+    <!--    form page -->
+    <string name="search">Search</string>
+    <string name="form_list_results">Results</string>
+    <string name="form_list_continue">Continue. Questions remain: %1$d</string>
+
+    <!--    form page -->
+    <string name="in_processTitle">In process: %1$s </string>
+    <string name="button_abort">Abort</string>
+    <string name="button_finish">Submit</string>
+    <string name="confirm_abort">Abort?</string>
+    <string name="confirm_finish">Confirm?</string>
+    <string name="warning_fill">Please fill all questions</string>
+
+    <!--    compare page -->
+    <string name="compareTitle">Comparing</string>
+    <string name="and">vs</string>
+    <string name="comparing_filter"><u>Filter</u></string>
+    <string name="comparing_filter_all"><u>Show all</u></string>
+    <string name="comparing_filter_diff"><u>Show diffs</u></string>
+    <string name="comparing_filter_sim"><u>Show similar</u></string>
+    <string name="navigation_back">Back</string>
+
+    <!--    result page -->
+    <string name="result_compare_status_current"><u>Current</u></string>
+    <string name="result_compare_status_compare"><u>Compare</u></string>
+    <string name="result_compare_status_in_compare"><u>In comparison</u></string>
+    <string name="empty_list">Empty</string>
+
+    <string name="resultsTitle">Results of %1$s</string>
+    <string name="resultsTwoTitle">Results of %1$s vs %2$s</string>
+    <string name="resultsDescription">You have passed. The results are below \n %1$s </string>
+    <string name="resultsTwoDescription">You have passed. Results comparing \n %1$s </string>
+    <string name="no_results">No results</string>
+    <string name="no_results_suggestion">You have deleted all results. Pass again</string>
+    <string name="action_compare_answers"><u>Compare answers</u></string>
+    <string name="confirm_delete">Delete?</string>
+
+    <string name="text_actions">Actions</string>
+    <string name="button_home">To list</string>
+    <string name="button_repeat">Pass again</string>
+    <string name="button_repeat_friend">Pass by friend</string>
+    <string name="button_restart">Restart last</string>
+    <string name="button_restart_simple">Restart</string>
+    <string name="text_other_results">Other results</string>
+
+    <!--    pass user dialog-->
+    <string name="button_yes">Yes</string>
+    <string name="dialog_choose_user_title">Choose user</string>
+    <string name="add_new_user_desc">Or add new</string>
+    <string name="suggestion_choose_any">Choose an option</string>
+    <string name="suggestion_choose_another">This is already exist, please choose another name</string>
+    <string name="addNewUser">Add new user</string>
+    <string name="hint_enter_name">Enter a name</string>
+    <string name="button_choose_user">Choose</string>
+    <string name="button_cancel">Cancel</string>
+
+</resources>

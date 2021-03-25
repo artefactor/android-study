@@ -129,7 +129,7 @@ class UseCasesTest {
         assertNull(results[0].resultEntity.dateEnd)
 
         assertFormInfo(1, 2, 0, furContext.resultId, furContext.userId)
-        val result = usecase.submitTest(furContext, questions)
+        val result = usecase.calculateResult(furContext, questions)
         assertFalse(result)
     }
 
@@ -150,7 +150,7 @@ class UseCasesTest {
         val questions: List<AnswerQuestion> = databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId)
         usecase.handleAnswer(questions[0], 2, furContext) {}
         usecase.handleAnswer(questions[1], 2, furContext) {}
-        val result = usecase.submitTest(furContext, questions)
+        val result = usecase.calculateResult(furContext, questions)
         return result
     }
 
@@ -204,7 +204,7 @@ class UseCasesTest {
         val questions: List<AnswerQuestion> = databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId)
         usecase.handleAnswer(questions[0], 2, furContext) {}
         usecase.handleAnswer(questions[1], 2, furContext) {}
-        usecase.submitTest(furContext, questions)
+        usecase.calculateResult(furContext, questions)
 
         var newResultId2 = usecase.startNextAttemptTest(furContext)
 
@@ -257,7 +257,7 @@ class UseCasesTest {
         val questions: List<AnswerQuestion> = databaseInfo.getAnswerDAO().getAttemptAnswers(furContext.resultId)
         usecase.handleAnswer(questions[0], 2, furContext) {}
         usecase.handleAnswer(questions[1], 2, furContext) {}
-        val result = usecase.submitTest(furContext, questions)
+        val result = usecase.calculateResult(furContext, questions)
         assert(result)
 
         val results = resultDAO.getAllByFormId(formId)

@@ -7,7 +7,6 @@ import by.academy.questionnaire.database.entity.UserEntity
 import io.reactivex.Completable
 import io.reactivex.Single
 
-// todo make this in coroutine
 interface QUseCase {
     fun clearAllAnswers()
 
@@ -27,7 +26,7 @@ interface QUseCase {
     fun deleteAttempt(resultId: Long): Completable
     fun handleAnswer(answerQuestion: AnswerQuestion, option: Int, furContext: FURContext, onItemAdded: () -> Unit)
 
-    fun submitTest(furContext: FURContext, answers: List<AnswerQuestion>): Boolean
+    fun submitTest(furContext: FURContext, answers: List<AnswerQuestion>): Single<Boolean>
     fun getResults(formId: Long) : Single<List<ResultUser>>
 
     // users

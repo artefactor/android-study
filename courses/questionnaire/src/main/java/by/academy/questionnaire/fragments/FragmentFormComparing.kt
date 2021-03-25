@@ -1,5 +1,6 @@
 package by.academy.questionnaire.fragments
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -52,6 +53,7 @@ class FragmentFormComparing : Fragment(R.layout.question_list) {
         binding = QuestionListBinding.bind(view)
                 .apply {
                     progressbar.visibility = GONE
+                    progressbarText.visibility = GONE
                     recyclerView.apply {
                         adapter = questionListAdapter
                         layoutManager = LinearLayoutManager(context)
@@ -78,6 +80,7 @@ class FragmentFormComparing : Fragment(R.layout.question_list) {
 
                     viewTextTitleRight.apply {
                         text = getString(R.string.comparing_filter)
+                        paintFlags = Paint.UNDERLINE_TEXT_FLAG
                         setOnClickListener { onFilter(binding.viewTextTitleRight) }
                     }
                 }

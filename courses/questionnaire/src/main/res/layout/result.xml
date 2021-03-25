@@ -19,23 +19,21 @@
         tools:text="Результаты - Артем" />
 
     <TextView
+        style="@style/action_style"
         android:id="@+id/viewTextTitleCompare"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/size16"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/viewTextTitle"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/viewTextTitle"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Сравнить ответы" />
+        tools:text="@string/action_compare_answers" />
 
     <TextView
         android:id="@+id/viewTextDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size16"
-        android:text="Долгое описание"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/viewTextTitle"
         tools:text="Долгое описание" />
 
@@ -44,65 +42,68 @@
         android:id="@+id/buttonsHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/size12"
         android:layout_marginHorizontal="@dimen/size16"
-        android:text="Действия"
+        android:layout_marginVertical="@dimen/size12"
+        android:text="@string/text_actions"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/viewTextDescription" />
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/StyleRounded.Button"
         android:id="@+id/button1Home"
+        style="@style/StyleRounded.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/size16"
         android:layout_marginTop="@dimen/size12"
-        android:layout_marginHorizontal="@dimen/size16"
-        android:text="Вернуться в список"
+        android:paddingHorizontal="0dp"
+        android:text="@string/button_home"
         android:textAllCaps="false"
         android:textSize="@dimen/text_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonsHeader" />
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/StyleRounded.Button"
         android:id="@+id/button2Restart"
+        style="@style/StyleRounded.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginHorizontal="@dimen/size16"
-        android:text="Перепройти заново"
+        android:layout_marginHorizontal="@dimen/size4"
+        android:text="@string/button_restart_simple"
         android:textAllCaps="false"
         android:textSize="@dimen/text_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button1Home" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/button1Home"
+        app:layout_constraintStart_toEndOf="@id/button1Home" />
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/StyleRounded.Button"
         android:id="@+id/button3Repeat"
+        style="@style/StyleRounded.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_marginHorizontal="@dimen/size4"
+        android:padding="0dp"
         android:paddingVertical="@dimen/size4"
-        android:layout_marginHorizontal="@dimen/size16"
-        android:text="Пройти еще раз"
+        android:text="@string/button_repeat"
         android:textAllCaps="false"
         android:textSize="@dimen/text_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2Restart" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/button1Home"
+        app:layout_constraintStart_toEndOf="@+id/button2Restart" />
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/StyleRounded.Button"
         android:id="@+id/button4RepeatFried"
+        style="@style/StyleRounded.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginHorizontal="@dimen/size16"
-        android:text="Пройти  другом"
+        android:layout_marginHorizontal="@dimen/size4"
+        android:text="@string/button_repeat_friend"
         android:textAllCaps="false"
         android:textSize="@dimen/text_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3Repeat" />
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/button1Home"
+        app:layout_constraintStart_toEndOf="@id/button3Repeat" />
 
 
     <!--    другие результаты   -->
@@ -111,15 +112,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size16"
-        android:text="Другие результаты"
+        android:layout_marginVertical="@dimen/size4"
+        android:text="@string/text_other_results"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/button4RepeatFried" />
+        app:layout_constraintTop_toBottomOf="@+id/button1Home" />
 
     <TextView
         android:id="@+id/no_items"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="пусто"
+        android:text="@string/empty_list"
         android:textSize="@dimen/text_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -130,6 +132,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/size4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/otherResultsHeader" />
 
