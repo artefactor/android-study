@@ -13,7 +13,7 @@ import by.academy.questionnaire.database.entity.ResultUser
 interface ResultDAO {
 
     @Query("SELECT count(1) FROM result")
-    fun size(): Long
+    fun size(): Int
 
     @Query("SELECT * FROM result order by fk_f_id")
     fun getAll(): List<ResultEntity>

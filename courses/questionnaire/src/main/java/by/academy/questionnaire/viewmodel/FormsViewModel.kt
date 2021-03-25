@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import by.academy.questionnaire.database.entity.AnswerQuestion
 import by.academy.questionnaire.database.entity.FormQuestionStatus
 import by.academy.questionnaire.database.entity.ResultUser
+import by.academy.questionnaire.domain.DbStat
 import by.academy.questionnaire.domain.FURContext
 import by.academy.questionnaire.domain.QUseCase
 import io.reactivex.Single
@@ -33,8 +34,8 @@ class FormsViewModel(
     val formComparingMutableLiveData = MutableLiveData<List<Pair<AnswerQuestion, AnswerQuestion>>>()
     val formComparingLiveData: LiveData<List<Pair<AnswerQuestion, AnswerQuestion>>> = formComparingMutableLiveData
 
-    private val infoMutableLiveData = MutableLiveData<String>()
-    val infoLiveData: LiveData<String> = infoMutableLiveData
+    private val infoMutableLiveData = MutableLiveData<DbStat>()
+    val infoLiveData: LiveData<DbStat> = infoMutableLiveData
 
     private val mutableErrorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> = mutableErrorLiveData

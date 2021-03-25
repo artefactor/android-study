@@ -12,7 +12,7 @@ import by.academy.questionnaire.database.entity.QuestionEntity
 interface QuestionDAO {
 
     @Query("SELECT count(1) FROM question")
-    fun size(): Long
+    fun size(): Int
 
     @Query("SELECT * FROM question WHERE fk_f_id = :questionId")
     fun get(questionId: Long): QuestionEntity

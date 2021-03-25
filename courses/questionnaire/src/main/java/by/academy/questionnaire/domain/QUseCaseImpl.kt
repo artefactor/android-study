@@ -244,18 +244,18 @@ class QUseCaseImpl(private val databaseInfo: DatabaseInfo) : QUseCase {
         return item
     }
 
-    override fun getAppStatistics(): Single<String> {
+    override fun getAppStatistics(): Single<DbStat> {
         Log.i("model", "getAppStatistics ${Thread.currentThread()}")
-        return Single.create<String> {
-            it.onSuccess("""
-            Опросников: ${databaseInfo.getFormDAO().size()}
-            Вопросов: ${databaseInfo.getQuestionDAO().size()}
-            Ответов: ${databaseInfo.getAnswerDAO().size()}
-            Прохождений: ${databaseInfo.getResultDAO().size()}
-            Пользователей: ${databaseInfo.getUserDAO().size()}
-            """.also {
+        return Single.create<DbStat> {
+            it.onSuccess(DbStat(
+                    databaseInfo.getFormDAO().size(),
+                    databaseInfo.getQuestionDAO().size(),
+                    databaseInfo.getAnswerDAO().size(),
+                    databaseInfo.getResultDAO().size(),
+                    databaseInfo.getUserDAO().size())
+            ).also {
                 Log.i("model", "Single.create ${Thread.currentThread()}")
-            })
+            }
         }.subscribeOn(Schedulers.io())
     }
 }

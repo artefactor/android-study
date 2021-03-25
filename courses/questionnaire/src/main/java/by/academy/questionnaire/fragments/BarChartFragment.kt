@@ -24,7 +24,7 @@ class BarChartFragment : Fragment(R.layout.chart) {
 
     lateinit var barChartViewModel: BarChartViewModel
     private lateinit var chart: BarChart
-    private lateinit var usingСolors: Array<Int>
+    private lateinit var usingColors: Array<Int>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,7 +34,7 @@ class BarChartFragment : Fragment(R.layout.chart) {
         barChartViewModel.chartLiveData.observe(this.viewLifecycleOwner, this::drawChart)
         chart = requireActivity().findViewById<View>(R.id.chart) as BarChart
         configureChart(chart)
-        usingСolors = arrayOf(
+        usingColors = arrayOf(
                 // пока группы 4 цветов, но можно больше
                 resources.getColor(R.color.col1),
                 resources.getColor(R.color.col2),
@@ -146,7 +146,7 @@ class BarChartFragment : Fragment(R.layout.chart) {
             valueSet1.add(BarEntry(x1, model.line1[i].toFloat()))
             x1 += (d + b + d)
             BarDataSet(valueSet1, model.scaleNames[i]).apply {
-                color = usingСolors[i % usingСolors.size]
+                color = usingColors[i % usingColors.size]
                 dataSets.add(this)
             }
         }
@@ -168,7 +168,7 @@ class BarChartFragment : Fragment(R.layout.chart) {
         // рассчитываем точки где будут графики
 
         val dataSets: ArrayList<IBarDataSet> = arrayListOf()
-        val colorSize = usingСolors.size / 2
+        val colorSize = usingColors.size / 2
         // точки середины столбиков
         var x1 = a + d
         for (i in 0 until size) {
@@ -179,7 +179,7 @@ class BarChartFragment : Fragment(R.layout.chart) {
             x1 += (d + b2 + d)
             BarDataSet(valueSet1, model.scaleNames[i]).also {
                 it.setColors(
-                        usingСolors[i % colorSize], usingСolors[i % colorSize + colorSize]
+                        usingColors[i % colorSize], usingColors[i % colorSize + colorSize]
                 )
                 dataSets.add(it)
             }

@@ -62,4 +62,10 @@
     <string name="button_choose_user">Выбрать</string>
     <string name="button_cancel">Отмена</string>
 
+    <!--    db info -->
+    <string name="stat_f">Опросников</string>
+    <string name="stat_q">Вопросов</string>
+    <string name="stat_a">Ответов</string>
+    <string name="stat_r">Прохождений</string>
+    <string name="stat_u">Пользователей</string>
 </resources>

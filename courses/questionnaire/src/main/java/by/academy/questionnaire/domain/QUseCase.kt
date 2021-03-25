@@ -35,6 +35,6 @@ interface QUseCase {
     fun addUser(userName: String): UserEntity
     fun findByUserName(userName: String): UserEntity?
 
-    fun getAppStatistics(): Single<String>
+    fun getAppStatistics(): Single<DbStat>
 
 }

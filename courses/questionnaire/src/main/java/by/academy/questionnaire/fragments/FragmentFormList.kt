@@ -13,6 +13,7 @@ import by.academy.questionnaire.R
 import by.academy.questionnaire.adapters.FormListItemsAdapter
 import by.academy.questionnaire.database.entity.FormQuestionStatus
 import by.academy.questionnaire.databinding.FormListBinding
+import by.academy.questionnaire.domain.DbStat
 import by.academy.questionnaire.domain.FURContext
 import by.academy.questionnaire.domain.FormStatus
 import by.academy.questionnaire.domain.convertToFormStatus
@@ -114,14 +115,21 @@ class FragmentFormList : Fragment(R.layout.form_list) {
         }
     }
 
-    private fun onDbInfo(info: String) {
-        val myDialogFragment = DialogFragment("Статистика", info)
+    private fun onDbInfo(stat: DbStat) {
+        val info = """
+            ${getString(R.string.stat_f)}:    ${stat.formCount}
+            ${getString(R.string.stat_q)}:      ${stat.questionCount}
+            ${getString(R.string.stat_a)}:       ${stat.answerCount}
+            ${getString(R.string.stat_r)}:   ${stat.resultCount}
+            ${getString(R.string.stat_u)}: ${stat.userCount}
+            """
+        val myDialogFragment = DialogFragment(getString(R.string.action_stats), info)
         val manager = requireActivity().supportFragmentManager
         myDialogFragment.show(manager, "myDialog")
     }
 
     private fun onUserMgmt() {
-        val myDialogFragment = DialogFragment("", "")
+        val myDialogFragment = DialogFragment(getString(R.string.action_users), "")
         val manager = requireActivity().supportFragmentManager
         myDialogFragment.show(manager, "myDialog")
     }

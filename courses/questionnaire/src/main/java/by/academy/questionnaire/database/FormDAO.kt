@@ -13,7 +13,7 @@ import by.academy.questionnaire.database.entity.FormQuestionStatus
 interface FormDAO {
 
     @Query("SELECT count(1) FROM form")
-    fun size(): Long
+    fun size(): Int
 
     @Query("SELECT * FROM form order by f_id")
     fun getAll(): List<FormEntity>

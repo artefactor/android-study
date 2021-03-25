@@ -1,4 +1,10 @@
 <resources>
+
+    <!--     Поскольку сами тексты опросников в базе на русском языке,
+    другая локаль не имеет смысла.
+    Файл пока оставлю на будущее
+    -->
+
     <string name="app_name">Psy Questionnaire</string>
 
     <!--    menu-->
@@ -62,4 +68,10 @@
     <string name="button_choose_user">Choose</string>
     <string name="button_cancel">Cancel</string>
 
+    <!--    db info -->
+    <string name="stat_f">Questionnaires</string>
+    <string name="stat_q">Questions</string>
+    <string name="stat_a">Answers</string>
+    <string name="stat_r">Attempts</string>
+    <string name="stat_u">Users</string>
 </resources>
