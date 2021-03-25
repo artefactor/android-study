@@ -49,6 +49,7 @@
     <string name="action_compare_answers"><u>Compare answers</u></string>
     <string name="confirm_delete">Delete?</string>
 
+    <string name="confirm_restart">Delete last result?</string>
     <string name="text_actions">Actions</string>
     <string name="button_home">To list</string>
     <string name="button_repeat">Pass again</string>
@@ -60,7 +61,7 @@
     <!--    pass user dialog-->
     <string name="button_yes">Yes</string>
     <string name="dialog_choose_user_title">Choose user</string>
-    <string name="add_new_user_desc">Or add new</string>
+    <string name="add_new_user_desc"></string>
     <string name="suggestion_choose_any">Choose an option</string>
     <string name="suggestion_choose_another">This is already exist, please choose another name</string>
     <string name="addNewUser">Add new user</string>

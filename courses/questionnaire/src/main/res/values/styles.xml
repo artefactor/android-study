@@ -36,10 +36,14 @@
 
     <style name="StyleRounded.Button">
         <item name="android:background">@drawable/button_main</item>
+        <item name="android:padding">@dimen/size4</item>
+        <item name="android:layout_margin">@dimen/size4</item>
     </style>
 
     <style name="StyleRounded.ButtonInverted">
         <item name="android:background">@drawable/button_main_inverted</item>
+        <item name="android:padding">@dimen/size4</item>
+        <item name="android:layout_margin">@dimen/size4</item>
     </style>
 
     <!--===============================================  -->

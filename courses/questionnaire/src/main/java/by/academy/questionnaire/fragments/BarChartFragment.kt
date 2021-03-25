@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import by.academy.questionnaire.LOG_TAG
 import by.academy.questionnaire.R
+import by.academy.questionnaire.chart.MyBarChart
+import by.academy.questionnaire.chart.MyValueFormatter
 import by.academy.questionnaire.logic.BarChartModel
 import by.academy.questionnaire.viewmodel.BarChartViewModel
 import com.github.mikephil.charting.charts.BarChart
@@ -16,14 +18,13 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import java.util.*
 
 class BarChartFragment : Fragment(R.layout.chart) {
 
     lateinit var barChartViewModel: BarChartViewModel
-    private lateinit var chart: BarChart
+    private lateinit var chart: MyBarChart
     private lateinit var usingColors: Array<Int>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -32,7 +33,7 @@ class BarChartFragment : Fragment(R.layout.chart) {
 
         barChartViewModel = ViewModelProvider(requireActivity()).get(BarChartViewModel::class.java)
         barChartViewModel.chartLiveData.observe(this.viewLifecycleOwner, this::drawChart)
-        chart = requireActivity().findViewById<View>(R.id.chart) as BarChart
+        chart = requireActivity().findViewById<View>(R.id.chart) as MyBarChart
         configureChart(chart)
         usingColors = arrayOf(
                 // пока группы 4 цветов, но можно больше
@@ -74,6 +75,8 @@ class BarChartFragment : Fragment(R.layout.chart) {
             isWordWrapEnabled = true
             formToTextSpace = 7f
             formLineWidth = 5f
+            yOffset = 5f
+            formToTextSpace = 7f
             setDrawInside(false)
             textSize = 20f
         }
@@ -105,7 +108,7 @@ class BarChartFragment : Fragment(R.layout.chart) {
         }
         val data = BarData(dataSet.first).apply {
             setValueTextSize(textSize)
-            setValueFormatter(DefaultValueFormatter(2))
+            setValueFormatter(MyValueFormatter(1))
             barWidth = dataSet.second * 2
         }
 
@@ -143,7 +146,7 @@ class BarChartFragment : Fragment(R.layout.chart) {
 
         for (i in 0 until size) {
             val valueSet1: ArrayList<BarEntry?> = arrayListOf()
-            valueSet1.add(BarEntry(x1, model.line1[i].toFloat()))
+            valueSet1.add(BarEntry(x1, model.line1[i].toFloat(), Pair(model.line1Desc[i], false)))
             x1 += (d + b + d)
             BarDataSet(valueSet1, model.scaleNames[i]).apply {
                 color = usingColors[i % usingColors.size]
@@ -173,9 +176,9 @@ class BarChartFragment : Fragment(R.layout.chart) {
         var x1 = a + d
         for (i in 0 until size) {
             val valueSet1: ArrayList<BarEntry?> = arrayListOf()
-            valueSet1.add(BarEntry(x1, model.line1[i].toFloat()))
+            valueSet1.add(BarEntry(x1, model.line1[i].toFloat(), Pair(model.line1Desc[i], true)))
             x1 += (d + b1 + d)
-            valueSet1.add(BarEntry(x1, model.line2[i].toFloat()))
+            valueSet1.add(BarEntry(x1, model.line2[i].toFloat(), Pair(model.line2Desc[i], false)))
             x1 += (d + b2 + d)
             BarDataSet(valueSet1, model.scaleNames[i]).also {
                 it.setColors(

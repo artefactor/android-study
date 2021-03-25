@@ -225,7 +225,9 @@ class QUseCaseImpl(private val databaseInfo: DatabaseInfo) : QUseCase {
         if (allByFormId.isNotEmpty()) {
             val furContext = FURContext(formId, userId, allByFormId.last().resultEntity.getId())
             // clear last answers
-            return FURContext(formId, userId, restartTest(furContext))
+            // TODO return confirmation - нужно запросить конфирмацию у юзера
+            // но я вообще хочу убрать этот режим с перезаписыванием последнего результата - он путает пользователя
+                return FURContext(formId, userId, restartTest(furContext))
         }
         return FURContext(formId, userId, startTest(formId, userId))
     }

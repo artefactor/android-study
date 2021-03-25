@@ -43,18 +43,19 @@
     <string name="action_compare_answers"><u>Сравнить ответы</u></string>
     <string name="confirm_delete">Удалить?</string>
 
+    <string name="confirm_restart">Удалить последний результат?</string>
     <string name="text_actions">Действия</string>
     <string name="button_home">В список</string>
     <string name="button_repeat">Еще раз</string>
-    <string name="button_repeat_friend">Пройти другом</string>
-    <string name="button_restart">Перепройти последний</string>
-    <string name="button_restart_simple">Заново</string>
+    <string name="button_repeat_friend">Дать телефон пройти другу</string>
+    <string name="button_restart">Перепройти последний результат</string>
+    <string name="button_restart_simple">Перепройти заново</string>
     <string name="text_other_results">Другие результаты</string>
 
     <!--    pass user dialog-->
     <string name="button_yes">Да</string>
     <string name="dialog_choose_user_title">Выберите пользователя</string>
-    <string name="add_new_user_desc">Или добавьте нового</string>
+    <string name="add_new_user_desc"></string>
     <string name="suggestion_choose_any">Выберите вариант</string>
     <string name="suggestion_choose_another">Такой уже есть, выберите другое имя</string>
     <string name="addNewUser">Добавить нового</string>
@@ -68,4 +69,22 @@
     <string name="stat_a">Ответов</string>
     <string name="stat_r">Прохождений</string>
     <string name="stat_u">Пользователей</string>
+    <string name="questionInstruction" translatable="false">
+       <br>        0 - Никогда \n         </br>
+       <br>        1 - Почти никогда \n       </br>
+       <br>        2 - Очень редко  \n      </br>
+       <br>        3 - Иногда        \n      </br>
+       <br>        4 - Очень часто   \n      </br>
+       <br>        5 - Почти всегда  \n      </br>
+       <br>        6 - Постоянно     \n       </br>
+    </string>
+    <string name="questionInstruction2" formatted="true" translatable="false">
+     <br>  (Ни разу) \n </br>
+     <br>  (Несколько раз в год) \n </br>
+     <br>  (Раз в месяц или реже) \n </br>
+     <br>  (Несколько раз в месяц) \n </br>
+     <br>  (Раз в неделю) \n </br>
+     <br>  (Несколько раз в неделю)\n  </br>
+     <br>  (Каждый день)</br>
+    </string>
 </resources>

@@ -22,7 +22,8 @@ class ResultCalculatorAverageDetailed : ResultCalculator {
         val model = BarChartModel(*elements).apply {
             name = "Среднее"
             addLine1(*split.map { i -> i.toFloat() }.toTypedArray())
-            addLineDescription1(*split.toTypedArray())
+//            addLineDescription1(*split.toTypedArray())
+            addLineDescription1(*Array(split.size) { "" })
         }
 
         return Pair("result: $result", model)
@@ -40,9 +41,11 @@ class ResultCalculatorAverageDetailed : ResultCalculator {
         val model = BarChartModel(*elements).apply {
             name = "Среднее"
             addLine1(*split1.map { i -> i.toFloat() }.toTypedArray())
-            addLineDescription1(*split1.toTypedArray())
+//            addLineDescription1(*split1.toTypedArray())
+            addLineDescription1(*Array(split1.size) { "" })
             addLine2(*split2.map { i -> i.toFloat() }.toTypedArray())
-            addLineDescription2(*split2.toTypedArray())
+//            addLineDescription2(*split2.toTypedArray())
+            addLineDescription2(*Array(split2.size) { "" })
         }
 
         return Pair("result: $result1 - $result2", model)

@@ -129,11 +129,15 @@ class FragmentFormResult : Fragment(R.layout.result) {
                 it.button4RepeatFried.visibility = GONE
             } else {
                 it.button3Repeat.setOnClickListener { onRepeatButton() }
-                it.button2Restart.setOnClickListener { onRestartButton() }
+                it.button2Restart.setOnClickListener { onRestartButtonConfirm() }
                 it.button2Restart.text = getString(R.string.button_restart_simple)
                 it.button4RepeatFried.visibility = VISIBLE
             }
         }
+    }
+
+    private fun onRestartButtonConfirm() {
+        fragmentManager.showConfirmDialog(getString(R.string.confirm_restart)) { onRestartButton() }
     }
 
     private fun onRestartButton() {
@@ -234,6 +238,7 @@ class FragmentFormResult : Fragment(R.layout.result) {
     private fun fillInfo() {
         with(binding) {
             viewTextTitleCompare.text = ""
+            viewTextTitleCompare.clearAnimation()
             resultListAdapter.currentResultId = furContext.resultId
             resultListAdapter.resultIdInCompare = -1
             val resultUser = fragmentManager.getQUseCase().getAttempt(furContext.resultId)
