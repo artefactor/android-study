@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="StyleRounded">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:layout_marginLeft">@dimen/size8</item>
+        <item name="android:layout_marginRight">@dimen/size8</item>
+        <item name="android:layout_marginTop">@dimen/size4</item>
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:paddingHorizontal">@dimen/size4</item>
+        <item name="android:paddingVertical">@dimen/size8</item>
+
+    </style>
+
+
+    <!--===============================================  -->
+    <!--                 buttons                         -->
+    <!--===============================================  -->
+    <style name="flowButton">
+        <item name="android:layout_margin">@dimen/size32</item>
+        <item name="android:background">@color/teal_700</item>
+    </style>
+
+    <style name="buttonBig">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginRight">@dimen/size32</item>
+        <item name="android:layout_marginLeft">@dimen/size32</item>
+        <item name="android:layout_marginTop">@dimen/size16</item>
+        <item name="android:layout_marginBottom">106dp</item>
+        <!--        <item name="android:backgroundTint">@color/teal_100</item>-->
+        <item name="android:textColor">@color/teal_700</item>
+    </style>
+
+    <style name="StyleRounded.Button">
+        <item name="android:background">@drawable/button_main</item>
+        <item name="android:padding">@dimen/size4</item>
+        <item name="android:layout_margin">@dimen/size4</item>
+    </style>
+
+    <style name="StyleRounded.ButtonInverted">
+        <item name="android:background">@drawable/button_main_inverted</item>
+        <item name="android:padding">@dimen/size4</item>
+        <item name="android:layout_margin">@dimen/size4</item>
+    </style>
+
+    <!--===============================================  -->
+    <!--                 toolbars                        -->
+    <!--===============================================  -->
+    <style name="toolbar">
+        <item name="android:background">@color/purple_500</item>
+        <item name="android:padding">@dimen/size4</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="buttonToolbar">
+        <item name="android:layout_gravity">start|center_vertical</item>
+        <item name="android:backgroundTint">@color/purple_500</item>
+        <item name="android:tint">@color/white</item>
+    </style>
+
+    <style name="toolbarTextlight">
+        <item name="android:layout_gravity">fill_horizontal|center_vertical</item>
+        <item name="android:layout_marginRight">@dimen/size4</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_button</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="toolbarText">
+        <item name="android:layout_gravity">fill_horizontal|center_vertical</item>
+        <item name="android:layout_marginRight">@dimen/size32</item>
+        <item name="android:layout_marginLeft">@dimen/size32</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_button</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="searchTextStyle">
+        <item name="android:drawablePadding">@dimen/size16</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:inputType">text</item>
+        <item name="android:paddingStart">@dimen/size4</item>
+        <item name="android:elegantTextHeight">true</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:layout_margin">@dimen/size16</item>
+        <item name="android:textSize">@dimen/text_search</item>
+    </style>
+    <!--===============================================  -->
+
+    <style name="card">
+        <item name="android:paddingLeft">@dimen/size4</item>
+        <item name="android:paddingRight">@dimen/size4</item>
+        <item name="android:paddingTop">@dimen/size4</item>
+        <item name="android:paddingBottom">@dimen/size20</item>
+        <item name="android:background">@android:drawable/dialog_holo_light_frame</item>
+        <item name="android:backgroundTint">@color/purple_100</item>
+    </style>
+
+    <!--    TODO не понял как его применить-->
+    <style name="radioButtonDialogStyle" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/size8</item>
+        <item name="android:paddingStart">@dimen/size16</item>
+        <item name="android:textSize">@dimen/text_medium</item>
+    </style>
+
+    <style name="action_style">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/teal_800</item>
+        <item name="android:layout_marginHorizontal">@dimen/size16</item>
+        <item name="android:layout_marginTop">@dimen/size20</item>
+    </style>
+
+</resources>

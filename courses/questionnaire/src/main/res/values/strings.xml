@@ -1,0 +1,90 @@
+<resources>
+    <string name="app_name">Опросник</string>
+
+    <!--    menu-->
+    <string name="action_clear_all">Сбросить все</string>
+    <string name="action_stats">Статистика</string>
+    <string name="action_users">Пользователи</string>
+
+    <!--    form page -->
+    <string name="search">Найти</string>
+    <string name="form_list_results">Результаты</string>
+    <string name="form_list_continue">Продолжить. Осталось вопросов: %1$d</string>
+
+    <!--    form page -->
+    <string name="in_processTitle">В процессе: %1$s </string>
+    <string name="button_abort">Не проходить</string>
+    <string name="button_finish">Завершить</string>
+    <string name="confirm_abort">Отменить тест?</string>
+    <string name="confirm_finish">Подтверждаете?</string>
+    <string name="warning_fill">Заполните все ответы</string>
+
+    <!--    compare page -->
+    <string name="compareTitle">Сравниваем</string>
+    <string name="and">и</string>
+    <string name="comparing_filter"><u>Фильтр одинаковых</u></string>
+    <string name="comparing_filter_all"><u>Все</u></string>
+    <string name="comparing_filter_diff"><u>Разные</u></string>
+    <string name="comparing_filter_sim"><u>Одинаковые</u></string>
+    <string name="navigation_back">Назад</string>
+
+    <!--    result page -->
+    <string name="result_compare_status_current"><u>Текущий</u></string>
+    <string name="result_compare_status_compare"><u>Сравнить</u></string>
+    <string name="result_compare_status_in_compare"><u>В сравнении</u></string>
+    <string name="empty_list">Пусто</string>
+
+    <string name="resultsTitle">Результаты %1$s</string>
+    <string name="resultsTwoTitle">Результаты %1$s vs %2$s</string>
+    <string name="resultsDescription">Вы прошли тест. Результаты ниже \n %1$s </string>
+    <string name="resultsTwoDescription">Вы прошли тест. Сравниваем результаты \n %1$s </string>
+    <string name="no_results">Результатов нет</string>
+    <string name="no_results_suggestion">Вы удалили все результаты. Пройдите заново</string>
+    <string name="action_compare_answers"><u>Сравнить ответы</u></string>
+    <string name="confirm_delete">Удалить?</string>
+
+    <string name="confirm_restart">Удалить последний результат?</string>
+    <string name="text_actions">Действия</string>
+    <string name="button_home">В список</string>
+    <string name="button_repeat">Еще раз</string>
+    <string name="button_repeat_friend">Дать телефон пройти другу</string>
+    <string name="button_restart">Перепройти последний результат</string>
+    <string name="button_restart_simple">Перепройти заново</string>
+    <string name="text_other_results">Другие результаты</string>
+
+    <!--    pass user dialog-->
+    <string name="button_yes">Да</string>
+    <string name="dialog_choose_user_title">Выберите пользователя</string>
+    <string name="add_new_user_desc"></string>
+    <string name="suggestion_choose_any">Выберите вариант</string>
+    <string name="suggestion_choose_another">Такой уже есть, выберите другое имя</string>
+    <string name="addNewUser">Добавить нового</string>
+    <string name="hint_enter_name">Введите имя</string>
+    <string name="button_choose_user">Выбрать</string>
+    <string name="button_cancel">Отмена</string>
+
+    <!--    db info -->
+    <string name="stat_f">Опросников</string>
+    <string name="stat_q">Вопросов</string>
+    <string name="stat_a">Ответов</string>
+    <string name="stat_r">Прохождений</string>
+    <string name="stat_u">Пользователей</string>
+    <string name="questionInstruction" translatable="false">
+       <br>        0 - Никогда \n         </br>
+       <br>        1 - Почти никогда \n       </br>
+       <br>        2 - Очень редко  \n      </br>
+       <br>        3 - Иногда        \n      </br>
+       <br>        4 - Очень часто   \n      </br>
+       <br>        5 - Почти всегда  \n      </br>
+       <br>        6 - Постоянно     \n       </br>
+    </string>
+    <string name="questionInstruction2" formatted="true" translatable="false">
+     <br>  (Ни разу) \n </br>
+     <br>  (Несколько раз в год) \n </br>
+     <br>  (Раз в месяц или реже) \n </br>
+     <br>  (Несколько раз в месяц) \n </br>
+     <br>  (Раз в неделю) \n </br>
+     <br>  (Несколько раз в неделю)\n  </br>
+     <br>  (Каждый день)</br>
+    </string>
+</resources>

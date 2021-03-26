@@ -1,0 +1,47 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+
+    <!--    <style name="Theme.Courses" parent="Theme.AppCompat.Light.NoActionBar">-->
+    <style name="Base.Theme.Questionnaire" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:colorBackground">@color/teal_100</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="android:editTextStyle">@style/DefaultTextEditStyle</item>
+        <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
+        <item name="colorControlNormal">@color/teal_200</item>
+        <item name="colorControlActivated">@color/teal_700</item>
+
+        <!-- makes all dialogs in your app use your dialog theme by default -->
+<!--        <item name="alertDialogTheme">@style/DialogTheme</item>-->
+<!--        <item name="android:alertDialogTheme">?alertDialogTheme</item>-->
+<!--        <item name="dialogTheme">?alertDialogTheme</item>-->
+<!--        <item name="android:dialogTheme">?alertDialogTheme</item>-->
+
+        <item name="android:radioButtonStyle">@style/radioButtonDialogStyle</item>
+    </style>
+
+<!--тоже какая-то фигня  - установить можно на все диалоги. а потом как выборочно поставить - не понял-->
+    <!-- define your dialog theme -->
+    <style name="DialogTheme" parent="Theme.AppCompat.DayNight.DialogWhenLarge">
+        <item name="android:buttonStyle">@style/buttonBig</item>
+        <item name="android:textColorHint">@color/teal_700</item>
+    </style>
+
+    <style name="DefaultTextEditStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textSize">@dimen/text_medium</item>
+        <item name="android:textColor">@color/teal_700</item>
+    </style>
+    <style name="DefaultTextViewStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:textColor">@color/teal_700</item>
+    </style>
+</resources>

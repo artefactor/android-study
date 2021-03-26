@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemViewRoot"
+    style="@style/card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/viewTextTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Результаты - Артем" />
+
+    <TextView
+        android:id="@+id/viewTextTitleCompare"
+        style="@style/action_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/viewTextTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/action_compare_answers" />
+
+    <TextView
+        android:id="@+id/viewTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/viewTextTitle"
+        tools:text="Долгое описание" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/chartFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintTop_toBottomOf="@+id/viewTextDescription" />
+
+    <!--    действия   -->
+    <TextView
+        android:id="@+id/buttonsHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:layout_marginVertical="@dimen/size12"
+        android:text="@string/text_actions"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/chartFragmentContainer" />
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size4"
+        android:layout_marginTop="@dimen/size12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonsHeader">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button1Home"
+            style="@style/StyleRounded.Button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingHorizontal="0dp"
+            android:text="@string/button_home"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button2Restart"
+            style="@style/StyleRounded.Button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/size4"
+            android:layout_weight="1"
+            android:text="@string/button_restart_simple"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button3Repeat"
+            style="@style/StyleRounded.Button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/size4"
+            android:layout_weight="1"
+            android:padding="0dp"
+            android:paddingVertical="@dimen/size4"
+            android:text="@string/button_repeat"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button4RepeatFried"
+            style="@style/StyleRounded.Button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/size4"
+            android:layout_weight="1"
+            android:text="@string/button_repeat_friend"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_button"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <!--    другие результаты   -->
+    <TextView
+        android:id="@+id/otherResultsHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size16"
+        android:layout_marginVertical="@dimen/size4"
+        android:text="@string/text_other_results"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/buttons" />
+
+    <TextView
+        android:id="@+id/no_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_list"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otherResultsHeader" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/size4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otherResultsHeader" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
